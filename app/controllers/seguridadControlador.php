@@ -20,7 +20,6 @@ class SeguridadControlador {
     if ($loginSuccess) {
       $_SESSION['id'] = $usuarioModelo->id;
       header('Location: ../views/admin.php')
-      require_once ''
     } else {
       echo 'credenciales incorrectas';
     }

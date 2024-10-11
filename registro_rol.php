@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Rol</title>
+    <link rel="stylesheet" href="./public/styles.css">
 </head>
 <body>
     <h2>Registrar Rol</h2>

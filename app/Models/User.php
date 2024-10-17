@@ -10,8 +10,17 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
 class User extends Authenticatable
 {
+    public function empleados() : HasMany {
+        return  $this->hasMany(Empleado::class);
+    }
+    public function roles() : BelongsTo {
+        return $this->belongsTo(roles::class);
+    }
     use HasApiTokens;
 
     /** @use HasFactory<\Database\Factories\UserFactory> */

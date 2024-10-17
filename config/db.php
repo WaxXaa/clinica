@@ -1,20 +1,20 @@
-
 <?php
-// Database configuration
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'clinica_db');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+class Database {
+    private static $host = 'localhost';
+    private static $db_name = 'clinica';  // Database name is "clinica"
+    private static $username = 'root';
+    private static $password = '';
+    public static $conn;
 
-// Create a connection to the database
-try {
-    $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME;
-    $options = array(
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    );
-    $pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
-} catch (PDOException $e) {
-    die('Database connection failed: ' . $e->getMessage());
+    public static function connect() {
+        if (self::$conn == null) {
+            self::$conn = new mysqli(self::$host, self::$username, self::$password, self::$db_name);
+
+            if (self::$conn->connect_error) {
+                die("Connection failed: " . self::$conn->connect_error);
+            }
+        }
+        return self::$conn;
+    }
 }
 ?>

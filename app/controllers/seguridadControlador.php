@@ -15,11 +15,12 @@ class SeguridadControlador {
   }
   public function __construct(){}
   public function login(){
-    $usuarioModelo = new Usuario($this-db, $_POST['correo'], $_POST['contra']);
-    $loginSuccess = $usuarioModelo->login();
+    $usuarioModelo = new Usuario($this-db, $correo, $contra);
+    $loginSuccess = $usuarioModelo->obtener_usuario_login();
     if ($loginSuccess) {
-      $_SESSION['id'] = $usuarioModelo->id;
-      header('Location: ../views/admin.php')
+      $_SESSION['logged_in'] = true;
+      $_SESSION['user_id'] = $usuarioModelo->id;
+      header('Location: ../views/in')
     } else {
       echo 'credenciales incorrectas';
     }

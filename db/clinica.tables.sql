@@ -1,14 +1,16 @@
+-- SQLBook: Code
 DROP IF EXIST DATABASE clinica;
 CREATE DATABASE clinica;
 
-CREATE TABLE roles (
-    id_roles VARCHAR(4) PRIMARY KEY,
-    nombre VARCHAR(50) UNIQUE NOT NULL,
-    descripcion TEXT
+CREATE TABLE rol_administradores (
+    id_rol_administrador VARCHAR(4) PRIMARY KEY,
+    nombre_administrador VARCHAR(50) UNIQUE NOT NULL,
+    departamento_administrador VARCHAR(75) UNIQUE NOT NULL,
+    descripcion_administrador TEXT
 );
-INSERT INTO roles (id_roles, nombre, descripcion_permisos) VALUES ('RS01', 'Admin', 'usuario administrador del sistema, tiene permiso por defecto para hacer todo');
-INSERT INTO roles (id_roles, nombre, descripcion_permisos) VALUES ('RM01', 'Medico', 'Medico atiende a los pacientes y usa el sistema');
-INSERT INTO roles (id_roles, nombre, descripcion_permisos) VALUES ('RL01', 'Laboratorista','solo tiene acceso a ciertos datos del paciente y a insertar resultados del laboratorio al historial medico');
+INSERT INTO rol_administradores (id_rol_administrador, nombre_administrador, departamento_administrador, descripcion_permisos) VALUES ('RS01', 'Admin', 'usuario administrador del sistema, tiene permiso por defecto para hacer todo');
+INSERT INTO rol_administradores (id_rol_administrador, nombre_administrador, departamento_administrador, descripcion_permisos) VALUES ('RM01', 'Medico', 'Medico atiende a los pacientes y usa el sistema');
+INSERT INTO rol_administradores (id_rol_administrador, nombre_administrador, departamento_administrador, descripcion_permisos) VALUES ('RL01', 'Laboratorista','solo tiene acceso a ciertos datos del paciente y a insertar resultados del laboratorio al historial medico');
 
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,

@@ -1,4 +1,4 @@
-<?php
+<!-- <?php
 session_start();
 require '../../config/db.php'; 
 
@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user = $result->fetch_assoc();
             $_SESSION['logged_in'] = true;
             $_SESSION['role'] = $user['rol'];
-            header('Location: ../../app/views/index.php'); 
+            header('Location /../../index.php'); 
             exit();
         } else {
             $error = "Usuario o contraseña incorrectos.";
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Por favor, complete todos los campos.";
     }
 }
-?>
+?> -->
 
 <!DOCTYPE html>
 <html lang="es">
@@ -45,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             overflow: hidden;
             background-color: #12130F;
         }
-        /* Borde degradado animado */
         .gradient-border {
             background: linear-gradient(45deg, #c94b4b, #4b134f, #c94b4b);
             padding: 10px;
@@ -53,7 +52,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background-size: 200% 200%;
             animation: gradientAnimation 5s ease infinite;
         }
-        /* Animación del gradiente */
         @keyframes gradientAnimation {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -64,12 +62,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border-radius: 30px;
             overflow: hidden;
         }
-        /* Estilo neumórfico para la imagen */
         .neumorphism {
             border-radius: 30px 0 0 30px;
             box-shadow: 10px 10px 20px #0e0e0f, -10px -10px 20px #26272a;
         }
-        /* Contenedor con borde y animación en el enfoque */
         .input-field-container {
             position: relative;
             margin-bottom: 1rem;
@@ -84,7 +80,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             animation: gradientAnimation 5s ease infinite;
             transform: scale(1.05);
         }
-        /* Campo de entrada */
         .input-field {
             width: 100%;
             padding: 12px;
@@ -94,7 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             outline: none;
             border-radius: 15px;
         }
-        /* Estilo de los botones rectangulares del carrusel */
         .carousel-button {
             width: 30px;
             height: 4px;
@@ -106,19 +100,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             width: 35px;
             background-color: white;
         }
-        /* Botón de inicio de sesión centrado */
         .login-button {
             width: 50%;
             margin: 0 auto;
             display: block;
         }
-        /* Positioning for Logo in the Carousel */
         .carousel-logo-container {
             position: absolute;
-            top: 30px; /* Ajuste hacia abajo */
-            left: 30px; /* Ajuste hacia la derecha */
+            top: 30px;
+            left: 30px;
         }
-        /* Logo Style */
         #logoImage {
             width: 60px;
             height: 60px;
@@ -135,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="w-1/2 relative h-full flex items-center justify-center p-6 neumorphism">
                 <img id="carouselImage" alt="A scenic view" class="w-full h-full object-cover neumorphism" src="https://picsum.photos/800/600?random=1"/>
                 <div class="carousel-logo-container">
-                    <img id="logoImage" src="https://example.com/your-logo.webp" alt="Logo AMC"/>
+                    <img id="logoImage" src="https://images.pexels.com/photos/3831181/pexels-photo-3831181.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Logo AMC"/>
                 </div>
                 <div class="absolute bottom-20 left-1/2 transform -translate-x-1/2 text-white text-center">
                     <p class="text-lg font-semibold">Capturing Moments,</p>
@@ -153,12 +144,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <h2 class="text-3xl font-semibold text-white mb-8 text-center">Iniciar Sesión</h2>
                 
                 <!-- Formulario de Inicio de Sesión con Usuario y Contraseña -->
-                <form id="loginForm" class="w-2/3 mx-auto">
+                <form method="POST" action="../core/App.php" id="loginForm" class="w-2/3 mx-auto">
+                    <input type="hidden" name="login" value="login">
                     <div class="input-field-container">
-                        <input id="usuario" class="input-field" placeholder="Usuario" type="text" required/>
+                        <input name="user" id="usuario" class="input-field" placeholder="Usuario" type="text" required/>
                     </div>
                     <div class="relative input-field-container">
-                        <input id="password" class="input-field" placeholder="Contraseña" type="password" required/>
+                        <input name="contra" id="password" class="input-field" placeholder="Contraseña" type="password" required/>
                         <i id="togglePassword" class="fas fa-eye text-gray-400 cursor-pointer absolute right-3 top-1/2 transform -translate-y-1/2" onclick="togglePasswordVisibility()"></i>
                     </div>
 

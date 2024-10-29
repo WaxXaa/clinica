@@ -1,20 +1,23 @@
 <?php
 class Database {
-    private static $host = 'localhost';
-    private static $db_name = 'clinica';  // Database name is "clinica"
-    private static $username = 'root';
-    private static $password = '';
-    public static $conn;
+    private $host = "localhost";
+    private $db_name = "clinica";
+    private $username = "root"; // Cambia a tu nombre de usuario de MySQL
+    private $password = ""; // Cambia a tu contraseña de MySQL
+    private $conn;
 
-    public static function connect() {
-        if (self::$conn == null) {
-            self::$conn = new mysqli(self::$host, self::$username, self::$password, self::$db_name);
+    // Método para obtener la conexión a la base de datos
+    public function getConnection() {
+        $this->conn = null;
 
-            if (self::$conn->connect_error) {
-                die("Connection failed: " . self::$conn->connect_error);
-            }
+        try {
+            $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name, $this->username, $this->password);
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Modo de error de PDO
+        } catch(PDOException $exception) {
+            echo "Error de conexión: " . $exception->getMessage();
         }
-        return self::$conn;
+
+        return $this->conn;
     }
 }
 ?>

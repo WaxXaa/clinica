@@ -1,10 +1,10 @@
 <?php
 session_start();
-require '../../config/db.php'; // Asegúrate de que la ruta sea correcta
+require './config/db.php'; // Asegúrate de que la ruta sea correcta
 
 // Verificar si el usuario está logueado
 if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
-    header('Location: login.php');
+    header('Location: ./app/views/login.php');
     exit();
 }
 

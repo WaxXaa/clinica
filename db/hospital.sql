@@ -11,7 +11,6 @@ CREATE TABLE Usuarios (
  Cedula Varchar(20) not Null Primary key,
  Genero Varchar(10) not null );
 
---Crear la tabla de los empleados
 CREATE TABLE Empleados (
   Num_Identificacion Varchar(20) not null primary key,
  Nombre varchar(15) not null, Apellido varchar(15) not null, Cedula Varchar(20),

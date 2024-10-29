@@ -4,26 +4,26 @@ include_once '../Controllers/seguridadControlador.php';
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
   if(isset($_POST['login'])) {
     session_start();
-    $correo = isset($_POST['correo']);
+    $user = isset($_POST['user']);
     $contra = isset($_POST['contra']);
-    if (!empty($correo) && !empty($contra)){
-      trim($correo);
+    if (!empty($user) && !empty($contra)){
+      trim($user);
       trim($contra);
-      $seguridadControlador = new SeguridadControlador($correo, $contra);
-      $seguridadControlador->login();
+      $seguridadController = new SeguridadControlador($user, $contra);
+      $seguridadController->login();
     } else {
       echo "Por favor, complete todos los campos.";
     }
   }
   if(isset($_POST['registrar_usuario'])) {
     session_start();
-    $correo = isset($_POST['correo']);
+    $user = isset($_POST['user']);
     $contra = isset($_POST['contra']);
-    if (!empty($correo) && !empty($contra)){
-      trim($correo);
+    if (!empty($user) && !empty($contra)){
+      trim($user);
       trim($contra);
-      $seguridadControlador = new SeguridadControlador($correo, $contra);
-      $seguridadControlador->login();
+      $usuarioController = new usuarioControlador($user, $contra);
+      $usuarioController->createUser();
     } else {
       echo "Por favor, complete todos los campos.";
     }

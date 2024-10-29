@@ -1,65 +1,61 @@
 <?php
-class UserModel {
+class Usuario {
     private $conn;
     private $table = 'users';
+    public $correo;
+    public $contra;
+    public $id;
 
-    public function __construct($db) {
+    public function __construct($db, $correo, $contra) {
         $this->conn = $db;
+        $this->correo = $correo;
+        $this->contra = $contra;
     }
 
     // Crear un nuevo usuario
-    public function createUser($nombre, $email, $password, $roleId) {
-        $query = 'INSERT INTO ' . $this->table . ' (nombre, email, password, role_id) VALUES (:nombre, :email, :password, :role_id)';
+    public function crearUsuario($rol) {
+        try {
+            $this->correo = htmlspecialchars(strip_tags($this->correo));
+        $this->contra = htmlspecialchars(strip_tags($this->contra));
+        $rol = htmlspecialchars(strip_tags($rol));
+        $query = 'INSERT INTO ' . $this->table . ' CALL p_registrar_usuario(:nombre, :email, :password, :rol)';
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':nombre', $nombre);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':password', password_hash($password, PASSWORD_DEFAULT));
-        $stmt->bindParam(':role_id', $roleId);
+        $stmt->bindParam(':email', $this->correo);
+        $stmt->bindParam(':password', password_hash($this->contra, PASSWORD_DEFAULT));
+        $stmt->bindParam(':rol', $rol);
         return $stmt->execute();
+        } catch (PDOException $e) {
+            return false;
+        }
     }
+    public static function obtener_usuario_login() {
+        try {
+            $this->correo = htmlspecialchars(strip_tags($this->correo));
+            $this->contra = htmlspecialchars(strip_tags($this->contra));
+            $query = 'INSERT INTO ' . $this->table . ' SELECT id, correo, contra FROM usuarios WHERE correo = :correo';
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':correo', $this->correo);
+            $result = $stmt->execute();
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Obtener usuario por ID
-    public function getUserById($id) {
-        $query = 'SELECT * FROM ' . $this->table . ' WHERE id = :id';
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    // Obtener todos los usuarios
-    public function getAllUsers() {
-        $query = 'SELECT * FROM ' . $this->table;
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    // Actualizar información de usuario
-    public function updateUser($id, $nombre, $email, $roleId) {
-        $query = 'UPDATE ' . $this->table . ' SET nombre = :nombre, email = :email, role_id = :role_id WHERE id = :id';
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':id', $id);
-        $stmt->bindParam(':nombre', $nombre);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':role_id', $roleId);
-        return $stmt->execute();
-    }
-
-    // Desactivar usuario
-    public function deactivateUser($id) {
-        $query = 'UPDATE ' . $this->table . ' SET activo = 0 WHERE id = :id';
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':id', $id);
-        return $stmt->execute();
-    }
-
-    // Activar usuario
-    public function activateUser($id) {
-        $query = 'UPDATE ' . $this->table . ' SET activo = 1 WHERE id = :id';
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':id', $id);
-        return $stmt->execute();
+            if($user){
+                if($user[$correo] === 'superad@email.com'){
+                    if ($this->contra === $user['contra']) {
+                        $this->id = $user['id'];
+                        return true;
+                    }
+                }
+                if (password_verify($this->password, $user['contra'])) {
+                    $this->id = $user['id'];
+                    return true;
+                }
+                return false;
+            }
+            
+            
+        } catch (PDOEcxeption $e) {
+            return false;
+        }
     }
 }
 ?>

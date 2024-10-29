@@ -1,6 +1,6 @@
 <?php
-include_once 'Database.php';
-include_once 'UserModel.php';
+include_once '../core/Database.php';
+include_once '../models/Usuario.php';
 
 class UserController {
     private $userModel;
@@ -12,33 +12,35 @@ class UserController {
     }
 
     // Crear un nuevo usuario
-    public function createUser($nombre, $email, $password, $roleId) {
-        return $this->userModel->createUser($nombre, $email, $password, $roleId);
+    public function createUser(
+        $email,
+        $password,
+        $role) {
+        $usuarioModel = new Usuario(
+        $email,
+        $password,
+        $role)
+
+        if($this->userModel->createUser()) {
+            $message = "usuario registrado exitosamente.";
+            $message_type = "success";
+        } else {
+            $message = "Error al registrar el usuario. Verifica que los datos esten correctos y vuelve a intentarlo. si sigue saliendo error el sistema esta caido, intenta mas tarde.";
+            $message_type = "error";
+        }
+        session_start();
+        $_SESSION['message'] = $message;
+        $_SESSION['message_type'] = $message_type;
+        
+        
+        header("Location: ../views/mensaje/mensaje.php");
+        $this->db = null;
+        exit();
     }
 
     // Obtener todos los usuarios
     public function getAllUsers() {
         return $this->userModel->getAllUsers();
-    }
-
-    // Obtener un usuario por ID
-    public function getUserById($id) {
-        return $this->userModel->getUserById($id);
-    }
-
-    // Actualizar usuario
-    public function updateUser($id, $nombre, $email, $roleId) {
-        return $this->userModel->updateUser($id, $nombre, $email, $roleId);
-    }
-
-    // Desactivar usuario
-    public function deactivateUser($id) {
-        return $this->userModel->deactivateUser($id);
-    }
-
-    // Activar usuario
-    public function activateUser($id) {
-        return $this->userModel->activateUser($id);
     }
 }
 ?>

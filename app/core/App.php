@@ -15,5 +15,18 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
       echo "Por favor, complete todos los campos.";
     }
   }
+  if(isset($_POST['registrar_usuario'])) {
+    session_start();
+    $correo = isset($_POST['correo']);
+    $contra = isset($_POST['contra']);
+    if (!empty($correo) && !empty($contra)){
+      trim($correo);
+      trim($contra);
+      $seguridadControlador = new SeguridadControlador($correo, $contra);
+      $seguridadControlador->login();
+    } else {
+      echo "Por favor, complete todos los campos.";
+    }
+  }
 }
 ?>

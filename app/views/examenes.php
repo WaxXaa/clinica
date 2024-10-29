@@ -11,16 +11,16 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
 // Conectar a la base de datos
 $conn = Database::connect();
 
-// Obtener los pacientes y tipos de exámenes disponibles
-$pacientes_result = $conn->query("SELECT id, nombre FROM pacientes");
-$examenes_result = $conn->query("SELECT id, tipo FROM tipos_examenes");
+// Obtener los usuarios (pacientes) y roles disponibles
+$pacientes_result = $conn->query("SELECT Cedula, Nombre FROM Usuarios");
+$roles_result = $conn->query("SELECT Id_Rol, Nombre FROM Rol");
 
-// Obtener lista de exámenes para mostrar
-$lista_examenes = $conn->query("
-    SELECT e.id, p.nombre AS paciente, t.tipo AS examen, e.urgencia 
-    FROM examenes_ordenados e 
-    JOIN pacientes p ON e.paciente_id = p.id 
-    JOIN tipos_examenes t ON e.examen_id = t.id
+// Obtener lista de servicios para mostrar
+$lista_servicios = $conn->query("
+    SELECT s.Num_Servicio, u.Nombre AS paciente, r.Nombre AS rol, s.FEntrada, s.FSalida
+    FROM Servicio s
+    JOIN Usuarios u ON s.Num_Identificacion = u.Cedula
+    JOIN Rol r ON s.Id_Rol = r.Id_Rol
 ");
 ?>
 
@@ -29,7 +29,7 @@ $lista_examenes = $conn->query("
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ordenar Exámenes</title>
+    <title>Ordenar Servicios</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 min-h-screen p-6">
@@ -45,7 +45,7 @@ $lista_examenes = $conn->query("
         <!-- Main Content -->
         <div class="flex-1 p-6">
             <header class="flex justify-between bg-blue-600 text-white p-4">
-                <h1 class="text-lg">Ordenar Exámenes</h1>
+                <h1 class="text-lg">Ordenar Servicios</h1>
                 <div class="flex space-x-4">
                     <button class="bg-blue-500 px-4 py-2 rounded hover:bg-blue-400">Perfil</button>
                     <button class="bg-blue-500 px-4 py-2 rounded hover:bg-blue-400">Home</button>
@@ -57,22 +57,27 @@ $lista_examenes = $conn->query("
             <div class="flex mt-6">
                 <!-- Formulario a la Izquierda -->
                 <div class="w-1/2 space-y-4">
-                    <!-- Tipo de Examen -->
+                    <!-- Tipo de Rol -->
                     <div>
-                        <label class="block text-gray-700">Tipo de Examen</label>
-                        <select name="examen_id" required class="w-full p-2 border rounded-md">
-                            <option value="">Seleccionar Tipo de Examen</option>
-                            <?php while ($examen = $examenes_result->fetch_assoc()): ?>
-                                <option value="<?= $examen['id'] ?>"><?= $examen['tipo'] ?></option>
+                        <label class="block text-gray-700">Tipo de Rol</label>
+                        <select name="rol_id" required class="w-full p-2 border rounded-md">
+                            <option value="">Seleccionar Rol</option>
+                            <?php while ($rol = $roles_result->fetch_assoc()): ?>
+                                <option value="<?= $rol['Id_Rol'] ?>"><?= $rol['Nombre'] ?></option>
                             <?php endwhile; ?>
                         </select>
                     </div>
 
-                    <!-- Nivel de Urgencia -->
+                    <!-- Fecha de Entrada -->
                     <div>
-                        <label class="block text-gray-700">Nivel de Urgencia</label>
-                        <input type="text" name="urgencia" placeholder="Nivel de Urgencia" 
-                               required class="w-full p-2 border rounded-md">
+                        <label class="block text-gray-700">Fecha de Entrada</label>
+                        <input type="date" name="fentrada" required class="w-full p-2 border rounded-md">
+                    </div>
+
+                    <!-- Fecha de Salida -->
+                    <div>
+                        <label class="block text-gray-700">Fecha de Salida</label>
+                        <input type="date" name="fsalida" required class="w-full p-2 border rounded-md">
                     </div>
 
                     <!-- Paciente -->
@@ -81,7 +86,7 @@ $lista_examenes = $conn->query("
                         <select name="paciente_id" required class="w-full p-2 border rounded-md">
                             <option value="">Seleccionar Paciente</option>
                             <?php while ($paciente = $pacientes_result->fetch_assoc()): ?>
-                                <option value="<?= $paciente['id'] ?>"><?= $paciente['nombre'] ?></option>
+                                <option value="<?= $paciente['Cedula'] ?>"><?= $paciente['Nombre'] ?></option>
                             <?php endwhile; ?>
                         </select>
                     </div>
@@ -94,20 +99,21 @@ $lista_examenes = $conn->query("
                     </div>
                 </div>
 
-                <!-- Lista de Exámenes a la Derecha -->
+                <!-- Lista de Servicios a la Derecha -->
                 <div class="w-1/2 pl-8">
-                    <h2 class="text-lg font-semibold mb-4">Lista de Exámenes para el Paciente</h2>
+                    <h2 class="text-lg font-semibold mb-4">Lista de Servicios para el Paciente</h2>
                     <ul class="space-y-2">
-                        <?php if ($lista_examenes->num_rows > 0): ?>
-                            <?php while ($examen = $lista_examenes->fetch_assoc()): ?>
+                        <?php if ($lista_servicios->num_rows > 0): ?>
+                            <?php while ($servicio = $lista_servicios->fetch_assoc()): ?>
                                 <li class="bg-gray-200 p-2 rounded">
-                                    <strong>Paciente:</strong> <?= $examen['paciente'] ?> | 
-                                    <strong>Examen:</strong> <?= $examen['examen'] ?> | 
-                                    <strong>Urgencia:</strong> <?= $examen['urgencia'] ?>
+                                    <strong>Paciente:</strong> <?= $servicio['paciente'] ?> | 
+                                    <strong>Rol:</strong> <?= $servicio['rol'] ?> | 
+                                    <strong>Fecha Entrada:</strong> <?= $servicio['FEntrada'] ?> | 
+                                    <strong>Fecha Salida:</strong> <?= $servicio['FSalida'] ?>
                                 </li>
                             <?php endwhile; ?>
                         <?php else: ?>
-                            <li class="bg-red-200 p-2 rounded">No hay exámenes registrados.</li>
+                            <li class="bg-red-200 p-2 rounded">No hay servicios registrados.</li>
                         <?php endif; ?>
                     </ul>
                 </div>

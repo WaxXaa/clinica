@@ -1,9 +1,9 @@
 <?php
 class Database {
     private $host = 'localhost';
-    private $db_name = 'clinica';
-    private $username = 'root';
-    private $password = '';
+    private $db_name = 'nombre_base_de_datos';
+    private $username = 'usuario';
+    private $password = 'contraseña';
     private $conn;
 
     // Obtener conexión a la base de datos

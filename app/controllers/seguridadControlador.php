@@ -10,10 +10,11 @@ class SeguridadControlador {
     $this->user = $user;
     $this->contra = $contra;
     $database = new Database();
-    $this->db = $database->connect();
+    $this->db = $database->getConnection();
   }
   public function login(){
-    $usuarioModelo = new Usuario($this-db, $user, $contra);
+
+    $usuarioModelo = new Usuario($this->db, $this->user, $this->contra);
     $loginSuccess = $usuarioModelo->obtener_usuario_login();
     if ($loginSuccess) {
       $_SESSION['logged_in'] = true;
@@ -21,8 +22,16 @@ class SeguridadControlador {
       header('Location /../../../public/index.php');
       exit();
     }else {
-      echo 'credenciales incorrectas';
-    }
+      $message = $usuarioModelo->c ."Credenciales Incorrectas. si sigue saliendo error el sistema esta caido, intenta mas tarde.";
+      $message_type = "error";
+  }
+  $_SESSION['message'] = $message;
+  $_SESSION['message_type'] = $message_type;
+  
+  
+  header("Location: ../views/mensaje/mensaje.php");
+  $this->db = null;
+  exit();
   }
 }
 ?>

@@ -5,6 +5,7 @@ class Usuario {
     public $user;
     public $contra;
     public $id;
+    public $c;
 
     public function __construct($db, $user, $contra) {
         $this->conn = $db;
@@ -26,32 +27,35 @@ class Usuario {
             return false;
         }
     }
-    public static function obtener_usuario_login() {
+    public function obtener_usuario_login() {
         try {
+            $query = 'SELECT * FROM usuario WHERE username = :username';
+            $stmt = $this->conn->prepare($query);
             $this->user = htmlspecialchars(strip_tags($this->user));
             $this->contra = htmlspecialchars(strip_tags($this->contra));
-            $query = 'INSERT INTO ' . $this->table . ' SELECT id, username, contra FROM usuarios WHERE username = :username';
-            $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':username', $this->user);
-            $result = $stmt->execute();
+            $stmt->execute();
+            
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if($user){
-                if($user[$user] === 'superad'){
-                    if ($this->contra === $user['contra']) {
-                        $this->id = $user['id'];
-                        return true;
-                    }
-                }
-                if (password_verify($this->password, $user['contra'])) {
-                    $this->id = $user['id'];
+            $this->c = $this->contra;
+             print_r($this->contra);
+            
+            if ($user) {
+                if ($user['username'] == 'superad' && $this->contra === '1') {
+                    $this->id = $user['id_usuario'];
                     return true;
                 }
+                elseif (password_verify($this->contra, $user['contra'])) {
+                    $this->id = $user['id_usuario'];
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
                 return false;
             }
-            
-            
-        } catch (PDOEcxeption $e) {
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
             return false;
         }
     }

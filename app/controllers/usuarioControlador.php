@@ -7,7 +7,7 @@ class UserController {
 
     public function __construct($user, $contra) {
         $database = new Database();
-        $db = $database->connect();
+        $db = $database->getConnection();
         $this->userModel = new UserModel($db, $user, $contra);
     }
 

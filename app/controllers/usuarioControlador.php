@@ -5,23 +5,15 @@ include_once '../models/Usuario.php';
 class UserController {
     private $userModel;
 
-    public function __construct() {
+    public function __construct($user, $contra) {
         $database = new Database();
-        $db = $database->connect();
-        $this->userModel = new UserModel($db);
+        $db = $database->getConnection();
+        $this->userModel = new UserModel($db, $user, $contra);
     }
 
     // Crear un nuevo usuario
-    public function createUser(
-        $email,
-        $password,
-        $role) {
-        $usuarioModel = new Usuario(
-        $email,
-        $password,
-        $role)
-
-        if($this->userModel->createUser()) {
+    public function createUser(){
+        if($this->userModel->crearUsuario()) {
             $message = "usuario registrado exitosamente.";
             $message_type = "success";
         } else {

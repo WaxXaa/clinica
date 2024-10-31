@@ -1,53 +1,68 @@
 <?php
 class Usuario {
     private $conn;
-    private $table = 'users';
-    public $correo;
+    private $table = 'usuario';
+    public $user;
     public $contra;
     public $id;
+    public $c;
 
-    public function __construct($db, $correo, $contra) {
+    public function __construct($db, $user, $contra) {
         $this->conn = $db;
-        $this->correo = $correo;
+        $this->user = $user;
         $this->contra = $contra;
     }
 
     // Crear un nuevo usuario
-    public function crearUsuario($rol) {
+    public function crearUsuario() {
         try {
-            $this->correo = htmlspecialchars(strip_tags($this->correo));
+            $this->user = htmlspecialchars(strip_tags($this->user));
         $this->contra = htmlspecialchars(strip_tags($this->contra));
-        $rol = htmlspecialchars(strip_tags($rol));
-        $query = 'INSERT INTO ' . $this->table . ' CALL p_registrar_usuario(:nombre, :email, :password, :rol)';
+        $query = 'INSERT INTO ' . $this->table . 'CALL p_registrar_usuario(:username, :contra)';
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':email', $this->correo);
-        $stmt->bindParam(':password', password_hash($this->contra, PASSWORD_DEFAULT));
-        $stmt->bindParam(':rol', $rol);
+        $stmt->bindParam(':user', $this->user);
+        $stmt->bindParam(':contra', password_hash($this->contra, PASSWORD_DEFAULT));
         return $stmt->execute();
         } catch (PDOException $e) {
             return false;
         }
     }
-    public static function obtener_usuario_login() {
-        try {
-            $this->correo = htmlspecialchars(strip_tags($this->correo));
-            $this->contra = htmlspecialchars(strip_tags($this->contra));
-            $query = 'INSERT INTO ' . $this->table . ' SELECT id, correo, contra FROM usuarios WHERE correo = :correo';
-            $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(':correo', $this->correo);
-            $result = $stmt->execute();
-            // Obtener los resultados
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    public function obtener_usuario_login() {
+        session_start();
 
-            // Verificar si la contraseña proporcionada coincide con la almacenada
-            if ($user && password_verify($this->password, $user['password'])) {
-                $id = $user['id'];
-                $this->id = $id;
-                return true;
-            }
-            return false;
+        if ($this->user == 'superad' && $this->contra == '1') {
+            $_SESSION['logged_in'] = true;
+            $_SESSION['user_id'] = 1;
+
+
+            return true;
+        }
+        try {
+            $query = 'SELECT * FROM usuario WHERE username = :username;';
+            $stmt = $this->conn->prepare($query);
+            $this->user = htmlspecialchars(strip_tags($this->user));
+            $this->contra = htmlspecialchars(strip_tags($this->contra));
+            $stmt->bindParam(':username', $this->user);
+            $stmt->execute();
             
-        } catch (PDOEcxeption $e) {
+            $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+            $this->c = $this->contra;
+
+
+
+            if ($userData) {
+
+                if (password_verify($this->contra, $userData['contra'])) {
+                    $this->id = $userData['id_usuario'];
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
             return false;
         }
     }

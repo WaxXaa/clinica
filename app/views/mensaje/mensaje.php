@@ -185,7 +185,7 @@ session_start();
     <script>
 
         setTimeout(() => {
-            window.location.href = '../admin.php';
+            window.location.href = '../../../index.php';
         }, 5000);
     </script>
     <?php

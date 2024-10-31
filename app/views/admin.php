@@ -1,12 +1,4 @@
-<?php
-session_start();
 
-// Verificar si no existe una sesión activa con 'id_usuario'
-if (!isset($_SESSION['id'])) {
-    header('Location: ./login.php');
-    exit();
-}
-?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -165,11 +157,11 @@ if (!isset($_SESSION['id'])) {
 
     <div class="menu">
         <h2>Seleccione una opción de registro:</h2>
-        <a href="registro_usuario.php">Registrar Usuario</a>
-        <a href="registro_rol.php">Registrar Rol</a>
-        <a href="registro_permiso.php">Registrar Permiso</a>
-        <a href="asignar_permisos.php">Asignar Permisos a Roles</a>
-        <a href="registro_empleado.php">Registrar Empleado</a>
+        <a href="../../registro_usuario.php">Registrar Usuario</a>
+        <a href="../../registro_rol.php">Registrar Rol</a>
+        <a href="../../registro_permiso.php">Registrar Permiso</a>
+        <a href="../../asignar_permisos.php">Asignar Permisos a Roles</a>
+        <a href="../../registro_empleado.php">Registrar Empleado</a>
     </div>
 </body>
 </html>

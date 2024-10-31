@@ -16,9 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = $conn->prepare("INSERT INTO roles (nombre, descripcion) VALUES (?, ?)");
     $stmt->bind_param("ss", $nombre, $descripcion);
     if ($stmt->execute()) {
-        echo "<p>Rol registrado correctamente.</p>";
+        echo "<p class='text-green-500'>Rol registrado correctamente.</p>";
     } else {
-        echo "<p>Error al registrar rol.</p>";
+        echo "<p class='text-red-500'>Error al registrar rol.</p>";
     }
 }
 ?>
@@ -29,13 +29,86 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <title>Registro de Roles</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #EAE6E5, #8F8073);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.8); /* Slight transparency */
+            border-radius: 12px;
+            padding: 30px;
+            width: 500px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background-color: #12130F;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.75rem;
+            font-weight: bold;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .form-input {
+            background-color: #EAE6E5;
+            border: 1px solid #8F8073;
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 6px;
+        }
+
+        .btn-submit {
+            background-color: #5B9279;
+            transition: background-color 0.3s;
+            width: 100%;
+            padding: 10px;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn-submit:hover {
+            background-color: #8FCB9B;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 p-6">
-    <h1 class="text-xl font-semibold mb-4">Registrar Nuevo Rol</h1>
-    <form method="POST" class="space-y-4">
-        <input type="text" name="nombre" placeholder="Nombre del Rol" required class="p-2 border rounded-md w-full">
-        <textarea name="descripcion" placeholder="Descripción" class="p-2 border rounded-md w-full"></textarea>
-        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-md">Registrar Rol</button>
-    </form>
+<body>
+    <div class="container">
+        <div class="header">Registrar Nuevo Rol</div>
+
+        <form method="POST" class="space-y-4">
+            <input 
+                type="text" 
+                name="nombre" 
+                placeholder="Nombre del Rol" 
+                required 
+                class="form-input"
+            >
+            <textarea 
+                name="descripcion" 
+                placeholder="Descripción" 
+                class="form-input"
+                rows="4"
+            ></textarea>
+            <button 
+                type="submit" 
+                class="btn-submit"
+            >
+                Registrar Rol
+            </button>
+        </form>
+    </div>
 </body>
 </html>

@@ -1,21 +1,4 @@
-<?php
-session_start();
-require '../../config/db.php'; // Asegúrate de que la ruta sea correcta
 
-// Verificar si el usuario está logueado
-if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
-    header('Location: login.php');
-    exit();
-}
-
-// Verificar el rol del usuario desde la sesión
-$role = $_SESSION['role'];
-
-// Conectar a la base de datos y obtener los usuarios
-$conn = Database::connect();
-$usuarios_query = "SELECT correo_electronico FROM usuarios";
-$usuarios_result = $conn->query($usuarios_query);
-?>
 
 <!DOCTYPE html>
 <html lang="es">

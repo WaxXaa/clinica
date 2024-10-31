@@ -1,28 +1,38 @@
 <?php
-include_once '../core/Database.php'
-include_once '../models/Usuario.php'
-session_start();
+include_once '../core/Database.php';
+include_once '../models/Usuario.php';
 class SeguridadControlador {
-  public $correo;
+  public $user;
   public $contra;
   public $db;
 
-  public function __construct($correo, $contra){
-    $this->correo = $correo;
+  public function __construct($user, $contra){
+    $this->user = $user;
     $this->contra = $contra;
     $database = new Database();
-    $this->db = $database->connect();
+    $this->db = $database->getConnection();
   }
-  public function __construct(){}
   public function login(){
-    $usuarioModelo = new Usuario($this-db, $_POST['correo'], $_POST['contra']);
-    $loginSuccess = $usuarioModelo->login();
+    session_start();
+
+    $usuarioModelo = new Usuario($this->db, $this->user, $this->contra);
+    $loginSuccess = $usuarioModelo->obtener_usuario_login();
     if ($loginSuccess) {
-      $_SESSION['id'] = $usuarioModelo->id;
-      header('Location: ../views/admin.php')
-    } else {
-      echo 'credenciales incorrectas';
-    }
+      
+      header('Location: ../../index.php');
+      exit();
+    }else {
+      $message = $usuarioModelo->c ."Credenciales Incorrectas. si sigue saliendo error el sistema esta caido, intenta mas tarde." . $loginSuccess;
+      $message_type = "error";
+      $_SESSION['message'] = $message;
+      $_SESSION['message_type'] = $message_type;
+  
+  
+  header("Location: ../views/mensaje/mensaje.php");
+  $this->db = null;
+  exit();
   }
+  }
+  
 }
 ?>

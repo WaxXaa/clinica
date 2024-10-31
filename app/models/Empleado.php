@@ -1,19 +1,33 @@
 <?php
 class EmployeeModel {
     private $conn;
-    private $table = 'employees';
+    private $table = 'empleados';
+    public $nombre;
+    public $apellido;
+    public $puesto;
+    public $departamento;
+    public $fecha_contratacion;
 
     public function __construct($db) {
         $this->conn = $db;
     }
 
-    // Método para crear un nuevo empleado
-    public function createEmployee($nombre, $email, $roleId) {
-        $query = 'INSERT INTO ' . $this->table . ' (nombre, email, role_id) VALUES (:nombre, :email, :role_id)';
+    public function crearEmpleado() {
+        $this->nombre = htmlspecialchars(strip_tags($this->nombre));
+        $this->apellido = htmlspecialchars(strip_tags($this->apellido));
+        $this->puesto = htmlspecialchars(strip_tags($this->puesto));
+        $this->departamento = htmlspecialchars(strip_tags($this->departamento));
+        $this->fecha_contratacion = htmlspecialchars(strip_tags($this->fecha_contratacion));
+        
+        $query = 'INSERT INTO ' . $this->table . ' (nombre, apellido, puesto, departamento, fecha_contratacion) VALUES (:nombre, :apellido, :puesto, :departamento, :fecha_departamento)';
+
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':nombre', $nombre);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':role_id', $roleId);
+        $stmt->bindParam(':nombre', $this->nombre);
+        $stmt->bindParam(':apellido', $this->apellido);
+        $stmt->bindParam(':puesto', $this->puesto);
+        $stmt->bindParam(':departamento', $this->departamento);
+        $stmt->bindParam(':fecha_contratacion', $this->fecha_contratacion);
+
         return $stmt->execute();
     }
 

@@ -33,14 +33,14 @@ $usuarios_result = $conn->query($usuarios_query);
         <aside class="w-64 bg-blue-800 text-white min-h-screen p-6">
             <h2 class="text-xl font-semibold mb-4">Menú</h2>
             <nav class="space-y-4">
-                <a href="registro_usuario.php" class="block px-4 py-2 bg-blue-700 rounded hover:bg-blue-600">Usuarios</a>
+                <a href="../../registro_usuario.php" class="block px-4 py-2 bg-blue-700 rounded hover:bg-blue-600">Usuarios</a>
                 <a href="roles_permisos.php" class="block px-4 py-2 hover:bg-blue-600">Roles y permisos</a>
                 <a href="#" class="block px-4 py-2 hover:bg-blue-600">Recursos Humanos</a>
                 <a href="#" class="block px-4 py-2 hover:bg-blue-600">Farmacia</a>
                 <a href="#" class="block px-4 py-2 hover:bg-blue-600">Inventario</a>
                 <a href="#" class="block px-4 py-2 hover:bg-blue-600">Pacientes</a>
                 <a href="#" class="block px-4 py-2 hover:bg-blue-600">Finanzas</a>
-                <a href="examenes.php" class="block px-4 py-2 hover:bg-blue-600">Exámenes</a>
+                <a href="./examenes.php" class="block px-4 py-2 hover:bg-blue-600">Exámenes</a>
                 <a href="#" class="block px-4 py-2 hover:bg-blue-600">Seguridad y Privacidad</a>
                 <a href="logout.php" class="block px-4 py-2 hover:bg-blue-600">Logout</a>
             </nav>

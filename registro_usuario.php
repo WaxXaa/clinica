@@ -14,7 +14,7 @@
             <h2 class="text-xl font-semibold mb-4">Admin Menu</h2>
             <nav class="space-y-4">
                 <a href="#" class="block px-4 py-2 bg-blue-700 rounded hover:bg-blue-600">Usuarios</a>
-                <a href="#" class="block px-4 py-2 hover:bg-blue-600">Roles y permisos</a>
+                <a href="./app/views/roles_permisos.php" class="block px-4 py-2 hover:bg-blue-600">Roles y permisos</a>
                 <a href="#" class="block px-4 py-2 hover:bg-blue-600">Recursos Humanos</a>
             </nav>
         </aside>

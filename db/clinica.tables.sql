@@ -1,14 +1,14 @@
 DROP IF EXIST DATABASE clinica;
 CREATE DATABASE clinica;
-
+use clinica;
 CREATE TABLE roles (
     id_roles VARCHAR(4) PRIMARY KEY,
     nombre VARCHAR(50) UNIQUE NOT NULL,
     descripcion TEXT
 );
-INSERT INTO roles (id_roles, nombre, descripcion_permisos) VALUES ('RS01', 'Admin', 'usuario administrador del sistema, tiene permiso por defecto para hacer todo');
-INSERT INTO roles (id_roles, nombre, descripcion_permisos) VALUES ('RM01', 'Medico', 'Medico atiende a los pacientes y usa el sistema');
-INSERT INTO roles (id_roles, nombre, descripcion_permisos) VALUES ('RL01', 'Laboratorista','solo tiene acceso a ciertos datos del paciente y a insertar resultados del laboratorio al historial medico');
+INSERT INTO roles (id_roles, nombre, descripcion) VALUES ('RS01', 'Admin', 'usuario administrador del sistema, tiene permiso por defecto para hacer todo');
+INSERT INTO roles (id_roles, nombre, descripcion) VALUES ('RM01', 'Medico', 'Medico atiende a los pacientes y usa el sistema');
+INSERT INTO roles (id_roles, nombre, descripcion) VALUES ('RL01', 'Laboratorista','solo tiene acceso a ciertos datos del paciente y a insertar resultados del laboratorio al historial medico');
 
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -20,7 +20,7 @@ CREATE TABLE usuarios (
     actualizado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-INSERT INTO usuarios (contra, correo_electronico) VALUES ('1', 'superad@email.com');
+INSERT INTO usuarios (contra,rol, correo_electronico) VALUES ('1','RS01','superad@email.com');
 
 
 CREATE TABLE configuracion_sistema (

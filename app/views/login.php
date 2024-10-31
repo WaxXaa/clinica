@@ -1,6 +1,6 @@
-<!-- <?php
-
-include_once '/app/core/Database.php'; 
+<?php
+session_start();
+include_once '../core/Database.php';
 
 $error = '';
 
@@ -27,7 +27,7 @@ $error = '';
 //         $error = "Por favor, complete todos los campos.";
 //     }
 // }
-?> -->
+?>
 
 <!DOCTYPE html>
 <html lang="es">

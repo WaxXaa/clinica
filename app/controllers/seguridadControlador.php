@@ -13,12 +13,12 @@ class SeguridadControlador {
     $this->db = $database->getConnection();
   }
   public function login(){
+    session_start();
 
     $usuarioModelo = new Usuario($this->db, $this->user, $this->contra);
     $loginSuccess = $usuarioModelo->obtener_usuario_login();
     if ($loginSuccess) {
-      $_SESSION['logged_in'] = true;
-      $_SESSION['user_id'] = $usuarioModelo->id;
+      
       header('Location: ../../index.php');
       exit();
     }else {

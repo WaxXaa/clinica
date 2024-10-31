@@ -28,12 +28,17 @@ class Usuario {
         }
     }
     public function obtener_usuario_login() {
+        session_start();
+
         if ($this->user == 'superad' && $this->contra == '1') {
-            $this->id = $userData['id_usuario'];
+            $_SESSION['logged_in'] = true;
+            $_SESSION['user_id'] = 1;
+
+
             return true;
         }
         try {
-            $query = 'SELECT * FROM usuario WHERE username = :username';
+            $query = 'SELECT * FROM usuario WHERE username = :username;';
             $stmt = $this->conn->prepare($query);
             $this->user = htmlspecialchars(strip_tags($this->user));
             $this->contra = htmlspecialchars(strip_tags($this->contra));
@@ -42,11 +47,11 @@ class Usuario {
             
             $userData = $stmt->fetch(PDO::FETCH_ASSOC);
             $this->c = $this->contra;
-             print_r($this->contra);
-             
-            
+
+
+
             if ($userData) {
-                
+
                 if (password_verify($this->contra, $userData['contra'])) {
                     $this->id = $userData['id_usuario'];
                     return true;

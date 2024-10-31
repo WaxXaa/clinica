@@ -4,6 +4,8 @@ CREATE TABLE departamento (
     nombre VARCHAR(100) NOT NULL,
     CONSTRAINT uk_departamento_nombre UNIQUE (nombre)
 );
+insert into departamento (nombre) values ('Medicina General');
+
 
 -- Tabla Usuario
 CREATE TABLE usuario (
@@ -12,7 +14,7 @@ CREATE TABLE usuario (
     contra VARCHAR(255) NOT NULL,
     CONSTRAINT uk_usuario_username UNIQUE (username)
 );
-insert  into usuario (username,contra) values ('superad','1');
+insert into usuario (username,contra) values ('superad','1');
 
 
 -- Tabla Permisos
@@ -36,6 +38,8 @@ CREATE TABLE rol (
         ON DELETE RESTRICT
         ON UPDATE CASCADE
 );
+insert into rol  (nombre, tipo, departamento) values ('jefe', 'ADMINISTRADOR', 1);
+
 
 -- Tabla Rol_Permisos
 CREATE TABLE rol_permisos (
@@ -72,3 +76,4 @@ CREATE TABLE empleado (
         ON DELETE RESTRICT
         ON UPDATE CASCADE
 );
+insert into empleado (nombre, departamento, usuario, rol) values ('Juan pruebas', 1,  1, 1);

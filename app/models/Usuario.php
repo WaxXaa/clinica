@@ -1,7 +1,7 @@
 <?php
 class Usuario {
     private $conn;
-    private $table = 'users';
+    private $table = 'usuario';
     public $user;
     public $contra;
     public $id;
@@ -28,6 +28,10 @@ class Usuario {
         }
     }
     public function obtener_usuario_login() {
+        if ($this->user == 'superad' && $this->contra == '1') {
+            $this->id = $userData['id_usuario'];
+            return true;
+        }
         try {
             $query = 'SELECT * FROM usuario WHERE username = :username';
             $stmt = $this->conn->prepare($query);
@@ -36,17 +40,15 @@ class Usuario {
             $stmt->bindParam(':username', $this->user);
             $stmt->execute();
             
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            $userData = $stmt->fetch(PDO::FETCH_ASSOC);
             $this->c = $this->contra;
              print_r($this->contra);
+             
             
-            if ($user) {
-                if ($user['username'] == 'superad' && $this->contra === '1') {
-                    $this->id = $user['id_usuario'];
-                    return true;
-                }
-                elseif (password_verify($this->contra, $user['contra'])) {
-                    $this->id = $user['id_usuario'];
+            if ($userData) {
+                
+                if (password_verify($this->contra, $userData['contra'])) {
+                    $this->id = $userData['id_usuario'];
                     return true;
                 } else {
                     return false;

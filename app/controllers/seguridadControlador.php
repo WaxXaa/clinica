@@ -19,19 +19,20 @@ class SeguridadControlador {
     if ($loginSuccess) {
       $_SESSION['logged_in'] = true;
       $_SESSION['user_id'] = $usuarioModelo->id;
-      header('Location /../../../public/index.php');
+      header('Location: ../../index.php');
       exit();
     }else {
-      $message = $usuarioModelo->c ."Credenciales Incorrectas. si sigue saliendo error el sistema esta caido, intenta mas tarde.";
+      $message = $usuarioModelo->c ."Credenciales Incorrectas. si sigue saliendo error el sistema esta caido, intenta mas tarde." . $loginSuccess;
       $message_type = "error";
-  }
-  $_SESSION['message'] = $message;
-  $_SESSION['message_type'] = $message_type;
+      $_SESSION['message'] = $message;
+      $_SESSION['message_type'] = $message_type;
   
   
   header("Location: ../views/mensaje/mensaje.php");
   $this->db = null;
   exit();
   }
+  }
+  
 }
 ?>

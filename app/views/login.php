@@ -1,32 +1,32 @@
 <!-- <?php
-session_start();
-require '../../config/db.php'; 
+
+include_once '/app/core/Database.php'; 
 
 $error = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $correo = isset($_POST['correo']) ? trim($_POST['correo']) : '';
-    $contra = isset($_POST['contra']) ? trim($_POST['contra']) : '';
+// if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+//     $correo = isset($_POST['correo']) ? trim($_POST['correo']) : '';
+//     $contra = isset($_POST['contra']) ? trim($_POST['contra']) : '';
 
-    if (!empty($correo) && !empty($contra)) {
-        $stmt = Database::connect()->prepare("SELECT * FROM usuarios WHERE correo_electronico = ? AND contra = ?");
-        $stmt->bind_param("ss", $correo, $contra);
-        $stmt->execute();
-        $result = $stmt->get_result();
+//     if (!empty($correo) && !empty($contra)) {
+//         $stmt = Database::connect()->prepare("SELECT * FROM usuarios WHERE correo_electronico = ? AND contra = ?");
+//         $stmt->bind_param("ss", $correo, $contra);
+//         $stmt->execute();
+//         $result = $stmt->get_result();
 
-        if ($result->num_rows > 0) {
-            $user = $result->fetch_assoc();
-            $_SESSION['logged_in'] = true;
-            $_SESSION['role'] = $user['rol'];
-            header('Location /../../index.php'); 
-            exit();
-        } else {
-            $error = "Usuario o contraseña incorrectos.";
-        }
-    } else {
-        $error = "Por favor, complete todos los campos.";
-    }
-}
+//         if ($result->num_rows > 0) {
+//             $user = $result->fetch_assoc();
+//             $_SESSION['logged_in'] = true;
+//             $_SESSION['role'] = $user['rol'];
+//             header('Location /../../index.php'); 
+//             exit();
+//         } else {
+//             $error = "Usuario o contraseña incorrectos.";
+//         }
+//     } else {
+//         $error = "Por favor, complete todos los campos.";
+//     }
+// }
 ?> -->
 
 <!DOCTYPE html>

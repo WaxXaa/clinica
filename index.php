@@ -1,6 +1,6 @@
 <?php
 session_start();
-require './config/db.php'; // Asegúrate de que la ruta sea correcta
+include_once './app/core/Database.php'; // Asegúrate de que la ruta sea correcta
 
 // Verificar si el usuario está logueado
 if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
@@ -9,12 +9,13 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
 }
 
 // Verificar el rol del usuario desde la sesión
-$role = $_SESSION['role'];
+$role = $_SESSION['user_id'];
 
 // Conectar a la base de datos y obtener los usuarios
-$conn = Database::connect();
-$usuarios_query = "SELECT correo_electronico FROM usuarios";
-$usuarios_result = $conn->query($usuarios_query);
+$database = new Database();
+$conn = $database->getConnection();
+// $usuarios_query = "SELECT correo_electronico FROM usuarios";
+// $usuarios_result = $conn->query($usuarios_query);
 ?>
 
 <!DOCTYPE html>

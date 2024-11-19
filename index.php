@@ -1,6 +1,7 @@
 <?php
+
 session_start();
-include_once './app/core/Database.php'; // Asegúrate de que la ruta sea correcta
+include_once './app/api/src/core/Database.php'; // Asegúrate de que la ruta sea correcta
 
 // Verificar si el usuario está logueado
 if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
@@ -51,10 +52,10 @@ $usuarios_result = $stmt->fetch(PDO::FETCH_ASSOC); // Obtener todos los resultad
         }
     </style>
 </head>
-<body class="flex justify-start items-start h-screen bg-[#282c34] text-white" x-data="{ sidebarOpen: true, isDark: false, openProfile: false, openStatus: false }" x-init="initializeSidebarToggleButton()">
+<body class="flex justify-start items-start h-screen bg-slate-200 text-white" x-data="{ sidebarOpen: true, isDark: false, openProfile: false, openStatus: false }" x-init="initializeSidebarToggleButton()">
     
         <!-- Header -->
-        <div class="fixed w-full flex items-center justify-between h-14 text-white bg-teal-600 z-10">
+        <header class="fixed w-full flex items-center justify-between h-14 text-white bg-teal-600 z-10">
 
             <!-- Logo y Avatar con Popup de Opciones -->
             <div @click="openProfile = !openProfile" @click.away="openProfile = false" class="flex items-center justify-start md:justify-center pl-3 w-14 md:w-64 h-14 border-none relative cursor-pointer">
@@ -73,7 +74,7 @@ $usuarios_result = $stmt->fetch(PDO::FETCH_ASSOC); // Obtener todos los resultad
                     </div>
                 </div>
             
-        </div>
+            </div>
 
         <!-- Search Bar -->
         <div class="flex justify-between items-center h-14 w-full pr-4 ml-10">
@@ -118,7 +119,7 @@ $usuarios_result = $stmt->fetch(PDO::FETCH_ASSOC); // Obtener todos los resultad
                 </li>
             </ul>
         </div>
-    </div>
+    </header>
 
     <!-- ./Header -->
 
@@ -192,15 +193,6 @@ $usuarios_result = $stmt->fetch(PDO::FETCH_ASSOC); // Obtener todos los resultad
 
     <!-- Contenido Principal -->
     <div class="flex-1 p-5 space-y-5">
-        
-        <!-- Breadcrumb -->
-        <nav class="flex items-center space-x-2 px-5 py-3 text-xl font-serif font-bold text-gray-500 bg-gradient-to-r from-slate-50 to-gray-200 rounded-lg dark:bg-gray-800 mt-28 w-fit">
-            <a href="#" class="hover:text-teal-600">Home</a>
-            <span>/</span>
-            <a href="#" class="hover:text-teal-600">Dashboard</a>
-            <span>/</span>
-            <span class="text-teal-400 dark:text-teal-400">Current Page</span>
-        </nav>
 
          <!-- Contenedor Principal -->
          <div class="bg-white rounded-lg p-5 shadow-md flex space-x-4">

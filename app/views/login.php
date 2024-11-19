@@ -1,32 +1,8 @@
 <?php
 session_start();
-include_once '../core/Database.php';
 
 $error = '';
 
-// if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-//     $correo = isset($_POST['correo']) ? trim($_POST['correo']) : '';
-//     $contra = isset($_POST['contra']) ? trim($_POST['contra']) : '';
-
-//     if (!empty($correo) && !empty($contra)) {
-//         $stmt = Database::connect()->prepare("SELECT * FROM usuarios WHERE correo_electronico = ? AND contra = ?");
-//         $stmt->bind_param("ss", $correo, $contra);
-//         $stmt->execute();
-//         $result = $stmt->get_result();
-
-//         if ($result->num_rows > 0) {
-//             $user = $result->fetch_assoc();
-//             $_SESSION['logged_in'] = true;
-//             $_SESSION['role'] = $user['rol'];
-//             header('Location /../../index.php'); 
-//             exit();
-//         } else {
-//             $error = "Usuario o contraseña incorrectos.";
-//         }
-//     } else {
-//         $error = "Por favor, complete todos los campos.";
-//     }
-// }
 ?>
 
 <!DOCTYPE html>
@@ -142,9 +118,9 @@ $error = '';
             <!-- Sección Derecha: Formulario de Inicio de Sesión -->
             <div class="w-1/2 p-12 bg-gray-800 rounded-r-lg flex flex-col justify-center">
                 <h2 class="text-3xl font-semibold text-white mb-8 text-center">Iniciar Sesión</h2>
-                
+
                 <!-- Formulario de Inicio de Sesión con Usuario y Contraseña -->
-                <form method="POST" action="../core/App.php" id="loginForm" class="w-2/3 mx-auto">
+                <form method="POST" action="../api/src/Core/App.php" id="loginForm" class="w-2/3 mx-auto">
                     <input type="hidden" name="login" value="login">
                     <div class="input-field-container">
                         <input name="user" id="usuario" class="input-field" placeholder="Usuario" type="text" required/>

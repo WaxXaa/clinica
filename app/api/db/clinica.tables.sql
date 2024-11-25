@@ -4,7 +4,7 @@ CREATE TABLE departamento (
     nombre VARCHAR(100) NOT NULL,
     CONSTRAINT uk_departamento_nombre UNIQUE (nombre)
 );
-insert into departamento (nombre) values ('Laboratorios'), ('Cirugia'), ('Recursos Humanos'), ('Farmacia');
+insert into departamento (nombre) values ('Laboratorios'), ('Cirugia'), ('Recursos Humanos'), ('Farmacia'), ('Direccion');
 
 -- Tabla Usuario
 CREATE TABLE usuario (
@@ -78,3 +78,102 @@ CREATE TABLE empleado (
         ON UPDATE CASCADE
 );
 insert into empleado (nombre, departamento, usuario, rol) values ('Juan pruebas', 1,  1, 1);
+
+
+CREATE TABLE pacientes(){
+    id_paciente INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    apellido VARCHAR(100) NOT NULL,
+    fecha_nacimiento DATE NOT NULL,
+    sexo ENUM('M', 'F') NOT NULL,
+    correo VARCHAR(100) not null,
+    CONSTRAINT fk_paciente_departamento FOREIGN KEY (departamento)
+        REFERENCES departamento(id_departamento)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+}
+-- Tabla que relaciona pacientes con expedientes que tienen la enfermedad, fecha de creacion y el doctor que lo atendio, ademas de la descripcion de la enfermedad, tratamiento y medicamentos, examenes y resultados y diagnosticos
+
+CREATE TABLE examenes(
+    id_examen INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT NOT NULL,
+    precio DECIMAL(10,2) NOT NULL
+)
+
+CREATE TABLE expedientes_pacientes(
+    id_expediente INT PRIMARY KEY AUTO_INCREMENT,
+    paciente INT NOT NULL,
+    sintomas TEXT NOT NULL,
+    fecha_creacion DATE NOT NULL,
+    doctor INT NOT NULL,
+    tratamiento TEXT,
+    medicamentos TEXT,
+    diagnostico TEXT,
+    CONSTRAINT fk_expediente_paciente FOREIGN KEY (paciente)
+        REFERENCES pacientes(id_paciente)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE,
+    CONSTRAINT fk_expediente_doctor FOREIGN KEY (doctor)
+        REFERENCES empleado(id_empleado)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+)
+
+-- tabla para relacionar el expediente de un paciente con los examenes que se le han realizado
+CREATE TABLE expedientes_examenes(
+    id_examen_paciente INT PRIMARY KEY AUTO_INCREMENT,
+    fecha DATE NOT NULL,
+    expediente INT NOT NULL,
+    examen INT NOT NULL,
+    resultados TEXT,
+    CONSTRAINT fk_expediente_examenes FOREIGN KEY (expediente)
+        REFERENCES expedientes_pacientes(id_expediente)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    CONSTRAINT fk_expediente_examenes FOREIGN KEY (examen)
+        REFERENCES examenes(id_examen)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+)
+
+-- se debe tener un control de los medicamentos que se tienen
+CREATE TABLE medicamentos(
+    id_medicamento INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT NOT NULL,
+    precio DECIMAL(10,2) NOT NULL
+)
+
+-- tabla para relacionar los medicamentos con los expedientes de los pacientes
+CREATE TABLE medicamentos_expedientes(
+    id_medicamento_paciente INT PRIMARY KEY AUTO_INCREMENT,
+    expediente INT NOT NULL,
+    medicamento INT NOT NULL,
+    fecha DATE NOT NULL,
+    CONSTRAINT fk_medicamento_expediente FOREIGN KEY (expediente)
+        REFERENCES expedientes_pacientes(id_expediente)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    CONSTRAINT fk_medicamento_expediente FOREIGN KEY (medicamento)
+        REFERENCES medicamentos(id_medicamento)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+)
+
+-- tabla para relacionar los medicamentos con los empleados que los recetan solo pueden ser doctores y hay ocaciones en los que un doctor no tiene el permiso(debido a su rol para recetar cierto medicamento) por ejemlo un medico general no va a recetar medicamentos especifoicos para el corazon
+
+CREATE TABLE medicamentos_doctores(
+    id_medicamento_doctor INT PRIMARY KEY AUTO_INCREMENT,
+    doctor INT NOT NULL,
+    medicamento INT NOT NULL,
+    CONSTRAINT fk_medicamento_doctor FOREIGN KEY (doctor)
+        REFERENCES empleado(id_empleado)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    CONSTRAINT fk_medicamento_doctor FOREIGN KEY (medicamento)
+        REFERENCES medicamentos(id_medicamento)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE 
+)
+

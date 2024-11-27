@@ -15,13 +15,15 @@ $user_id = $_SESSION['user_id'];
 
 
 
+
+
 // Conectar a la base de datos y obtener los usuarios
 $database = new Database();
 $conn = $database->getConnection();
 
 // Usando prepared statements para evitar inyección SQL
-$usuarios_query = "SELECT e.nombre as nombre, d.nombre AS departamento, r.nombre AS rol FROM empleado AS e JOIN departamento AS d on e.departamento = d.id_departamento JOIN rol AS r on e.rol = r.id_rol WHERE usuario = :user_id";
-$stmt = $conn->prepare($usuarios_query);
+$usuarios_query = "SELECT e.nombre as nombre, d.nombre AS departamento, r.nombre AS rol, r.id_rol AS id_rol FROM empleado AS e JOIN departamento AS d on e.departamento = d.id_departamento JOIN rol AS r on e.rol = r.id_rol WHERE usuario = :user_id";
+    $stmt = $conn->prepare($usuarios_query);
 // if ($conn) {
 //     echo "Conexión a la base de datos exitosa.";
 // } else {
@@ -32,6 +34,7 @@ $stmt->execute();
 
 $usuarios_result = $stmt->fetch(PDO::FETCH_ASSOC); // Obtener todos los resultados
 // var_dump( $usuarios_result);
+$user_role = $usuarios_result['id_rol'];
 ?>
 
 <!DOCTYPE html>
@@ -125,71 +128,28 @@ $usuarios_result = $stmt->fetch(PDO::FETCH_ASSOC); // Obtener todos los resultad
 
     <!-- Sidebar -->
     <aside :class="sidebarOpen ? 'w-1/6' : 'w-28'" class="relative bg-slate-200 h-screen p-5 pt-20 transition-all duration-700 flex flex-col space-y-4">
-        <!-- Botón de alternancia con posición dinámica y animación Lottie -->
-        <div :class="sidebarOpen ? 'left-[15.3vw]' : 'left-[6.2vw]'"
-            class="absolute top-15 w-10 h-10 bg-white cursor-pointer flex items-center justify-center 
-                    rounded-lg transition-all duration-500 ease-in-out 
-                    hover:bg-gradient-to-r hover:from-lime-400 hover:via-emerald-400 hover:to-teal-400"
-            @click="toggleSidebar"
-            @mouseenter="playToggleAnimation(sidebarOpen ? 4500 : 4600)"
-            @mouseleave="stopToggleAnimation()">
-            <div id="lottieToggleButton"></div>
-        </div>
-
-        <!-- Título de la sección Principal -->
-        <h2 class="font-bold font-serif text-left ml-2 text-gray-800 text-lg " x-show="sidebarOpen" x-transition>
-            Principal
-        </h2>
-
-        <!-- Botón de Página de Inicio -->
-        <div class="section-button flex items-center space-x-2 py-2 px-2 rounded-md transition-all duration-300 group
-                    hover:bg-gradient-to-r from-lime-400 via-emerald-400 to-teal-400, !sidebarOpen ? 'w-fit justify-center' : '']"
-            :class="!sidebarOpen ? 'justify-center' : ''"
-            @mouseenter="playAnimation('homepageAnimation')" 
-            @mouseleave="stopAnimation('homepageAnimation')">
-            <div class="lottie-animation" id="homepageAnimation"></div>
-            <span class="font-bold text-black group-hover:text-white transition-colors duration-300" 
-                x-show="sidebarOpen" x-transition>Página de Inicio</span>
-        </div>
-
-        <!-- Botón de Registro Médico -->
+        <?php 
+        $stmt = $conn->prepare("
+        SELECT m.nombre, m.descripcion
+        FROM modulos m
+        JOIN modulo_rol mr ON m.id_modulo = mr.id_modulo
+        WHERE mr.id_rol = :role
+    ");
+    $stmt->bindParam(':role', $user_role);
+    $stmt->execute();
+    $modules = $stmt->fetchAll(PDO::FETCH_ASSOC);   
+    ?>
+    <?php foreach ($modules as $module): ?>
         <div class="section-button flex items-center space-x-2 py-2 px-3 rounded-md transition-all duration-300 group
-                    hover:bg-gradient-to-r from-lime-400 via-emerald-400 to-teal-400, !sidebarOpen ? 'w-fit justify-center' : '']"
-            :class="!sidebarOpen ? 'justify-center' : ''"
-            @mouseenter="playAnimation('documentAnimation')" 
-            @mouseleave="stopAnimation('documentAnimation')">
-            <div class="lottie-animation" id="documentAnimation"></div>
+                    hover:bg-gradient-to-r from-lime-400 via-emerald-400 to-teal-400"
+            :class="!sidebarOpen ? 'justify-center' : ''">
             <span class="font-bold text-black group-hover:text-white transition-colors duration-300" 
-                x-show="sidebarOpen" x-transition>Registro Médico</span>
+                x-show="sidebarOpen" x-transition>
+                <?php echo htmlspecialchars($module['nombre']); ?>
+            </span>
         </div>
-
-        <!-- Título de la sección Configuración -->
-        <h2 class="font-bold font-serif text-left ml-2 text-gray-800 text-lg" x-show="sidebarOpen" x-transition>
-            Configuración
-        </h2>
-
-        <!-- Botón de Notificaciones -->
-        <div class="section-button flex items-center space-x-2 py-2 px-3 rounded-md transition-all duration-300 group
-                    hover:bg-gradient-to-r from-lime-400 via-emerald-400 to-teal-400, !sidebarOpen ? 'w-fit justify-center' : '']"
-            :class="!sidebarOpen ? 'justify-center' : ''"
-            @mouseenter="playAnimation('notificationAnimation')" 
-            @mouseleave="stopAnimation('notificationAnimation')">
-            <div class="lottie-animation" id="notificationAnimation"></div>
-            <span class="font-bold text-black group-hover:text-white transition-colors duration-300" 
-                x-show="sidebarOpen" x-transition>Notificaciones</span>
-        </div>
-
-        <!-- Botón de Configuración -->
-        <div class="section-button flex items-center space-x-2 py-2 px-3 rounded-md transition-all duration-300 group
-                    hover:bg-gradient-to-r from-lime-400 via-emerald-400 to-teal-400, !sidebarOpen ? 'w-fit justify-center' : '']"
-            :class="!sidebarOpen ? 'justify-center' : ''"
-            @mouseenter="playAnimation('configurationAnimation')" 
-            @mouseleave="stopAnimation('configurationAnimation')">
-            <div class="lottie-animation" id="configurationAnimation"></div>
-            <span class="font-bold text-black group-hover:text-white transition-colors duration-300" 
-                x-show="sidebarOpen" x-transition>Configuración</span>
-        </div>
-    </aside>
+    <?php endforeach; ?>
+</aside>
 
     <!-- Contenido Principal -->
     <div class="flex-1 p-5 space-y-5">

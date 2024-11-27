@@ -10,7 +10,7 @@ insert into departamento (id_departamento, nombre) values
 (3,'Inventario'),
 (4,'Medicina General'),
 (5,'Laboratorios'),
-(6'Cirugia'),
+(6,'Cirugia'),
 (7,'Enfermeria'),
 (8,'Cardiologia'),
 (9,'Neurologia'),
@@ -30,8 +30,8 @@ insert into departamento (id_departamento, nombre) values
 -- Tabla Usuario
 CREATE TABLE usuario (
     id_usuario INT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(50) NOT NULL,
-    contra VARCHAR(255) NOT NULL,
+    username VARCHAR(10) NOT NULL,
+    contra VARCHAR(10) NOT NULL,
     CONSTRAINT uk_usuario_username UNIQUE (username)
 );
 
@@ -49,7 +49,7 @@ CREATE TABLE permisos (
 
 -- Tabla Rol
 CREATE TABLE rol (
-    id_rol INT PRIMARY KEY,
+    id_rol VARCHAR(5) PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
     tipo ENUM('ADMINISTRADOR', 'NORMAL') NOT NULL,
     departamento INT NOT NULL,
@@ -61,12 +61,23 @@ CREATE TABLE rol (
 );
 -- para el departamento de direccion
 insert into rol (id_rol, nombre, tipo, departamento) values
-('D1','Director', 'ADMINISTRADOR', 1),
-('SD1','Sub Director', 'ADMINISTRADOR', 1), -- tiene todos los permisos
-('SC1','Secretario', 'NORMAL', 1),
-('AS1','Asistente', 'NORMAL', 1);
+('DRN1','Director', 'ADMINISTRADOR', 1),
+('DRN2','Sub Director', 'ADMINISTRADOR', 1),
+('DRN3','Secretario', 'NORMAL', 1),
+('DRN4','Asistente', 'NORMAL', 1);
 
--- para el departamento de medicina general
+insert into rol (id_rol, nombre, tipo, departamento) values
+('RHS1','Jefe de Departamento', 'ADMINISTRADOR', 2),
+('RHS2','Especialista en Nóminas', 'NORMAL', 2),
+('RHS3','Atencion a Empleados', 'NORMAL', 2),
+('RHS4','Reclutador', 'NORMAL', 2),
+('RHS5','Asistente', 'NORMAL', 2);
+
+insert into rol (id_rol, nombre, tipo, departamento) values
+('IN1','Encargado(a) de Almacén', 'ADMINISTRADOR', 3),
+('IN2','Coordinador(a) de Abastecimiento', 'NORMAL', 3),
+('IN3','Técnico(a) de Logística', 'NORMAL', 3);
+
 insert into rol (id_rol, nombre, tipo, departamento) values
 ('MG1','Jefe de Departamento', 'ADMINISTRADOR', 4),
 ('MG2','Médico(a) General', 'ADMINISTRADOR', 4),
@@ -76,14 +87,12 @@ insert into rol (id_rol, nombre, tipo, departamento) values
 ('MG6','Auxiliar de Enfermeria', 'NORMAL', 4),
 ('MG7','Encargado de Inventario', 'NORMAL', 4);
 
--- para el departamento de laboratorios
 insert into rol (id_rol, nombre, tipo, departamento) values
 ('LB1','Jefe de Laboratorio', 'ADMINISTRADOR', 5),
 ('LB2','Técnico(a) de Laboratorio', 'NORMAL', 5),
 ('LB3','Asistente de Laboratorio', 'NORMAL', 5),
 ('LB4','Encargado de Inventario', 'NORMAL', 5);
 
--- para el departamento de cirugia
 insert into rol (id_rol, nombre, tipo, departamento) values
 ('CG1','Jefe de Departamento', 'ADMINISTRADOR', 6),
 ('CG2','Cirujano(a)', 'ADMINISTRADOR', 6),
@@ -94,14 +103,12 @@ insert into rol (id_rol, nombre, tipo, departamento) values
 ('CG7','Auxiliar de Enfermeria', 'NORMAL', 6),
 ('CG8','Encargado de Inventario', 'NORMAL', 6);
 
--- para el departamento de enfermeria
 insert into rol (id_rol, nombre, tipo, departamento) values
 ('EN1','Director(a) de Enfermería', 'ADMINISTRADOR', 7),
 ('EN2','Subdirector(a) de Enfermería', 'ADMINISTRADOR', 7),
 ('EN3','Asistente Administrativo de Enfermería', 'NORMAL', 7),
 ('EN4','Recepcionista de Enfermeria', 'NORMAL', 7);
 
--- para el departamento de cardiologia
 insert into rol (id_rol, nombre, tipo, departamento) values
 ('CD1','Jefe de Departamento', 'ADMINISTRADOR', 8),
 ('CD2','Cardiologo(a)', 'ADMINISTRADOR', 8),
@@ -111,7 +118,6 @@ insert into rol (id_rol, nombre, tipo, departamento) values
 ('CD6','Auxiliar de Enfermeria', 'NORMAL', 8),
 ('CD7','Encargado de Inventario', 'NORMAL', 8);
 
--- para el departamento de neurologia
 insert into rol (id_rol, nombre, tipo, departamento) values
 ('NR1','Jefe de Departamento', 'ADMINISTRADOR', 9),
 ('NR2','Neurologo(a)', 'ADMINISTRADOR', 9),
@@ -121,7 +127,6 @@ insert into rol (id_rol, nombre, tipo, departamento) values
 ('NR6','Auxiliar de Enfermeria', 'NORMAL', 9),
 ('NR7','Encargado de Inventario', 'NORMAL', 9);
 
--- para el departamento de ginecologia
 insert into rol (id_rol, nombre, tipo, departamento) values
 ('GN1','Jefe de Departamento', 'ADMINISTRADOR', 10),
 ('GN2','Ginecologo(a)', 'ADMINISTRADOR', 10),
@@ -131,7 +136,6 @@ insert into rol (id_rol, nombre, tipo, departamento) values
 ('GN6','Auxiliar de Enfermeria', 'NORMAL', 10),
 ('GN7','Encargado de Inventario', 'NORMAL', 10);
 
--- para el departamento de pediatra
 insert into rol (id_rol, nombre, tipo, departamento) values
 ('PD1','Jefe de Departamento', 'ADMINISTRADOR', 11),
 ('PD2','Pediatra', 'ADMINISTRADOR', 11),
@@ -141,7 +145,6 @@ insert into rol (id_rol, nombre, tipo, departamento) values
 ('PD6','Auxiliar de Enfermeria', 'NORMAL', 11),
 ('PD7','Encargado de Inventario', 'NORMAL', 11);
 
--- para el departamento de oftalmologia
 insert into rol (id_rol, nombre, tipo, departamento) values
 ('OF1','Jefe de Departamento', 'ADMINISTRADOR', 12),
 ('OF2','Oftalmologo(a)', 'ADMINISTRADOR', 12),
@@ -151,7 +154,6 @@ insert into rol (id_rol, nombre, tipo, departamento) values
 ('OF6','Auxiliar de Enfermeria', 'NORMAL', 12),
 ('OF7','Encargado de Inventario', 'NORMAL', 12);
 
--- para el departamento de ortopedia
 insert into rol (id_rol, nombre, tipo, departamento) values
 ('OR1','Jefe de Departamento', 'ADMINISTRADOR', 13),
 ('OR2','Ortopedista', 'ADMINISTRADOR', 13),
@@ -161,7 +163,6 @@ insert into rol (id_rol, nombre, tipo, departamento) values
 ('OR6','Auxiliar de Enfermeria', 'NORMAL', 13),
 ('OR7','Encargado de Inventario', 'NORMAL', 13);
 
--- para el departamento de urologia
 insert into rol (id_rol, nombre, tipo, departamento) values
 ('UR1','Jefe de Departamento', 'ADMINISTRADOR', 14),
 ('UR2','Urologo(a)', 'ADMINISTRADOR', 14),
@@ -171,7 +172,6 @@ insert into rol (id_rol, nombre, tipo, departamento) values
 ('UR6','Auxiliar de Enfermeria', 'NORMAL', 14),
 ('UR7','Encargado de Inventario', 'NORMAL', 14);
 
--- para el departamento de traumatologia
 insert into rol (id_rol, nombre, tipo, departamento) values
 ('TR1','Jefe de Departamento', 'ADMINISTRADOR', 15),
 ('TR2','Traumatologo(a)', 'ADMINISTRADOR', 15),
@@ -181,7 +181,6 @@ insert into rol (id_rol, nombre, tipo, departamento) values
 ('TR6','Auxiliar de Enfermeria', 'NORMAL', 15),
 ('TR7','Encargado de Inventario', 'NORMAL', 15);
 
--- para el departamento de rehabilitacion
 insert into rol (id_rol, nombre, tipo, departamento) values
 ('RH1','Jefe de Departamento', 'ADMINISTRADOR', 16),
 ('RH2','Fisioterapeuta', 'ADMINISTRADOR', 16),
@@ -191,7 +190,6 @@ insert into rol (id_rol, nombre, tipo, departamento) values
 ('RH6','Auxiliar de Enfermeria', 'NORMAL', 16),
 ('RH7','Encargado de Inventario', 'NORMAL', 16);
 
--- para el departamento de nutricion
 insert into rol (id_rol, nombre, tipo, departamento) values
 ('NT1','Jefe de Departamento', 'ADMINISTRADOR', 17),
 ('NT2','Nutriologo(a)', 'ADMINISTRADOR', 17),
@@ -201,7 +199,6 @@ insert into rol (id_rol, nombre, tipo, departamento) values
 ('NT6','Auxiliar de Enfermeria', 'NORMAL', 17),
 ('NT7','Encargado de Inventario', 'NORMAL', 17);
 
--- para el departamento de psiquiatria
 insert into rol (id_rol, nombre, tipo, departamento) values
 ('PS1','Jefe de Departamento', 'ADMINISTRADOR', 18),
 ('PS2','Psiquiatra', 'ADMINISTRADOR', 18),
@@ -211,7 +208,6 @@ insert into rol (id_rol, nombre, tipo, departamento) values
 ('PS6','Auxiliar de Enfermeria', 'NORMAL', 18),
 ('PS7','Encargado de Inventario', 'NORMAL', 18);
 
--- para el departamento de dermatologia
 insert into rol (id_rol, nombre, tipo, departamento) values
 ('DR1','Jefe de Departamento', 'ADMINISTRADOR', 19),
 ('DR2','Dermatologo(a)', 'ADMINISTRADOR', 19),
@@ -221,7 +217,6 @@ insert into rol (id_rol, nombre, tipo, departamento) values
 ('DR6','Auxiliar de Enfermeria', 'NORMAL', 19),
 ('DR7','Encargado de Inventario', 'NORMAL', 19);
 
--- para el departamento de odontologia
 insert into rol (id_rol, nombre, tipo, departamento) values
 ('OD1','Jefe de Departamento', 'ADMINISTRADOR', 20),
 ('OD2','Odontologo(a)', 'ADMINISTRADOR', 20),
@@ -231,7 +226,6 @@ insert into rol (id_rol, nombre, tipo, departamento) values
 ('OD6','Auxiliar de Enfermeria', 'NORMAL', 20),
 ('OD7','Encargado de Inventario', 'NORMAL', 20);
 
--- para el departamento de emergencias
 insert into rol (id_rol, nombre, tipo, departamento) values
 ('EM1','Jefe de Departamento', 'ADMINISTRADOR', 21),
 ('EM2','Médico de Emergencias', 'ADMINISTRADOR', 21),
@@ -259,13 +253,33 @@ CREATE TABLE rol_permisos (
         ON UPDATE CASCADE
 );
 
+-- crear tabla para turnos, hay 3 turnos 7am-3pm, 3pm-11pm, 11pm-7am
+CREATE TABLE turnos (
+    id_turno INT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    hora_inicio TIME NOT NULL,
+    hora_fin TIME NOT NULL
+);
+INSERT INTO turnos (id_turno, nombre, hora_inicio, hora_fin) VALUES
+(1, 'Administrativo', '08:00:00', '17:00:00'),
+(2, '7am-3pm', '07:00:00', '15:00:00'),
+(3, '3pm-11pm', '15:00:00', '23:00:00'),
+(4, '11pm-7am', '23:00:00', '07:00:00');
+
 -- Tabla Empleado
 CREATE TABLE empleado (
     id_empleado INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
     departamento INT NOT NULL,
-    usuario INT NOT NULL UNIQUE,
-    rol INT NOT NULL,
+    usuario INT UNIQUE,
+    rol VARCHAR(5) NOT NULL,
+    fecha_contratacion DATE NOT NULL DEFAULT CURRENT_DATE,
+    turno INT,
+    num_empleado VARCHAR(6) NOT NULL,
+    CONSTRAINT fk_empleado_turno FOREIGN KEY (turno)
+        REFERENCES turnos(id_turno)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE,
     CONSTRAINT fk_empleado_departamento FOREIGN KEY (departamento)
         REFERENCES departamento(id_departamento)
         ON DELETE RESTRICT
@@ -279,103 +293,1144 @@ CREATE TABLE empleado (
         ON DELETE RESTRICT
         ON UPDATE CASCADE
 );
-insert into empleado (nombre, departamento, usuario, rol) values ('Juan pruebas', 1,  1, 'D1');
+insert into empleado (nombre, departamento, usuario, rol, turno) values ('Juan pruebas', 1,  1, 'DRN1', 1);
 
 
-CREATE TABLE pacientes(){
+DELIMITER //
+CREATE FUNCTION generarIdEmpleado() RETURNS VARCHAR(6)
+BEGIN
+    DECLARE nuevo_id VARCHAR(6);
+    DECLARE existe INT;
+    REPEAT
+        SET nuevo_id = LPAD(CONV(FLOOR(RAND() * 1000000), 10, 36), 6, '0');
+        SELECT COUNT(*) INTO existe FROM empleado WHERE num_empleado = nuevo_id;
+    UNTIL existe = 0 END REPEAT;
+    RETURN nuevo_id;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE registrarEmpleado (
+    IN nombre VARCHAR(100),
+    IN departamento INT,
+    IN usuario VARCHAR(10),
+    IN contra VARCHAR(10),
+    IN rol VARCHAR(5),
+    IN turno INT
+)
+BEGIN
+    DECLARE id_usuario INT;
+    DECLARE id_empleado INT;
+    DECLARE num_empleado VARCHAR(6);
+    SET num_empleado = generarIdEmpleado();
+    INSERT INTO usuario (username, contra) VALUES (usuario, contra);
+    INSERT INTO empleado (nombre, departamento, usuario, rol, turno, num_empleado) VALUES 
+    (nombre, departamento, LAST_INSERT_ID(), rol, turno, num_empleado);
+END //
+DELIMITER ;
+
+
+-- ahora tengo que crear una tabla llamada modulos que va a tener los modulos que se van a mostrar en el menu, que son: Gestion Pacientes, Finanzas, Inventario, Recursos Humanos, Laboratorios
+CREATE TABLE modulos (
+    id_modulo INT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT
+);  
+INSERT INTO modulos (id_modulo, nombre, descripcion) VALUES
+(1, 'Gestion Pacientes', 'Modulo para gestionar los pacientes'),
+(2, 'Finanzas', 'Modulo para gestionar las finanzas'),
+(3, 'Inventario', 'Modulo para gestionar el inventario'),
+(4, 'Recursos Humanos', 'Modulo para gestionar los recursos humanos'),
+(5, 'Laboratorios', 'Modulo para gestionar los laboratorios');
+
+--ahora tengo que relacionar los modulos con los roles para indicar que modulo puede ver cada rol
+CREATE TABLE modulo_rol (
+    id_modulo INT NOT NULL,
+    id_rol VARCHAR(5) NOT NULL,
+    PRIMARY KEY (id_modulo, id_rol),
+    FOREIGN KEY (id_modulo) REFERENCES modulos(id_modulo) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (id_rol) REFERENCES rol(id_rol) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+--el director y subdirector del departamento de direccion pueden ver todos los modulos
+INSERT INTO modulo_rol (id_modulo, id_rol) VALUES
+(1, 'DRN1'),
+(2, 'DRN1'),
+(3, 'DRN1'),
+(4, 'DRN1'),
+(5, 'DRN1'),
+(1, 'DRN2'),
+(2, 'DRN2'),
+(3, 'DRN2'),
+(4, 'DRN2'),
+(5, 'DRN2');
+
+-- el asistente y secretario solo pueden ver el modulo de finanzas, recursos humanos, inventario
+INSERT INTO modulo_rol (id_modulo, id_rol) VALUES
+(2, 'DRN3'),
+(3, 'DRN3'),
+(4, 'DRN3'),
+(2, 'DRN4'),
+(3, 'DRN4'),
+(4, 'DRN4');
+
+-- el jefe de departamento de recursos humanos solo puede ver el modulo de recursos humanos y finanzas y el resto solo el de recursos humanos
+INSERT INTO modulo_rol (id_modulo, id_rol) VALUES
+(2, 'RHS1'),
+(4, 'RHS1'),
+(2, 'RHS2'),
+(2, 'RHS3'),
+(2, 'RHS4'),
+(2, 'RHS5');
+
+-- el jefe de departamento de inventario solo puede ver el modulo de inventario y finanzas y el resto solo el de inventario
+INSERT INTO modulo_rol (id_modulo, id_rol) VALUES
+(3, 'IN1'),
+(4, 'IN1'),
+(3, 'IN2'),
+(3, 'IN3');
+
+-- el jefe de departamento de medicina general puede ver todos excepto,  el medico puede ver el de gestio de pacientes, Laboratorios e Inventario, la de recepcionesta solo ve el de gestion de pacientes, el enfermero ve el de gestion de pacientes y laboratorios, el axuliar de enfermeria ve el de gestion de pacientes y el encargado de inventario ve el de inventario
+INSERT INTO modulo_rol (id_modulo, id_rol) VALUES
+(1, 'MG1'),
+(2, 'MG1'),
+(3, 'MG1'),
+(4, 'MG1'),
+(5, 'MG1'),
+(1, 'MG2'),
+(2, 'MG2'),
+(3, 'MG2'),
+(5, 'MG2'),
+(1, 'MG3'),
+(1, 'MG4'),
+(5, 'MG4'),
+(1, 'MG5'),
+(5, 'MG5'),
+(3, 'MG5'),
+(1, 'MG6'),
+(5, 'MG6'),
+(3, 'MG7');
+
+-- el jefe de departamento de laboratorios puede ver todos, el tecnico de laboratorio puede ver el de Laboratorios e Inventario, la de asistente de laboratorio solo ve el de Laboratorio, el encargado de inventario ve el de inventario
+INSERT INTO modulo_rol (id_modulo, id_rol) VALUES
+(1, 'LB1'),
+(2, 'LB1'),
+(3, 'LB1'),
+(4, 'LB1'),
+(5, 'LB1'),
+(3, 'LB2'),
+(5, 'LB2'),
+(5, 'LB3'),
+(3, 'LB4');
+
+
+-- con cirugia pasa lo mismo que con medicina general
+INSERT INTO modulo_rol (id_modulo, id_rol) VALUES
+(1, 'CG1'),
+(2, 'CG1'),
+(3, 'CG1'),
+(4, 'CG1'),
+(5, 'CG1'),
+(1, 'CG2'),
+(2, 'CG2'),
+(3, 'CG2'),
+(5, 'CG2'),
+(1, 'CG3'),
+(1, 'CG4'),
+(5, 'CG4'),
+(1, 'CG5'),
+(5, 'CG5'),
+(3, 'CG5'),
+(1, 'CG6'),
+(5, 'CG6'),
+(3, 'CG7');
+
+-- el director y subdrictor de enfermeria pueden ver todos, el asistente solo ve el de gestion de pacientes y el recepcionista solo ve el de gestion de pacientes
+INSERT INTO modulo_rol (id_modulo, id_rol) VALUES
+(1, 'EN1'),
+(2, 'EN1'),
+(3, 'EN1'),
+(4, 'EN1'),
+(5, 'EN1'),
+(1, 'EN2'),
+(2, 'EN2'),
+(3, 'EN2'),
+(4, 'EN2'),
+(5, 'EN2'),
+(1, 'EN3'),
+(1, 'EN4');
+
+--con el resto de departamentos pasa lo mismo que con medicina general y cirugia
+INSERT INTO modulo_rol (id_modulo, id_rol) VALUES
+(1, 'CD1'),
+(2, 'CD1'),
+(3, 'CD1'),
+(4, 'CD1'),
+(5, 'CD1'),
+(1, 'CD2'),
+(2, 'CD2'),
+(3, 'CD2'),
+(5, 'CD2'),
+(1, 'CD3'),
+(1, 'CD4'),
+(5, 'CD4'),
+(1, 'CD5'),
+(5, 'CD5'),
+(3, 'CD5'),
+(1, 'CD6'),
+(5, 'CD6'),
+(3, 'CD7');
+
+INSERT INTO modulo_rol (id_modulo, id_rol) VALUES
+(1, 'NR1'),
+(2, 'NR1'),
+(3, 'NR1'),
+(4, 'NR1'),
+(5, 'NR1'),
+(1, 'NR2'),
+(2, 'NR2'),
+(3, 'NR2'),
+(5, 'NR2'),
+(1, 'NR3'),
+(1, 'NR4'),
+(5, 'NR4'),
+(1, 'NR5'),
+(5, 'NR5'),
+(3, 'NR5'),
+(1, 'NR6'),
+(5, 'NR6'),
+(3, 'NR7');
+
+insert into modulo_rol (id_modulo, id_rol) values
+(1, 'GN1'),
+(2, 'GN1'),
+(3, 'GN1'),
+(4, 'GN1'),
+(5, 'GN1'),
+(1, 'GN2'),
+(2, 'GN2'),
+(3, 'GN2'),
+(5, 'GN2'),
+(1, 'GN3'),
+(1, 'GN4'),
+(5, 'GN4'),
+(1, 'GN5'),
+(5, 'GN5'),
+(3, 'GN5'),
+(1, 'GN6'),
+(5, 'GN6'),
+(3, 'GN7');
+
+insert into modulo_rol (id_modulo, id_rol) values
+(1, 'PD1'),
+(2, 'PD1'),
+(3, 'PD1'),
+(4, 'PD1'),
+(5, 'PD1'),
+(1, 'PD2'),
+(2, 'PD2'),
+(3, 'PD2'),
+(5, 'PD2'),
+(1, 'PD3'),
+(1, 'PD4'),
+(5, 'PD4'),
+(1, 'PD5'),
+(5, 'PD5'),
+(3, 'PD5'),
+(1, 'PD6'),
+(5, 'PD6'),
+(3, 'PD7');
+
+
+insert into modulo_rol (id_modulo, id_rol) values
+(1, 'OF1'),
+(2, 'OF1'),
+(3, 'OF1'),
+(4, 'OF1'),
+(5, 'OF1'),
+(1, 'OF2'),
+(2, 'OF2'),
+(3, 'OF2'),
+(5, 'OF2'),
+(1, 'OF3'),
+(1, 'OF4'),
+(5, 'OF4'),
+(1, 'OF5'),
+(5, 'OF5'),
+(3, 'OF5'),
+(1, 'OF6'),
+(5, 'OF6'),
+(3, 'OF7');
+
+insert into modulo_rol (id_modulo, id_rol) values
+(1, 'OR1'),
+(2, 'OR1'),
+(3, 'OR1'),
+(4, 'OR1'),
+(5, 'OR1'),
+(1, 'OR2'),
+(2, 'OR2'),
+(3, 'OR2'),
+(5, 'OR2'),
+(1, 'OR3'),
+(1, 'OR4'),
+(5, 'OR4'),
+(1, 'OR5'),
+(5, 'OR5'),
+(3, 'OR5'),
+(1, 'OR6'),
+(5, 'OR6'),
+(3, 'OR7');
+
+insert into modulo_rol (id_modulo, id_rol) values
+(1, 'UR1'),
+(2, 'UR1'),
+(3, 'UR1'),
+(4, 'UR1'),
+(5, 'UR1'),
+(1, 'UR2'),
+(2, 'UR2'),
+(3, 'UR2'),
+(5, 'UR2'),
+(1, 'UR3'),
+(1, 'UR4'),
+(5, 'UR4'),
+(1, 'UR5'),
+(5, 'UR5'),
+(3, 'UR5'),
+(1, 'UR6'),
+(5, 'UR6'),
+(3, 'UR7');
+
+insert into modulo_rol (id_modulo, id_rol) values
+(1, 'TR1'),
+(2, 'TR1'),
+(3, 'TR1'),
+(4, 'TR1'),
+(5, 'TR1'),
+(1, 'TR2'),
+(2, 'TR2'),
+(3, 'TR2'),
+(5, 'TR2'),
+(1, 'TR3'),
+(1, 'TR4'),
+(5, 'TR4'),
+(1, 'TR5'),
+(5, 'TR5'),
+(3, 'TR5'),
+(1, 'TR6'),
+(5, 'TR6'),
+(3, 'TR7');
+
+insert into modulo_rol (id_modulo, id_rol) values
+(1, 'RH1'),
+(2, 'RH1'),
+(3, 'RH1'),
+(4, 'RH1'),
+(5, 'RH1'),
+(1, 'RH2'),
+(2, 'RH2'),
+(3, 'RH2'),
+(5, 'RH2'),
+(1, 'RH3'),
+(1, 'RH4'),
+(5, 'RH4'),
+(1, 'RH5'),
+(5, 'RH5'),
+(3, 'RH5'),
+(1, 'RH6'),
+(5, 'RH6'),
+(3, 'RH7');
+
+insert into modulo_rol (id_modulo, id_rol) values
+(1, 'NT1'),
+(2, 'NT1'),
+(3, 'NT1'),
+(4, 'NT1'),
+(5, 'NT1'),
+(1, 'NT2'),
+(2, 'NT2'),
+(3, 'NT2'),
+(5, 'NT2'),
+(1, 'NT3'),
+(1, 'NT4'),
+(5, 'NT4'),
+(1, 'NT5'),
+(5, 'NT5'),
+(3, 'NT5'),
+(1, 'NT6'),
+(5, 'NT6'),
+(3, 'NT7');
+
+insert into modulo_rol (id_modulo, id_rol) values
+(1, 'PS1'),
+(2, 'PS1'),
+(3, 'PS1'),
+(4, 'PS1'),
+(5, 'PS1'),
+(1, 'PS2'),
+(2, 'PS2'),
+(3, 'PS2'),
+(5, 'PS2'),
+(1, 'PS3'),
+(1, 'PS4'),
+(5, 'PS4'),
+(1, 'PS5'),
+(5, 'PS5'),
+(3, 'PS5'),
+(1, 'PS6'),
+(5, 'PS6'),
+(3, 'PS7');
+
+insert into modulo_rol (id_modulo, id_rol) values
+(1, 'DR1'),
+(2, 'DR1'),
+(3, 'DR1'),
+(4, 'DR1'),
+(5, 'DR1'),
+(1, 'DR2'),
+(2, 'DR2'),
+(3, 'DR2'),
+(5, 'DR2'),
+(1, 'DR3'),
+(1, 'DR4'),
+(5, 'DR4'),
+(1, 'DR5'),
+(5, 'DR5'),
+(3, 'DR5'),
+(1, 'DR6'),
+(5, 'DR6'),
+(3, 'DR7');
+
+insert into modulo_rol (id_modulo, id_rol) values
+(1, 'OD1'),
+(2, 'OD1'),
+(3, 'OD1'),
+(4, 'OD1'),
+(5, 'OD1'),
+(1, 'OD2'),
+(2, 'OD2'),
+(3, 'OD2'),
+(5, 'OD2'),
+(1, 'OD3'),
+(1, 'OD4'),
+(5, 'OD4'),
+(1, 'OD5'),
+(5, 'OD5'),
+(3, 'OD5'),
+(1, 'OD6'),
+(5, 'OD6'),
+(3, 'OD7');
+
+insert into modulo_rol (id_modulo, id_rol) values
+(1, 'EM1'),
+(2, 'EM1'),
+(3, 'EM1'),
+(4, 'EM1'),
+(5, 'EM1'),
+(1, 'EM2'),
+(2, 'EM2'),
+(3, 'EM2'),
+(5, 'EM2'),
+(1, 'EM3'),
+(1, 'EM4'),
+(5, 'EM4'),
+(1, 'EM5'),
+(5, 'EM5'),
+(3, 'EM5'),
+(1, 'EM6'),
+(5, 'EM6'),
+(3, 'EM7');
+
+
+-- ahora quiero una tabla examenes que va a tener los examenes que se pueden realizar y sus precios
+create table examenes (
+    id_examen INT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT NOT NULL,
+    precio DECIMAL(10,2) NOT NULL
+);
+
+-- ahora quiero una llenar esta tabla con los examenes que se pueden realizar
+insert into examenes (id_examen, nombre, descripcion, precio) values
+(1, 'Hemograma Completo', 'Examen de sangre para evaluar la salud general y detectar una variedad de trastornos', 100.00),
+(2, 'Prueba de Glucosa en Ayunas', 'Examen de sangre para medir los niveles de glucosa después de un período de ayuno', 75.00),
+(3, 'Perfil Lipídico', 'Examen de sangre para medir los niveles de colesterol y triglicéridos', 125.00),
+(4, 'Monitorización Ambulatoria de la Presión Arterial', 'Examen para medir la presión arterial durante 24 horas', 25.00),
+(5, 'Examen de Agudeza Visual', 'Examen para evaluar la claridad de la visión', 150.00),
+(6, 'Audiometría', 'Examen para evaluar la capacidad auditiva', 200.00),
+(7, 'Electrocardiograma (ECG)', 'Examen para registrar la actividad eléctrica del corazón', 300.00),
+(8, 'Espirometría', 'Examen para medir la función pulmonar', 250.00),
+(9, 'Prueba de Función Hepática', 'Examen de sangre para evaluar la función del hígado', 275.00),
+(10, 'Prueba de Función Renal', 'Examen de sangre para evaluar la función de los riñones', 225.00),
+(11, 'Prueba de TSH (Hormona Estimulante de la Tiroides)', 'Examen de sangre para evaluar la función de la tiroides', 175.00),
+(12, 'Hemograma Completo con Recuento Diferencial', 'Incluye el conteo y la proporción de diferentes tipos de glóbulos blancos', 120.00),
+(13, 'Curva de Tolerancia a la Glucosa', 'Evalúa cómo el cuerpo maneja la glucosa con varias mediciones después de una carga de glucosa', 130.00),
+(14, 'Lipoproteínas de Alta Densidad (HDL)', 'Colesterol "bueno" para evaluar el riesgo cardiovascular', 140.00),
+(15, 'Lipoproteínas de Baja Densidad (LDL)', 'Colesterol "malo" relacionado con enfermedades cardíacas', 150.00),
+(16, 'Triglicéridos', 'Niveles de grasa en la sangre como parte del perfil lipídico', 110.00),
+(17, 'Proteína C Reactiva (PCR)', 'Detecta inflamación en el cuerpo, relacionada con enfermedades cardíacas o infecciones', 160.00),
+(18, 'Troponina', 'Marcador específico de daño cardíaco, usado en el diagnóstico de infartos', 170.00),
+(19, 'Prueba de Dímero-D', 'Evalúa la probabilidad de trombosis o embolia pulmonar', 180.00),
+(20, 'Ecocardiograma Doppler', 'Ultrasonido del corazón para medir el flujo sanguíneo y las válvulas cardíacas', 350.00),
+(21, 'Prueba de Esfuerzo Cardiovascular (Prueba de la Caminadora)', 'Evalúa la función cardíaca bajo estrés físico', 400.00),
+(22, 'Gasometría Arterial', 'Mide los niveles de oxígeno, dióxido de carbono y pH en sangre arterial', 190.00),
+(23, 'Test de Coombs Directo', 'Detecta anticuerpos adheridos a glóbulos rojos, común en anemia hemolítica', 200.00),
+(24, 'Test de Coombs Indirecto', 'Detecta anticuerpos en el suero relacionados con incompatibilidades sanguíneas', 210.00),
+(25, 'Prueba de Creatinina en Suero', 'Mide la función renal mediante los niveles de creatinina', 220.00),
+(26, 'Prueba de Urea en Sangre', 'Evalúa la función renal y la eliminación de productos de desecho', 230.00),
+(27, 'Microalbuminuria', 'Mide pequeñas cantidades de albúmina en orina, útil para detectar daño renal temprano', 240.00),
+(28, 'Prueba de Bilirrubina (Directa e Indirecta)', 'Evalúa la función hepática y trastornos como la ictericia', 250.00),
+(29, 'Fosfatasa Alcalina (ALP)', 'Mide la función hepática y ósea', 260.00),
+(30, 'Alanina Aminotransferasa (ALT)', 'Enzima hepática para detectar daño en el hígado', 270.00),
+(31, 'Aspartato Aminotransferasa (AST)', 'Otra enzima hepática relacionada con la función hepática', 280.00),
+(32, 'Factor Reumatoide (FR)', 'Detecta trastornos autoinmunes como artritis reumatoide', 290.00),
+(33, 'Prueba de ANA (Anticuerpos Antinucleares)', 'Indica trastornos autoinmunes como lupus', 300.00),
+(34, 'Velocidad de Sedimentación Globular (VSG)', 'Evalúa inflamación en el cuerpo', 310.00),
+(35, 'Espirometría Forzada', 'Mide la capacidad pulmonar y el flujo aéreo', 320.00),
+(36, 'Electromiografía (EMG)', 'Evalúa la actividad eléctrica de los músculos', 330.00),
+(37, 'Electroencefalograma (EEG)', 'Registra la actividad eléctrica del cerebro, útil para epilepsia', 340.00),
+(38, 'Prueba de Antígeno Prostático Específico (PSA)', 'Detecta anomalías en la próstata', 350.00),
+(39, 'Prueba de Vitamina D', 'Evalúa los niveles de vitamina D para detectar deficiencia', 360.00),
+(40, 'Prueba de Ferritina', 'Mide las reservas de hierro en el cuerpo', 370.00),
+(41, 'Prueba de Hemoglobina Glicosilada (HbA1c)', 'Evalúa el control de la diabetes a largo plazo', 380.00),
+(42, 'Prueba de Hormona Antimülleriana (AMH)', 'Evalúa la reserva ovárica en mujeres', 390.00),
+(43, 'Prueba de Fibrinógeno', 'Mide un componente clave de la coagulación de la sangre', 400.00),
+(44, 'Test de Lactato en Sangre', 'Evalúa el metabolismo celular y el nivel de oxígeno en tejidos', 410.00),
+(45, 'Cultivo de Sangre', 'Detecta infecciones bacterianas o fúngicas en la sangre', 420.00),
+(46, 'Prueba de Calcio Ionizado', 'Mide la forma activa del calcio en la sangre', 430.00),
+(47, 'Prueba de Electrolitos (Na, K, Cl)', 'Evalúa el equilibrio de minerales y líquidos', 440.00),
+(48, 'Prueba de Hormona Paratiroidea (PTH)', 'Relacionada con trastornos del calcio y la tiroides', 450.00),
+(49, 'Prueba de Cortisol en Suero', 'Evalúa la función de las glándulas suprarrenales', 460.00),
+(50, 'Prueba de Aldosterona', 'Relacionada con el equilibrio de líquidos y la presión arterial', 470.00),
+(51, 'Prueba de Insulina en Sangre', 'Mide los niveles de insulina en sangre', 480.00),
+(52, 'Prueba de Progesterona', 'Hormona relacionada con la ovulación y el embarazo', 490.00),
+(53, 'Prueba de Prolactina', 'Hormona relacionada con la lactancia y la fertilidad', 500.00),
+(54, 'Prueba de Estradiol', 'Hormona relacionada con la fertilidad y el ciclo menstrual', 510.00),
+(55, 'Rayos X de Tórax', 'Imágenes del tórax para evaluar los pulmones y el corazón', 200.00),
+(56, 'Rayos X de Abdomen', 'Imágenes del abdomen para evaluar el hígado, riñones y otros órganos', 250.00),
+(57, 'Rayos X de Columna', 'Imágenes de la columna vertebral para evaluar lesiones o deformidades', 300.00),
+(58, 'Rayos X de Extremidades', 'Imágenes de brazos o piernas para evaluar lesiones o fracturas', 150.00),
+(59, 'Mamografía', 'Rayos X de las mamas para detectar cáncer de mama', 350.00),
+(60, 'Tomografía Computarizada (TAC)', 'Imágenes detalladas de órganos internos y tejidos', 400.00),
+(61, 'Resonancia Magnética (RM)', 'Imágenes detall adas de tejidos blandos y órganos internos', 500.00),
+(62, 'Rayos X de Cráneo', 'Imágenes del cráneo para evaluar lesiones o anomalías', 300.00),
+(63, 'Rayos X de Senos Paranasales', 'Imágenes de los senos paranasales para detectar infecciones o anomalías', 250.00),
+(64, 'Rayos X de Columna Cervical', 'Imágenes de la columna cervical para evaluar lesiones o deformidades', 350.00),
+(65, 'Rayos X de Columna Torácica', 'Imágenes de la columna torácica para evaluar lesiones o deformidades', 350.00),
+(66, 'Rayos X de Columna Lumbar', 'Imágenes de la columna lumbar para evaluar lesiones o deformidades', 350.00),
+(67, 'Rayos X de Pelvis', 'Imágenes de la pelvis para evaluar lesiones o anomalías', 300.00),
+(68, 'Rayos X de Cadera', 'Imágenes de la cadera para evaluar lesiones o anomalías', 300.00),
+(69, 'Rayos X de Rodilla', 'Imágenes de la rodilla para evaluar lesiones o anomalías', 250.00),
+(70, 'Rayos X de Tobillo', 'Imágenes del tobillo para evaluar lesiones o anomalías', 250.00),
+(71, 'Rayos X de Pie', 'Imágenes del pie para evaluar lesiones o anomalías', 250.00),
+(72, 'Rayos X de Mano', 'Imágenes de la mano para evaluar lesiones o anomalías', 250.00),
+(73, 'Rayos X de Muñeca', 'Imágenes de la muñeca para evaluar lesiones o anomalías', 250.00),
+(74, 'Rayos X de Codo', 'Imágenes del codo para evaluar lesiones o anomalías', 250.00),
+(75, 'Rayos X de Hombro', 'Imágenes del hombro para evaluar lesiones o anomalías', 300.00),
+(76, 'Rayos X de Abdomen Simple', 'Imágenes del abdomen para evaluar órganos y estructuras internas', 300.00);
+
+
+-- ahora tengo que especificar que roles de medicos pueden solicitar cierto examen,(los examenes solo lo pueden solicitar los medicos)
+CREATE TABLE medicos_examenes (
+    id_medico VARCHAR(5) NOT NULL,
+    id_examen INT NOT NULL,
+    PRIMARY KEY (id_medico, id_examen),
+    FOREIGN KEY (id_medico) REFERENCES rol(id_rol) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (id_examen) REFERENCES examenes(id_examen) ON DELETE CASCADE ON UPDATE CASCADE
+);
+-- insertar los medicos que pueden solicitar ciertos examenes 
+-- empecemos con los medicos generales, que no pueden solicitar examenes tan especificos sino mas bien examenes comunes o generales
+-- Insertar los exámenes más comunes que pueden ser solicitados por los médicos generales
+INSERT INTO medicos_examenes (id_medico, id_examen) VALUES
+('MG2', 1),   -- Hemograma Completo
+('MG2', 2),   -- Prueba de Glucosa en Ayunas
+('MG2', 3),   -- Perfil Lipídico
+('MG2', 7),   -- Electrocardiograma (ECG)
+('MG2', 9),   -- Prueba de Función Hepática
+('MG2', 10),  -- Prueba de Función Renal
+('MG2', 12),  -- Hemograma Completo con Recuento Diferencial
+('MG2', 13),  -- Curva de Tolerancia a la Glucosa
+('MG2', 16),  -- Triglicéridos
+('MG2', 17),  -- Proteína C Reactiva (PCR)
+('MG2', 25),  -- Prueba de Creatinina en Suero
+('MG2', 26),  -- Prueba de Urea en Sangre
+('MG2', 34),  -- Velocidad de Sedimentación Globular (VSG)
+('MG2', 41),  -- Prueba de Hemoglobina Glicosilada (HbA1c)
+('MG2', 47),  -- Prueba de Electrolitos (Na, K, Cl)
+('MG2', 55),  -- Rayos X de Tórax
+('MG2', 56),  -- Rayos X de Abdomen
+('MG2', 57),  -- Rayos X de Columna
+('MG2', 58),  -- Rayos X de Extremidades
+('MG2', 76);  -- Rayos X de Abdomen Simple
+
+-- ahora los examenes que puede realizar un cardiologo van a ser mas de los que puede solicitar un medico general
+INSERT INTO medicos_examenes (id_medico, id_examen) VALUES
+('CD2', 1),   -- Hemograma Completo
+('CD2', 2),   -- Prueba de Glucosa en Ayunas
+('CD2', 3),   -- Perfil Lipídico
+('CD2', 4),   -- Monitorización Ambulatoria de la Presión Arterial
+('CD2', 7),   -- Electrocardiograma (ECG)
+('CD2', 14),  -- Lipoproteínas de Alta Densidad (HDL)
+('CD2', 15),  -- Lipoproteínas de Baja Densidad (LDL)
+('CD2', 16),  -- Triglicéridos
+('CD2', 17),  -- Proteína C Reactiva (PCR)
+('CD2', 18),  -- Troponina
+('CD2', 19),  -- Prueba de Dímero-D
+('CD2', 20),  -- Ecocardiograma Doppler
+('CD2', 21),  -- Prueba de Esfuerzo Cardiovascular
+('CD2', 22),  -- Gasometría Arterial
+('CD2', 27),  -- Microalbuminuria
+('CD2', 34),  -- Velocidad de Sedimentación Globular (VSG)
+('CD2', 41),  -- Prueba de Hemoglobina Glicosilada (HbA1c)
+('CD2', 43),  -- Prueba de Fibrinógeno
+('CD2', 47),  -- Prueba de Electrolitos (Na, K, Cl)
+('CD2', 48),  -- Prueba de Hormona Paratiroidea (PTH)
+('CD2', 49),  -- Prueba de Cortisol en Suero
+('CD2', 50),  -- Prueba de Aldosterona
+('CD2', 55),  -- Rayos X de Tórax
+('CD2', 60),  -- Tomografía Computarizada (TAC)
+('CD2', 61);  -- Resonancia Magnética (RM)
+
+-- ahora los que puede realizar un neurologo
+INSERT INTO medicos_examenes (id_medico, id_examen) VALUES
+('NR2', 1),   -- Hemograma Completo
+('NR2', 2),   -- Prueba de Glucosa en Ayunas
+('NR2', 12),  -- Hemograma Completo con Recuento Diferencial
+('NR2', 25),  -- Prueba de Creatinina en Suero
+('NR2', 26),  -- Prueba de Urea en Sangre
+('NR2', 33),  -- Prueba de ANA (Anticuerpos Antinucleares)
+('NR2', 34),  -- Velocidad de Sedimentación Globular (VSG)
+('NR2', 36),  -- Electromiografía (EMG)
+('NR2', 37),  -- Electroencefalograma (EEG)
+('NR2', 40),  -- Prueba de Ferritina
+('NR2', 44),  -- Test de Lactato en Sangre
+('NR2', 47),  -- Prueba de Electrolitos (Na, K, Cl)
+('NR2', 60),  -- Tomografía Computarizada (TAC)
+('NR2', 61),  -- Resonancia Magnética (RM)
+('NR2', 62),  -- Rayos X de Cráneo
+('NR2', 64),  -- Rayos X de Columna Cervical
+('NR2', 65),  -- Rayos X de Columna Torácica
+('NR2', 66),  -- Rayos X de Columna Lumbar
+('NR2', 3),   -- Perfil Lipídico
+('NR2', 7),   -- Electrocardiograma (ECG)
+('NR2', 9),   -- Prueba de Función Hepática
+('NR2', 10),  -- Prueba de Función Renal
+('NR2', 13),  -- Curva de Tolerancia a la Glucosa
+('NR2', 16),  -- Triglicéridos
+('NR2', 17),  -- Proteína C Reactiva (PCR)
+('NR2', 41);  -- Prueba de Hemoglobina Glicosilada (HbA1c)
+
+
+-- ahora los que puede realizar un ginicologo
+INSERT INTO medicos_examenes (id_medico, id_examen) VALUES
+('GN2', 1),   -- Hemograma Completo
+('GN2', 2),   -- Prueba de Glucosa en Ayunas
+('GN2', 12),  -- Hemograma Completo con Recuento Diferencial
+('GN2', 25),  -- Prueba de Creatinina en Suero
+('GN2', 26),  -- Prueba de Urea en Sangre
+('GN2', 33),  -- Prueba de ANA (Anticuerpos Antinucleares)
+('GN2', 34),  -- Velocidad de Sedimentación Globular (VSG)
+('GN2', 36),  -- Electromiografía (EMG)
+('GN2', 37),  -- Electroencefalograma (EEG)
+('GN2', 40),  -- Prueba de Ferritina
+('GN2', 44),  -- Test de Lactato en Sangre
+('GN2', 47),  -- Prueba de Electrolitos (Na, K, Cl)
+('GN2', 60),  -- Tomografía Computarizada (TAC)
+('GN2', 61),  -- Resonancia Magnética (RM)
+('GN2', 62),  -- Rayos X de Cráneo
+('GN2', 64),  -- Rayos X de Columna Cervical
+('GN2', 65),  -- Rayos X de Columna Torácica
+('GN2', 66),  -- Rayos X de Columna Lumbar
+('GN2', 3),   -- Perfil Lipídico
+('GN2', 7),   -- Electrocardiograma (ECG)
+('GN2', 9),   -- Prueba de Función Hepática
+('GN2', 10),  -- Prueba de Función Renal
+('GN2', 13),  -- Curva de Tolerancia a la Glucosa
+('GN2', 16),  -- Triglicéridos
+('GN2', 17),  -- Proteína C Reactiva (PCR)
+('GN2', 41);  -- Prueba de Hemoglobina Glicosilada (HbA1c)
+
+-- ahora los que puede realizar un pediatra
+INSERT INTO medicos_examenes (id_medico, id_examen) VALUES
+('PD2', 1),   -- Hemograma Completo
+('PD2', 2),   -- Prueba de Glucosa en Ayunas
+('PD2', 12),  -- Hemograma Completo con Recuento Diferencial
+('PD2', 25),  -- Prueba de Creatinina en Suero
+('PD2', 26),  -- Prueba de Urea en Sangre
+('PD2', 33),  -- Prueba de ANA (Anticuerpos Antinucleares)
+('PD2', 34),  -- Velocidad de Sedimentación Globular (VSG)
+('PD2', 36),  -- Electromiografía (EMG)
+('PD2', 37),  -- Electroencefalograma (EEG)
+('PD2', 40),  -- Prueba de Ferritina
+('PD2', 44),  -- Test de Lactato en Sangre
+('PD2', 47),  -- Prueba de Electrolitos (Na, K, Cl)
+('PD2', 60),  -- Tomografía Computarizada (TAC)
+('PD2', 61),  -- Resonancia Magnética (RM)
+('PD2', 62),  -- Rayos X de Cráneo
+('PD2', 64),  -- Rayos X de Columna Cervical
+('PD2', 65),  -- Rayos X de Columna Torácica
+('PD2', 66),  -- Rayos X de Columna Lumbar
+('PD2', 3),   -- Perfil Lipídico
+('PD2', 7),   -- Electrocardiograma (ECG)
+('PD2', 9),   -- Prueba de Función Hepática
+('PD2', 10),  -- Prueba de Función Renal
+('PD2', 13),  -- Curva de Tolerancia a la Glucosa
+('PD2', 16),  -- Triglicéridos
+('PD2', 17),  -- Proteína C Reactiva (PCR)
+('PD2', 41);  -- Prueba de Hemoglobina Glicosilada (HbA1c)
+
+-- ahora los que puede realizar un oftalmologo
+INSERT INTO medicos_examenes (id_medico, id_examen) VALUES
+('OF2', 1),   -- Hemograma Completo
+('OF2', 5),   -- Examen de Agudeza Visual
+('OF2', 6),   -- Audiometría
+('OF2', 12),  -- Hemograma Completo con Recuento Diferencial
+('OF2', 25),  -- Prueba de Creatinina en Suero
+('OF2', 26),  -- Prueba de Urea en Sangre
+('OF2', 33),  -- Prueba de ANA (Anticuerpos Antinucleares)
+('OF2', 34),  -- Velocidad de Sedimentación Globular (VSG)
+('OF2', 40),  -- Prueba de Ferritina
+('OF2', 44),  -- Test de Lactato en Sangre
+('OF2', 47),  -- Prueba de Electrolitos (Na, K, Cl)
+('OF2', 60),  -- Tomografía Computarizada (TAC)
+('OF2', 61),  -- Resonancia Magnética (RM)
+('OF2', 62),  -- Rayos X de Cráneo
+('OF2', 63),  -- Rayos X de Senos Paranasales
+('OF2', 64),  -- Rayos X de Columna Cervical
+('OF2', 65),  -- Rayos X de Columna Torácica
+('OF2', 66),  -- Rayos X de Columna Lumbar
+('OF2', 3),   -- Perfil Lipídico
+('OF2', 7),   -- Electrocardiograma (ECG)
+('OF2', 9),   -- Prueba de Función Hepática
+('OF2', 10),  -- Prueba de Función Renal
+('OF2', 13),  -- Curva de Tolerancia a la Glucosa
+('OF2', 16),  -- Triglicéridos
+('OF2', 17),  -- Proteína C Reactiva (PCR)
+('OF2', 41);  -- Prueba de Hemoglobina Glicosilada (HbA1c)
+-- ahora los que puede realizar un ortopedista
+INSERT INTO medicos_examenes (id_medico, id_examen) VALUES
+('OR2', 1),   -- Hemograma Completo
+('OR2', 12),  -- Hemograma Completo con Recuento Diferencial
+('OR2', 25),  -- Prueba de Creatinina en Suero
+('OR2', 26),  -- Prueba de Urea en Sangre
+('OR2', 33),  -- Prueba de ANA (Anticuerpos Antinucleares)
+('OR2', 34),  -- Velocidad de Sedimentación Globular (VSG)
+('OR2', 36),  -- Electromiografía (EMG)
+('OR2', 44),  -- Test de Lactato en Sangre
+('OR2', 47),  -- Prueba de Electrolitos (Na, K, Cl)
+('OR2', 60),  -- Tomografía Computarizada (TAC)
+('OR2', 61),  -- Resonancia Magnética (RM)
+('OR2', 64),  -- Rayos X de Columna Cervical
+('OR2', 65),  -- Rayos X de Columna Torácica
+('OR2', 66),  -- Rayos X de Columna Lumbar
+('OR2', 67),  -- Rayos X de Pelvis
+('OR2', 68),  -- Rayos X de Cadera
+('OR2', 69),  -- Rayos X de Rodilla
+('OR2', 70),  -- Rayos X de Tobillo
+('OR2', 71),  -- Rayos X de Pie
+('OR2', 72),  -- Rayos X de Mano
+('OR2', 73),  -- Rayos X de Muñeca
+('OR2', 74),  -- Rayos X de Codo
+('OR2', 75);  -- Rayos X de Hombro
+
+-- ahora los que puede realizar un urólogo
+INSERT INTO medicos_examenes (id_medico, id_examen) VALUES
+('UR2', 1),    -- Hemograma Completo
+('UR2', 12),   -- Hemograma Completo con Recuento Diferencial
+('UR2', 25),   -- Prueba de Creatinina en Suero
+('UR2', 26),   -- Prueba de Urea en Sangre
+('UR2', 27),   -- Microalbuminuria
+('UR2', 34),   -- Velocidad de Sedimentación Globular (VSG)
+('UR2', 38),   -- Prueba de Antígeno Prostático Específico (PSA)
+('UR2', 47),   -- Prueba de Electrolitos (Na, K, Cl)
+('UR2', 60),   -- Tomografía Computarizada (TAC)
+('UR2', 61),   -- Resonancia Magnética (RM)
+('UR2', 67),   -- Rayos X de Pelvis
+('UR2', 68);   -- Rayos X de Cadera
+
+-- ahora los que puede realizar un traumatólogo
+INSERT INTO medicos_examenes (id_medico, id_examen) VALUES
+('TR2', 1),   -- Hemograma Completo
+('TR2', 12),  -- Hemograma Completo con Recuento Diferencial
+('TR2', 34),  -- Velocidad de Sedimentación Globular (VSG)
+('TR2', 36),  -- Electromiografía (EMG)
+('TR2', 44),  -- Test de Lactato en Sangre
+('TR2', 47),  -- Prueba de Electrolitos (Na, K, Cl)
+('TR2', 60),  -- Tomografía Computarizada (TAC)
+('TR2', 61),  -- Resonancia Magnética (RM)
+('TR2', 64),  -- Rayos X de Columna Cervical
+('TR2', 65),  -- Rayos X de Columna Torácica
+('TR2', 66),  -- Rayos X de Columna Lumbar
+('TR2', 67),  -- Rayos X de Pelvis
+('TR2', 68),  -- Rayos X de Cadera
+('TR2', 69),  -- Rayos X de Rodilla
+('TR2', 70),  -- Rayos X de Tobillo
+('TR2', 71),  -- Rayos X de Pie
+('TR2', 72),  -- Rayos X de Mano
+('TR2', 73),  -- Rayos X de Muñeca
+('TR2', 74),  -- Rayos X de Codo
+('TR2', 75);  -- Rayos X de Hombro
+
+-- ahora los que puede realizar un fisioterapia, dermatólogo, psiquiatra, nutriologo, odontologo y  medico de emergencia
+-- Ahora, los exámenes que pueden solicitar un fisioterapeuta, dermatólogo, psiquiatra, nutriólogo, odontólogo y médico de emergencias.
+
+-- Fisioterapeuta
+INSERT INTO medicos_examenes (id_medico, id_examen) VALUES
+('RH2', 35),  -- Espirometría Forzada
+('RH2', 36),  -- Electromiografía (EMG)
+('RH2', 44),  -- Test de Lactato en Sangre
+('RH2', 47),  -- Prueba de Electrolitos (Na, K, Cl)
+('RH2', 69),  -- Rayos X de Rodilla
+('RH2', 70),  -- Rayos X de Tobillo
+('RH2', 71),  -- Rayos X de Pie
+('RH2', 75);  -- Rayos X de Hombro
+
+-- Dermatólogo
+INSERT INTO medicos_examenes (id_medico, id_examen) VALUES
+('DR2', 1),   -- Hemograma Completo
+('DR2', 12),  -- Hemograma Completo con Recuento Diferencial
+('DR2', 17),  -- Proteína C Reactiva (PCR)
+('DR2', 28),  -- Prueba de Bilirrubina (Directa e Indirecta)
+('DR2', 29),  -- Fosfatasa Alcalina (ALP)
+('DR2', 30),  -- Alanina Aminotransferasa (ALT)
+('DR2', 31),  -- Aspartato Aminotransferasa (AST)
+('DR2', 33),  -- Prueba de ANA (Anticuerpos Antinucleares)
+('DR2', 34),  -- Velocidad de Sedimentación Globular (VSG)
+('DR2', 40),  -- Prueba de Ferritina
+('DR2', 47);  -- Prueba de Electrolitos (Na, K, Cl)
+
+-- Psiquiatra
+INSERT INTO medicos_examenes (id_medico, id_examen) VALUES
+('PS2', 1),   -- Hemograma Completo
+('PS2', 12),  -- Hemograma Completo con Recuento Diferencial
+('PS2', 25),  -- Prueba de Creatinina en Suero
+('PS2', 26),  -- Prueba de Urea en Sangre
+('PS2', 34),  -- Velocidad de Sedimentación Globular (VSG)
+('PS2', 37),  -- Electroencefalograma (EEG)
+('PS2', 41),  -- Prueba de Hemoglobina Glicosilada (HbA1c)
+('PS2', 43),  -- Prueba de Fibrinógeno
+('PS2', 47),  -- Prueba de Electrolitos (Na, K, Cl)
+('PS2', 49),  -- Prueba de Cortisol en Suero
+('PS2', 50);  -- Prueba de Aldosterona
+
+-- Nutriólogo
+INSERT INTO medicos_examenes (id_medico, id_examen) VALUES
+('NT2', 1),   -- Hemograma Completo
+('NT2', 2),   -- Prueba de Glucosa en Ayunas
+('NT2', 3),   -- Perfil Lipídico
+('NT2', 12),  -- Hemograma Completo con Recuento Diferencial
+('NT2', 13),  -- Curva de Tolerancia a la Glucosa
+('NT2', 14),  -- Lipoproteínas de Alta Densidad (HDL)
+('NT2', 15),  -- Lipoproteínas de Baja Densidad (LDL)
+('NT2', 16),  -- Triglicéridos
+('NT2', 17),  -- Proteína C Reactiva (PCR)
+('NT2', 25),  -- Prueba de Creatinina en Suero
+('NT2', 26),  -- Prueba de Urea en Sangre
+('NT2', 27),  -- Microalbuminuria
+('NT2', 34),  -- Velocidad de Sedimentación Globular (VSG)
+('NT2', 39),  -- Prueba de Vitamina D
+('NT2', 40),  -- Prueba de Ferritina
+('NT2', 41),  -- Prueba de Hemoglobina Glicosilada (HbA1c)
+('NT2', 47);  -- Prueba de Electrolitos (Na, K, Cl)
+
+-- Odontólogo
+INSERT INTO medicos_examenes (id_medico, id_examen) VALUES
+('OD2', 1),   -- Hemograma Completo
+('OD2', 12),  -- Hemograma Completo con Recuento Diferencial
+('OD2', 17),  -- Proteína C Reactiva (PCR)
+('OD2', 28),  -- Prueba de Bilirrubina (Directa e Indirecta)
+('OD2', 31),  -- Aspartato Aminotransferasa (AST)
+('OD2', 34),  -- Velocidad de Sedimentación Globular (VSG)
+('OD2', 40),  -- Prueba de Ferritina
+('OD2', 47),  -- Prueba de Electrolitos (Na, K, Cl)
+('OD2', 72),  -- Rayos X de Mano
+('OD2', 73),  -- Rayos X de Muñeca
+('OD2', 74);  -- Rayos X de Codo
+
+-- Médico de Emergencias
+INSERT INTO medicos_examenes (id_medico, id_examen) VALUES
+('EM2', 1),   -- Hemograma Completo
+('EM2', 2),   -- Prueba de Glucosa en Ayunas
+('EM2', 3),   -- Perfil Lipídico
+('EM2', 4),   -- Monitorización Ambulatoria de la Presión Arterial
+('EM2', 7),   -- Electrocardiograma (ECG)
+('EM2', 9),   -- Prueba de Función Hepática
+('EM2', 10),  -- Prueba de Función Renal
+('EM2', 12),  -- Hemograma Completo con Recuento Diferencial
+('EM2', 13),  -- Curva de Tolerancia a la Glucosa
+('EM2', 14),  -- Lipoproteínas de Alta Densidad (HDL)
+('EM2', 15),  -- Lipoproteínas de Baja Densidad (LDL)
+('EM2', 16),  -- Triglicéridos
+('EM2', 17),  -- Proteína C Reactiva (PCR)
+('EM2', 18),  -- Troponina
+('EM2', 19),  -- Prueba de Dímero-D
+('EM2', 20),  -- Ecocardiograma Doppler
+('EM2', 21),  -- Prueba de Esfuerzo Cardiovascular
+('EM2', 22),  -- Gasometría Arterial
+('EM2', 25),  -- Prueba de Creatinina en Suero
+('EM2', 26),  -- Prueba de Urea en Sangre
+('EM2', 27),  -- Microalbuminuria
+('EM2', 34),  -- Velocidad de Sedimentación Globular (VSG)
+('EM2', 41),  -- Prueba de Hemoglobina Glicosilada (HbA1c)
+('EM2', 43),  -- Prueba de Fibrinógeno
+('EM2', 44),  -- Test de Lactato en Sangre
+('EM2', 47),  -- Prueba de Electrolitos (Na, K, Cl)
+('EM2', 55),  -- Rayos X de Tórax
+('EM2', 56),  -- Rayos X de Abdomen
+('EM2', 57),  -- Rayos X de Columna
+('EM2', 58),  -- Rayos X de Extremidades
+('EM2', 60),  -- Tomografía Computarizada (TAC)
+('EM2', 61);  -- Resonancia Magnética (RM)
+
+
+
+CREATE TABLE seguros (
+    id_seguro INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT
+);
+INSERT INTO seguros (nombre) VALUES
+('BlueCross BlueShield of Panama'),
+('ASSA Compañía de Seguros'),
+('Mapfre Panamá'),
+('Internacional de Seguros (IS)'),
+('Pan-American Life Insurance Group (PALIG)'),
+('Generali Panamá');
+
+
+CREATE TABLE pacientes(
     id_paciente INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
     apellido VARCHAR(100) NOT NULL,
     fecha_nacimiento DATE NOT NULL,
     sexo ENUM('M', 'F') NOT NULL,
     correo VARCHAR(100) not null,
-    CONSTRAINT fk_paciente_departamento FOREIGN KEY (departamento)
-        REFERENCES departamento(id_departamento)
+    telefono VARCHAR(20) NOT NULL,
+    direccion VARCHAR(200) NOT NULL,
+    numero_seguro VARCHAR(50),
+    id_seguro INT,
+    observaciones TEXT
+);
+
+CREATE TABLE atenciones (
+    id_atencion INT PRIMARY KEY AUTO_INCREMENT,
+    id_paciente INT NOT NULL,
+    fecha_ingreso DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    fecha_alta DATETIME,
+    estado ENUM('En Atención', 'Alta') NOT NULL DEFAULT 'En Atención',
+    CONSTRAINT fk_atencion_paciente FOREIGN KEY (id_paciente)
+        REFERENCES pacientes(id_paciente)
         ON DELETE RESTRICT
         ON UPDATE CASCADE
-}
--- Tabla que relaciona pacientes con expedientes que tienen la enfermedad, fecha de creacion y el doctor que lo atendio, ademas de la descripcion de la enfermedad, tratamiento y medicamentos, examenes y resultados y diagnosticos
+);
 
-CREATE TABLE examenes(
-    id_examen INT PRIMARY KEY AUTO_INCREMENT,
-    nombre VARCHAR(100) NOT NULL,
-    descripcion TEXT NOT NULL,
-    precio DECIMAL(10,2) NOT NULL
-)
-
-CREATE TABLE expedientes_pacientes(
+-- Modificar la tabla expedientes_pacientes para relacionarla con atenciones
+CREATE TABLE expedientes_pacientes (
     id_expediente INT PRIMARY KEY AUTO_INCREMENT,
-    paciente INT NOT NULL,
+    id_atencion INT NOT NULL,
     sintomas TEXT NOT NULL,
-    fecha_creacion DATE NOT NULL,
+    fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     doctor INT NOT NULL,
     tratamiento TEXT,
     medicamentos TEXT,
     diagnostico TEXT,
-    CONSTRAINT fk_expediente_paciente FOREIGN KEY (paciente)
-        REFERENCES pacientes(id_paciente)
+    CONSTRAINT fk_expediente_atencion FOREIGN KEY (id_atencion)
+        REFERENCES atenciones(id_atencion)
         ON DELETE RESTRICT
         ON UPDATE CASCADE,
     CONSTRAINT fk_expediente_doctor FOREIGN KEY (doctor)
         REFERENCES empleado(id_empleado)
         ON DELETE RESTRICT
         ON UPDATE CASCADE
-)
+);
 
--- tabla para relacionar el expediente de un paciente con los examenes que se le han realizado
-CREATE TABLE expedientes_examenes(
+-- Tabla para registrar los exámenes realizados al paciente durante la atención
+CREATE TABLE expedientes_examenes (
     id_examen_paciente INT PRIMARY KEY AUTO_INCREMENT,
     fecha DATE NOT NULL,
-    expediente INT NOT NULL,
+    id_expediente INT NOT NULL,
     examen INT NOT NULL,
     resultados TEXT,
-    CONSTRAINT fk_expediente_examenes FOREIGN KEY (expediente)
+    CONSTRAINT fk_expediente_examenes_expediente FOREIGN KEY (id_expediente)
         REFERENCES expedientes_pacientes(id_expediente)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
-    CONSTRAINT fk_expediente_examenes FOREIGN KEY (examen)
+    CONSTRAINT fk_expediente_examenes_examen FOREIGN KEY (examen)
         REFERENCES examenes(id_examen)
         ON DELETE CASCADE
         ON UPDATE CASCADE
-)
+);
 
--- se debe tener un control de los medicamentos que se tienen
-CREATE TABLE medicamentos(
-    id_medicamento INT PRIMARY KEY AUTO_INCREMENT,
-    nombre VARCHAR(100) NOT NULL,
-    descripcion TEXT NOT NULL,
-    precio DECIMAL(10,2) NOT NULL
-)
-
--- tabla para relacionar los medicamentos con los expedientes de los pacientes
-CREATE TABLE medicamentos_expedientes(
-    id_medicamento_paciente INT PRIMARY KEY AUTO_INCREMENT,
-    expediente INT NOT NULL,
-    medicamento INT NOT NULL,
-    fecha DATE NOT NULL,
-    CONSTRAINT fk_medicamento_expediente FOREIGN KEY (expediente)
-        REFERENCES expedientes_pacientes(id_expediente)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
-    CONSTRAINT fk_medicamento_expediente FOREIGN KEY (medicamento)
-        REFERENCES medicamentos(id_medicamento)
-        ON DELETE CASCADE
+-- Tabla para generar facturas al dar de alta al paciente
+CREATE TABLE facturas (
+    id_factura INT PRIMARY KEY AUTO_INCREMENT,
+    id_atencion INT NOT NULL,
+    fecha_factura DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    total DECIMAL(10,2) NOT NULL,
+    CONSTRAINT fk_factura_atencion FOREIGN KEY (id_atencion)
+        REFERENCES atenciones(id_atencion)
+        ON DELETE RESTRICT
         ON UPDATE CASCADE
+);
+
+
+DELIMITER //
+
+CREATE PROCEDURE GenerarFactura(
+    IN p_id_atencion INT,
+    IN p_fecha_alta DATETIME
 )
+BEGIN
+    DECLARE v_total DECIMAL(10,2);
+    DECLARE v_cargo_adicional DECIMAL(10,2) DEFAULT 0;
+    DECLARE v_id_rol VARCHAR(10);
+    
+    -- Iniciar una transacción
+    START TRANSACTION;
+    
+    -- Actualizar la atención del paciente
+    UPDATE atenciones
+    SET fecha_alta = p_fecha_alta,
+        estado = 'Alta'
+    WHERE id_atencion = p_id_atencion;
+    
+    -- Obtener el rol del médico que atendió al paciente
+    SELECT e.id_rol INTO v_id_rol
+    FROM atenciones a
+    JOIN empleados e ON a.id_doctor = e.id_empleado
+    WHERE a.id_atencion = p_id_atencion;
+    
+    -- Verificar si el rol del médico está en la lista específica
+    IF v_id_rol IN ('CG2', 'CD2', 'NR2', 'GN2', 'PD2', 'OR2', 'UR2', 'TR2') THEN
+        SET v_cargo_adicional = 140;
+    END IF;
+    
+    -- Calcular el total de la factura
+    SELECT 
+        IFNULL(SUM(e.costo_examen), 0) + 30 + v_cargo_adicional INTO v_total
+    FROM expedientes_examenes ee
+    JOIN examenes e ON ee.examen = e.id_examen
+    WHERE ee.expediente = (
+        SELECT id_expediente
+        FROM expedientes_pacientes
+        WHERE id_atencion = p_id_atencion
+    );
+    
+    -- Insertar la factura en la tabla `facturas`
+    INSERT INTO facturas (id_atencion, fecha_factura, total)
+    VALUES (p_id_atencion, NOW(), v_total);
+    
+    -- Confirmar la transacción
+    COMMIT;
+END //
 
--- tabla para relacionar los medicamentos con los empleados que los recetan solo pueden ser doctores y hay ocaciones en los que un doctor no tiene el permiso(debido a su rol para recetar cierto medicamento) por ejemlo un medico general no va a recetar medicamentos especifoicos para el corazon
+DELIMITER ;
 
-CREATE TABLE medicamentos_doctores(
-    id_medicamento_doctor INT PRIMARY KEY AUTO_INCREMENT,
-    doctor INT NOT NULL,
-    medicamento INT NOT NULL,
-    CONSTRAINT fk_medicamento_doctor FOREIGN KEY (doctor)
-        REFERENCES empleado(id_empleado)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
-    CONSTRAINT fk_medicamento_doctor FOREIGN KEY (medicamento)
-        REFERENCES medicamentos(id_medicamento)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE 
+
+
+
+DELIMITER //
+
+CREATE PROCEDURE AsignarExamen(
+    IN p_id_atencion INT,
+    IN p_id_examen INT,
+    IN p_id_doctor VARCHAR(10),
+    IN p_fecha DATE
 )
+BEGIN
+    DECLARE v_id_expediente INT;
 
+    -- Iniciar una transacción
+    START TRANSACTION;
+
+    -- Verificar que el doctor está asociado a la atención
+    IF NOT EXISTS (
+        SELECT 1 FROM atenciones
+        WHERE id_atencion = p_id_atencion
+          AND id_doctor = (
+              SELECT id_empleado FROM empleados WHERE id_empleado = p_id_doctor
+          )
+    ) THEN
+        SIGNAL SQLSTATE '45000' 
+            SET MESSAGE_TEXT = 'Doctor no asociado a esta atención.';
+    END IF;
+
+    -- Obtener el id_expediente relacionado con la atención
+    SELECT id_expediente INTO v_id_expediente
+    FROM expedientes_pacientes
+    WHERE id_atencion = p_id_atencion
+    LIMIT 1;
+
+    -- Insertar el examen en expedientes_examenes
+    INSERT INTO expedientes_examenes (fecha, expediente, examen, resultados)
+    VALUES (p_fecha, v_id_expediente, p_id_examen, NULL);
+
+    -- Confirmar la transacción
+    COMMIT;
+END //
+
+DELIMITER ;
+
+
+
+
+DELIMITER //
+
+CREATE PROCEDURE TraspasarAtencion(
+    IN p_id_atencion INT,
+    IN p_new_id_paciente INT
+)
+BEGIN
+    DECLARE v_old_id_paciente INT;
+
+    -- Manejo de excepciones
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' 
+            SET MESSAGE_TEXT = 'Error al traspasar la atención.';
+    END;
+
+    -- Iniciar una transacción
+    START TRANSACTION;
+
+    -- Verificar que la atención existe y obtener el paciente actual
+    SELECT id_paciente INTO v_old_id_paciente
+    FROM atenciones
+    WHERE id_atencion = p_id_atencion
+    FOR UPDATE;
+
+    IF v_old_id_paciente IS NULL THEN
+        SIGNAL SQLSTATE '45000' 
+            SET MESSAGE_TEXT = 'La atención especificada no existe.';
+    END IF;
+
+    -- Verificar que el nuevo paciente existe
+    IF NOT EXISTS (
+        SELECT 1 FROM pacientes
+        WHERE id_paciente = p_new_id_paciente
+    ) THEN
+        SIGNAL SQLSTATE '45000' 
+            SET MESSAGE_TEXT = 'El nuevo paciente no existe.';
+    END IF;
+
+    -- Actualizar la atención para asignarla al nuevo paciente
+    UPDATE atenciones
+    SET id_paciente = p_new_id_paciente
+    WHERE id_atencion = p_id_atencion;
+
+    -- Registrar la transferencia en el expediente del paciente
+    -- Asumiendo que 'tratamiento' se usa para observaciones adicionales
+    UPDATE expedientes_pacientes
+    SET diagnostico = CONCAT(
+        diagnostico, ' | Atención traspasada de paciente ID ',
+        v_old_id_paciente, ' a paciente ID ', p_new_id_paciente, ' el ', NOW()
+    )
+    WHERE id_atencion = p_id_atencion;
+
+    -- Confirmar la transacción
+    COMMIT;
+END //
+
+DELIMITER ;

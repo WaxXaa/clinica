@@ -1,5 +1,5 @@
 <?php
-class EmployeeModel {
+class Empleado {
     private $conn;
     private $table = 'empleados';
     public $nombre;
@@ -12,23 +12,35 @@ class EmployeeModel {
         $this->conn = $db;
     }
 
-    public function crearEmpleado() {
-        $this->nombre = htmlspecialchars(strip_tags($this->nombre));
-        $this->apellido = htmlspecialchars(strip_tags($this->apellido));
-        $this->puesto = htmlspecialchars(strip_tags($this->puesto));
-        $this->departamento = htmlspecialchars(strip_tags($this->departamento));
-        $this->fecha_contratacion = htmlspecialchars(strip_tags($this->fecha_contratacion));
-        
-        $query = 'INSERT INTO ' . $this->table . ' (nombre, apellido, puesto, departamento, fecha_contratacion) VALUES (:nombre, :apellido, :puesto, :departamento, :fecha_departamento)';
-
+    public function crearEmpleado($nombre, $apellido, $departamento,$username, $password, $rol,  $turno, $salario) {
+        try {
+        $nombre = htmlspecialchars(strip_tags($nombre));
+        $apellido = htmlspecialchars(strip_tags($apellido));
+        $departamento = htmlspecialchars(strip_tags($departamento));
+        $rol = htmlspecialchars(strip_tags($rol));
+        $turno = htmlspecialchars(strip_tags($turno));
+        $salario = htmlspecialchars(strip_tags($salario));
+        $username = htmlspecialchars(strip_tags($username));
+        $password = htmlspecialchars(strip_tags($password));
+        $password = password_hash($password, PASSWORD_DEFAULT);
+        $query = "CALL registrarEmpleado (:nombre, :apellido, :departamento, :username, :password, :rol,  :turno, :salario);";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':nombre', $this->nombre);
-        $stmt->bindParam(':apellido', $this->apellido);
-        $stmt->bindParam(':puesto', $this->puesto);
-        $stmt->bindParam(':departamento', $this->departamento);
-        $stmt->bindParam(':fecha_contratacion', $this->fecha_contratacion);
+        $stmt->bindParam(':nombre', $nombre);
+        $stmt->bindParam(':apellido', $apellido);
+        $stmt->bindParam(':departamento', $departamento);
+        $stmt->bindParam(':rol', $rol);
+        $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':password', $password);
+        $stmt->bindParam(':turno', $turno);
+        $stmt->bindParam(':salario', $salario);
 
-        return $stmt->execute();
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            return false;
+        }} catch (PDOException $e) {
+            return false;
+        }
     }
 
     // Obtener un empleado por su ID
@@ -48,13 +60,17 @@ class EmployeeModel {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Método para asignar un rol a un empleado
-    public function assignRoleToEmployee($employeeId, $roleId) {
-        $query = 'UPDATE ' . $this->table . ' SET role_id = :role_id WHERE id = :employee_id';
+    // Método para obtener los turnos
+    public function getTurnos() {
+        $query = 'SELECT * FROM turnos';
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':employee_id', $employeeId);
-        $stmt->bindParam(':role_id', $roleId);
-        return $stmt->execute();
+        $stmt->execute();
+        $turnos = [];
+        while ($turno =  $stmt->fetch(PDO::FETCH_ASSOC)) {
+          array_push($turnos,$turno);
+        }
+        $this->db = null;
+        return $turnos;
     }
 }
 ?>

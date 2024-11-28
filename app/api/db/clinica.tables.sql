@@ -31,7 +31,7 @@ insert into departamento (id_departamento, nombre) values
 CREATE TABLE usuario (
     id_usuario INT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(10) NOT NULL,
-    contra VARCHAR(10) NOT NULL,
+    contra VARCHAR(500) NOT NULL,
     CONSTRAINT uk_usuario_username UNIQUE (username)
 );
 
@@ -262,20 +262,22 @@ CREATE TABLE turnos (
 );
 INSERT INTO turnos (id_turno, nombre, hora_inicio, hora_fin) VALUES
 (1, 'Administrativo', '08:00:00', '17:00:00'),
-(2, '7am-3pm', '07:00:00', '15:00:00'),
-(3, '3pm-11pm', '15:00:00', '23:00:00'),
-(4, '11pm-7am', '23:00:00', '07:00:00');
+(2, 'Matutino', '07:00:00', '15:00:00'),
+(3, 'Vespertino', '15:00:00', '23:00:00'),
+(4, 'Nocturno', '23:00:00', '07:00:00');
 
 -- Tabla Empleado
 CREATE TABLE empleado (
     id_empleado INT PRIMARY KEY AUTO_INCREMENT,
-    nombre VARCHAR(100) NOT NULL,
+    nombre VARCHAR(50) NOT NULL,
+    apellido VARCHAR(50) NOT NULL,
     departamento INT NOT NULL,
     usuario INT UNIQUE,
     rol VARCHAR(5) NOT NULL,
     fecha_contratacion DATE NOT NULL DEFAULT CURRENT_DATE,
     turno INT,
     num_empleado VARCHAR(6) NOT NULL,
+    salario DECIMAL(10,2) NOT NULL DEFAULT 500.00,
     CONSTRAINT fk_empleado_turno FOREIGN KEY (turno)
         REFERENCES turnos(id_turno)
         ON DELETE RESTRICT
@@ -286,7 +288,7 @@ CREATE TABLE empleado (
         ON UPDATE CASCADE,
     CONSTRAINT fk_empleado_usuario FOREIGN KEY (usuario)
         REFERENCES usuario(id_usuario)
-        ON DELETE RESTRICT
+        ON DELETE CASCADE
         ON UPDATE CASCADE,
     CONSTRAINT fk_empleado_rol FOREIGN KEY (rol)
         REFERENCES rol(id_rol)
@@ -311,12 +313,14 @@ DELIMITER ;
 
 DELIMITER //
 CREATE PROCEDURE registrarEmpleado (
-    IN nombre VARCHAR(100),
+    IN nombre VARCHAR(50),
+    IN apellido VARCHAR(50),
     IN departamento INT,
     IN usuario VARCHAR(10),
-    IN contra VARCHAR(10),
+    IN contra VARCHAR(500),
     IN rol VARCHAR(5),
-    IN turno INT
+    IN turno INT,
+    IN salario DECIMAL(10,2)
 )
 BEGIN
     DECLARE id_usuario INT;

@@ -1,0 +1,120 @@
+<?php
+require '../../config/db.php'; // Ensure the path to your database connection is correct
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id_paciente = $_POST['id_paciente'];
+    $nombre = $_POST['nombre'];
+    $apellido = $_POST['apellido'];
+    $fecha_nacimiento = $_POST['fecha_nacimiento'];
+    $sexo = $_POST['sexo'];
+    $correo = $_POST['correo'];
+    $telefono = $_POST['telefono'];
+    $direccion = $_POST['direccion'];
+    $numero_seguro = $_POST['numero_seguro'];
+    $id_seguro = $_POST['id_seguro'];
+    $observaciones = $_POST['observaciones'];
+
+    try {
+        $conn = Database::connect();
+
+        // Call the stored procedure
+        $stmt = $conn->prepare("CALL ActualizarPaciente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param(
+            "issssssisss", 
+            $id_paciente, $nombre, $apellido, $fecha_nacimiento, $sexo, 
+            $correo, $telefono, $direccion, $numero_seguro, $id_seguro, $observaciones
+        );
+        $stmt->execute();
+
+        echo "Información actualizada exitosamente.";
+    } catch (Exception $e) {
+        echo "Error al actualizar la información: " . $e->getMessage();
+    } finally {
+        $conn->close();
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualizar Información de Paciente</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg shadow-md w-1/2">
+        <h2 class="text-2xl font-semibold mb-4">Actualizar Información de Paciente</h2>
+        <form action="actualizar_paciente.php" method="POST" class="space-y-4">
+            <input type="hidden" name="id_paciente" value="<?php echo $_GET['id_paciente']; ?>">
+
+            <div>
+                <label for="nombre" class="block text-sm font-medium">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" class="border p-2 w-full" required>
+            </div>
+            
+            <div>
+                <label for="apellido" class="block text-sm font-medium">Apellido:</label>
+                <input type="text" id="apellido" name="apellido" class="border p-2 w-full" required>
+            </div>
+
+            <div>
+                <label for="fecha_nacimiento" class="block text-sm font-medium">Fecha de Nacimiento:</label>
+                <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" class="border p-2 w-full" required>
+            </div>
+
+            <div>
+                <label for="sexo" class="block text-sm font-medium">Sexo:</label>
+                <select id="sexo" name="sexo" class="border p-2 w-full" required>
+                    <option value="M">Masculino</option>
+                    <option value="F">Femenino</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="correo" class="block text-sm font-medium">Correo Electrónico:</label>
+                <input type="email" id="correo" name="correo" class="border p-2 w-full" required>
+            </div>
+
+            <div>
+                <label for="telefono" class="block text-sm font-medium">Teléfono:</label>
+                <input type="text" id="telefono" name="telefono" class="border p-2 w-full" required>
+            </div>
+
+            <div>
+                <label for="direccion" class="block text-sm font-medium">Dirección:</label>
+                <input type="text" id="direccion" name="direccion" class="border p-2 w-full" required>
+            </div>
+
+            <div>
+                <label for="numero_seguro" class="block text-sm font-medium">Número de Seguro:</label>
+                <input type="text" id="numero_seguro" name="numero_seguro" class="border p-2 w-full">
+            </div>
+
+            <div>
+                <label for="id_seguro" class="block text-sm font-medium">Seguro:</label>
+                <select id="id_seguro" name="id_seguro" class="border p-2 w-full">
+                    <option value="">Seleccionar Seguro</option>
+                    <!-- Fetch seguros dynamically from DB -->
+                    <?php
+                    require '../../config/db.php';
+                    $conn = Database::connect();
+                    $result = $conn->query("SELECT id_seguro, nombre FROM seguros");
+                    while ($seguro = $result->fetch_assoc()) {
+                        echo "<option value='{$seguro['id_seguro']}'>{$seguro['nombre']}</option>";
+                    }
+                    $conn->close();
+                    ?>
+                </select>
+            </div>
+
+            <div>
+                <label for="observaciones" class="block text-sm font-medium">Observaciones:</label>
+                <textarea id="observaciones" name="observaciones" class="border p-2 w-full"></textarea>
+            </div>
+
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Actualizar</button>
+        </form>
+    </div>
+</body>
+</html>

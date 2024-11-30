@@ -34,10 +34,12 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $_POST['user'];
     $contra = $_POST['contra'];
     $turno = $_POST['turno'];
+    $email = $_POST['email'];
     $salario = $_POST['salario'];
     if (!empty($nombre) && !empty($apellido) && !empty($departamento) && !empty($rol) && !empty($user) && !empty($contra) && !empty($turno) && !empty($salario)){
       trim($nombre);
       trim($apellido);
+      trim($email);
 
       trim($user);
       trim($contra);
@@ -50,6 +52,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         'user' => $user,
         'contra' => $contra,
         'turno' => $turno,
+        'email' => $email,
         'salario' => $salario
       ];
       $controlador = new HumanResourcesController();

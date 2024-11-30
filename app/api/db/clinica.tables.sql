@@ -276,6 +276,7 @@ CREATE TABLE empleado (
     rol VARCHAR(5) NOT NULL,
     fecha_contratacion DATE NOT NULL DEFAULT CURRENT_DATE,
     turno INT,
+    email VARCHAR(100) UNIQUE NOT NULL,
     num_empleado VARCHAR(6) NOT NULL,
     salario DECIMAL(10,2) NOT NULL DEFAULT 500.00,
     CONSTRAINT fk_empleado_turno FOREIGN KEY (turno)
@@ -320,6 +321,7 @@ CREATE PROCEDURE registrarEmpleado (
     IN contra VARCHAR(500),
     IN rol VARCHAR(5),
     IN turno INT,
+    IN email VARCHAR(100),
     IN salario DECIMAL(10,2)
 )
 BEGIN
@@ -328,8 +330,8 @@ BEGIN
     DECLARE num_empleado VARCHAR(6);
     SET num_empleado = generarIdEmpleado();
     INSERT INTO usuario (username, contra) VALUES (usuario, contra);
-    INSERT INTO empleado (nombre, departamento, usuario, rol, turno, num_empleado) VALUES 
-    (nombre, departamento, LAST_INSERT_ID(), rol, turno, num_empleado);
+    INSERT INTO empleado (nombre, departamento, usuario, rol, turno, email, num_empleado) VALUES 
+    (nombre, departamento, LAST_INSERT_ID(), rol, turno,email, num_empleado);
 END //
 DELIMITER ;
 

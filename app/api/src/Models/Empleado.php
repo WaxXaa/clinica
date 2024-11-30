@@ -12,18 +12,19 @@ class Empleado {
         $this->conn = $db;
     }
 
-    public function crearEmpleado($nombre, $apellido, $departamento,$username, $password, $rol,  $turno, $salario) {
+    public function crearEmpleado($nombre, $apellido, $departamento,$username, $password, $rol,  $turno,$email, $salario) {
         try {
         $nombre = htmlspecialchars(strip_tags($nombre));
         $apellido = htmlspecialchars(strip_tags($apellido));
         $departamento = htmlspecialchars(strip_tags($departamento));
         $rol = htmlspecialchars(strip_tags($rol));
         $turno = htmlspecialchars(strip_tags($turno));
+        $email = htmlspecialchars(strip_tags($email));
         $salario = htmlspecialchars(strip_tags($salario));
         $username = htmlspecialchars(strip_tags($username));
         $password = htmlspecialchars(strip_tags($password));
         $password = password_hash($password, PASSWORD_DEFAULT);
-        $query = "CALL registrarEmpleado (:nombre, :apellido, :departamento, :username, :password, :rol,  :turno, :salario);";
+        $query = "CALL registrarEmpleado (:nombre, :apellido, :departamento, :username, :password, :rol,  :turno, :email,:salario);";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':nombre', $nombre);
         $stmt->bindParam(':apellido', $apellido);
@@ -32,6 +33,7 @@ class Empleado {
         $stmt->bindParam(':username', $username);
         $stmt->bindParam(':password', $password);
         $stmt->bindParam(':turno', $turno);
+        $stmt->bindParam(':email', $email);
         $stmt->bindParam(':salario', $salario);
 
         if ($stmt->execute()) {

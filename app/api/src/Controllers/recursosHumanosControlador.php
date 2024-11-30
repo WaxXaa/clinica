@@ -37,10 +37,11 @@ class HumanResourcesController {
         $departamento = $data['departamento'];
         $rol = $data['rol'];
         $turno = $data['turno'];
+        $email = $data['email'];
         $salario = $data['salario'];
         $username = $data['user'];
         $password = $data['contra'];
-        $nuevoEmpleado = $empleado->crearEmpleado($nombre, $apellido, $departamento, $username, $password, $rol, $turno, $salario);
+        $nuevoEmpleado = $empleado->crearEmpleado($nombre, $apellido, $departamento, $username, $password, $rol, $turno, $email, $salario);
         if($nuevoEmpleado) {
             $message = "empleado registrado exitosamente.";
             $message_type = "success";

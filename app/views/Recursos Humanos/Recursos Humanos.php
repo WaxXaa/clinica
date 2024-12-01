@@ -35,11 +35,11 @@ include_once '../../api/src/controllers/recursosHumanosControlador.php';
         }
     </style>
 </head>
-<body class="flex justify-start items-start h-screen bg-slate-200 text-white" x-data="{ sidebarOpen: true, isDark: false, openProfile: false, openStatus: false }" x-init="initializeSidebarToggleButton()">
+<body class="flex justify-start items-start h-screen bg-[#EAFCF3] text-white" x-data="{ sidebarOpen: true, isDark: false, openProfile: false, openStatus: false }" x-init="initializeSidebarToggleButton()">
     <!-- Header -->
     <?php include_once '../../views/header.php'; ?>
     <!-- Sidebar -->
-    <aside :class="sidebarOpen ? 'w-1/6' : 'w-28'" class="relative bg-slate-200 h-screen p-5 pt-20 transition-all duration-700 flex flex-col space-y-4">
+    <aside :class="sidebarOpen ? 'w-1/6' : 'w-28'" class="relative  h-screen p-5 pt-20 transition-all duration-700 flex flex-col space-y-4">
         <!-- modulo de inicio-->
         <div id="homeLink" class="section-button flex items-center space-x-2 py-2 px-3 rounded-md transition-all duration-300 group hover:bg-gradient-to-r from-lime-400 via-emerald-400 to-teal-400"
             :class="!sidebarOpen ? 'justify-center' : ''">
@@ -78,7 +78,7 @@ include_once '../../api/src/controllers/recursosHumanosControlador.php';
     <!-- Contenido Principal -->
     <div class="flex-1 p-5 space-y-5 mt-10 text-black">
         <!-- Contenedor Principal -->
-        <div id="main-container-modulos" class="bg-white rounded-lg p-5 shadow-md grid grid-cols-2 gap-4">
+        <div id="main-container-modulos" class=" rounded-lg p-5 shadow-md grid grid-cols-2 gap-4">
         <?php
         
         $controller = new HumanResourcesController();
@@ -88,7 +88,7 @@ include_once '../../api/src/controllers/recursosHumanosControlador.php';
         if (in_array($user_rol, $roles_con_PHR1)) {
         // Mostrar la sección de registro de empleado
         ?>
-            <div id="registro-empleado" class="bg-gray-100 p-4 rounded-lg shadow">
+            <div id="registro-empleado" class="bg-[#F8FFFE] p-4 rounded-lg shadow-md shadow-green-400/50">
             <h1 class="text-xl font-bold mb-4">Registrar Empleado</h1>
             <form action="../../api/src/Core/App.php" method="POST">
                 <input type="hidden" name="registrarEmpleado" value="registrarEmpleado">
@@ -157,7 +157,7 @@ include_once '../../api/src/controllers/recursosHumanosControlador.php';
         // Mostrar la sección de registro de empleado
         ?>
     
-    <div id="lista-empleados" class="overflow-x-auto bg-gray-100 p-4 rounded-lg shadow">
+    <div id="lista-empleados" class="overflow-x-auto bg-[#F8FFFE] p-4 rounded-lg shadow-md shadow-green-400/50">
         <div class="flex items-center mb-4">
             <input 
                 type="text" 
@@ -201,7 +201,7 @@ include_once '../../api/src/controllers/recursosHumanosControlador.php';
         if (in_array($user_rol, $roles_con_PHR1)) {
         // Mostrar la sección de registro de empleado
         ?>
-    <div id="editar-salario" class="bg-gray-100 p-4 rounded-lg shadow">
+    <div id="editar-salario" class="bg-[#F8FFFE] p-4 rounded-lg shadow-md shadow-green-400/50">
         <h1 class="text-xl font-bold mb-4">Editar Salario</h1>
         <form action="../../api/src/Core/App.php" method="POST">
             <input type="hidden" name="editarSalario" value="editarSalario">
@@ -225,7 +225,7 @@ include_once '../../api/src/controllers/recursosHumanosControlador.php';
         if (in_array($user_rol, $roles_con_PHR1)) {
         // Mostrar la sección de registro de empleado
         ?>
-    <div id="editar-turno" class="bg-gray-100 p-4 rounded-lg shadow">
+    <div id="editar-turno" class="bg-[#F8FFFE] p-4 rounded-lg shadow-md shadow-green-400/50">
         <h1 class="text-xl font-bold mb-4">Editar Turno</h1>
         <form action="../../api/src/Core/App.php" method="POST">
             <input type="hidden" name="editarTurno" value="editarTurno">
@@ -257,9 +257,9 @@ include_once '../../api/src/controllers/recursosHumanosControlador.php';
         if (in_array($user_rol, $roles_con_PHR1)) {
         // Mostrar la sección de registro de empleado
         ?>
-        <div id="enviar-correo" class="bg-gray-100 p-4 rounded-lg shadow">
+        <div id="enviar-correo" class="bg-[#F8FFFE] p-4 rounded-lg shadow-md shadow-green-400/50">
             <h1 class="text-xl font-bold mb-4">Enviar Correo Electrónico</h1>
-            <form action="../../api/src/Core/App.php" method="POST">
+            <form id="formCorreo"action="../../api/src/Core/App.php" method="POST">
                 <input type="hidden" name="enviarCorreo" value="enviarCorreo">
                 
                 <label for="destinatario" class="block font-medium">Correo Destino:</label>
@@ -272,6 +272,32 @@ include_once '../../api/src/controllers/recursosHumanosControlador.php';
                 <textarea id="mensaje" name="mensaje" rows="5" class="border rounded-md p-2 w-full mb-4" required></textarea>
                 
                 <input class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded cursor-pointer w-full" type="submit" value="Enviar Correo">
+            <!-- Loading Animation -->
+            <div id="loading" class="hidden fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+                <div class="grid min-h-[140px] w-full place-items-center overflow-x-scroll rounded-lg p-6 lg:overflow-visible">
+                    <svg class="w-16 h-16 animate-spin text-gray-900/50" viewBox="0 0 64 64" fill="none"
+                        xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+                        <path
+                        d="M32 3C35.8083 3 39.5794 3.75011 43.0978 5.20749C46.6163 6.66488 49.8132 8.80101 52.5061 11.4939C55.199 14.1868 57.3351 17.3837 58.7925 20.9022C60.2499 24.4206 61 28.1917 61 32C61 35.8083 60.2499 39.5794 58.7925 43.0978C57.3351 46.6163 55.199 49.8132 52.5061 52.5061C49.8132 55.199 46.6163 57.3351 43.0978 58.7925C39.5794 60.2499 35.8083 61 32 61C28.1917 61 24.4206 60.2499 20.9022 58.7925C17.3837 57.3351 14.1868 55.199 11.4939 52.5061C8.801 49.8132 6.66487 46.6163 5.20749 43.0978C3.7501 39.5794 3 35.8083 3 32C3 28.1917 3.75011 24.4206 5.2075 20.9022C6.66489 17.3837 8.80101 14.1868 11.4939 11.4939C14.1868 8.80099 17.3838 6.66487 20.9022 5.20749C24.4206 3.7501 28.1917 3 32 3L32 3Z"
+                        stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path
+                        d="M32 3C36.5778 3 41.0906 4.08374 45.1692 6.16256C49.2477 8.24138 52.7762 11.2562 55.466 14.9605C58.1558 18.6647 59.9304 22.9531 60.6448 27.4748C61.3591 31.9965 60.9928 36.6232 59.5759 40.9762"
+                        stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" class="text-gray-900">
+                        </path>
+                    </svg>
+                </div> 
+            </div>
+
+            <script>
+                document.querySelector('#formCorreo').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    document.getElementById('loading').classList.remove('hidden');
+                    setTimeout(() => {
+                        e.target.submit();
+                    }, 4000);
+                });
+
+            </script>
             </form>
         </div>
         <?php

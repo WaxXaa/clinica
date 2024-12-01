@@ -3,7 +3,7 @@ class Database {
     private $host = "localhost";
     private $db_name = "clinica";
     private $username = "root"; // Cambia a tu nombre de usuario de MySQL
-    private $password = ""; // Cambia a tu contraseña de MySQL
+    private $password = "alejandro"; // Cambia a tu contraseña de MySQL
     private $conn;
     // Método para obtener la conexión a la base de datos
     public function getConnection() {

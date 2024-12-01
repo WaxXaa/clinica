@@ -1,15 +1,17 @@
 <?php
+ob_start();
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 require_once __DIR__ . '/../../../../public/phpmailer/src/SMTP.php';
 require_once __DIR__ . '/../../../../public/phpmailer/src/Exception.php';
 require_once __DIR__ . '/../../../../public/phpmailer/src/PHPMailer.php';
-
+include_once __DIR__ . '/../../../../config/config.php';
 include_once __DIR__ . '/../Core/Database.php';
 include_once __DIR__ . '/../Models/Rol.php';
 include_once __DIR__ . '/../Models/Empleado.php';
 include_once __DIR__ . '/../Models/Departamento.php';
+
 class HumanResourcesController {
     private $db;
 
@@ -116,31 +118,38 @@ class HumanResourcesController {
     
     
     public function enviarCorreo($email, $asunto, $mensaje) {
-        define("CORREO_REMITENTE", "manuelalfonsop@gmail.com");
-        define("CORREO_PASS", "xqxk zvqs jcfh rmtn");
-        $empleados = new Empleado($this->db);
+
+        try {
+            $empleados = new Empleado($this->db);
         $nombreEmpleado = $empleados->getNombreEmpleado($email);
             //Enviar email
             $mail = new PHPMailer(true);
-            $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
+            $mail->SMTPDebug = SMTP::DEBUG_OFF;                      //Enable verbose debug output
             $mail->isSMTP();                                            //Send using SMTP
             $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
             $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
             $mail->Username   = constant('CORREO_REMITENTE');                     //SMTP username
             $mail->Password   = constant('CORREO_PASS');                               //SMTP password
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
-            $mail->Port       = 465;
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;            //Enable implicit TLS encryption
+            $mail->Port       = 587;
 
             //Recipients
             $mail->setFrom(constant('CORREO_REMITENTE'), 'Clinica Hispital');
             $mail->addAddress($email);     //Add a recipient
-            //plantilla HTML
+            
 
-            $mensajeHTML='
-                <p align="center">Estimado Colaborador: '. $nombreEmpleado.' </p>
-                <p align="center">'.$mensaje.'</p>
+            if (is_array($nombreEmpleado)) {
+                $nombreEmpleado = implode(' ', $nombreEmpleado); // Convierte el arreglo en cadena
+            }
+
+            if (is_array($mensaje)) {
+                $mensaje = implode(' ', $mensaje); // Convierte el arreglo en cadena
+            }
+
+            $mensajeHTML = '
+                <p align="center">Estimado Colaborador: ' . htmlspecialchars($nombreEmpleado, ENT_QUOTES, 'UTF-8') . ' </p>
+                <p align="center">' . htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8') . '</p>
                 <p>Atentamente Recursos Humanos </p>';
-
 
             //Content
             $mail->isHTML(true);                                  //Set email format to HTML
@@ -149,6 +158,21 @@ class HumanResourcesController {
             $mail->AltBody = 'Este es Un Mensaje de Recursos Humanos';
 
             $mail->send();
+            $mensaje = "El correo se envió correctamente";
+            $message_type = "success";
+        } catch (Exception $th) {
+            $mensaje = "Error al enviar el correo. Verifica que los datos esten correctos y vuelve a intentarlo. si sigue saliendo error el sistema esta caido, intenta mas tarde.";
+            $message_type = "error";
+        } finally {
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
+            $_SESSION['message'] = $mensaje;
+            $_SESSION['message_type'] = $message_type;
+            header("Location: ../../../views/mensaje/mensaje.php");
+            exit();
+        }
+        
     }
 }
-?>
+ob_end_flush();

@@ -15,13 +15,14 @@ $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT); // Aseguramos que sea un
 $stmt->execute();
 $usuarios_result = $stmt->fetch(PDO::FETCH_ASSOC); // Obtener todos los resultados
 $user_role = $usuarios_result['id_rol'];
+$user_department = $usuarios_result['departamento'];
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Sidebar with Header</title>
+    <title>Inventario</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.5/lottie.min.js"></script>
@@ -76,6 +77,7 @@ $user_role = $usuarios_result['id_rol'];
     <div class="flex-1 p-5 space-y-5 mt-10 text-black">
         <!-- Contenedor Principal -->
         <div id="main-container-modulos" class="bg-white rounded-lg p-5 shadow-md flex space-x-4">
+
 
         <div>
     </div>

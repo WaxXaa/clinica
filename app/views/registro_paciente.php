@@ -61,9 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <!-- Main Content -->
         <div class="flex-1 p-6">
-            <header class="bg-blue-600 text-white p-4">
                 <h1 class="text-lg">Registrar Paciente</h1>
-            </header>
 
             <div class="mt-6">
                 <!-- Display messages -->

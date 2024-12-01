@@ -18,10 +18,10 @@ class SeguridadControlador {
     if($usuarioModelo->obtener_usuario_login()) {
       header("Location: ../../../../index.php");
       exit();
-      $message = $this->contra . "usuario logeado exitosamente.";
+      $message = "usuario logeado exitosamente.";
       $message_type = "success";
   } else {
-      $message =" " . $this->contra . " Error al iniciar sesion. Verifica que los datos esten correctos y vuelve a intentarlo. si sigue saliendo error el sistema esta caido, intenta mas tarde.";
+      $message =" Error al iniciar sesion. Verifica que los datos esten correctos y vuelve a intentarlo. si sigue saliendo error el sistema esta caido, intenta mas tarde.";
       $message_type = "error";
   }
 

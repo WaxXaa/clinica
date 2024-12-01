@@ -37,14 +37,7 @@ CREATE TABLE usuario (
 
 insert into usuario (username,contra) values ('superad','1');
 
--- Tabla Permisos
-CREATE TABLE permisos (
-    id_permiso INT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL UNIQUE,
-    descripcion TEXT,
-    departamento INT NOT NULL,
-    CONSTRAINT fk_permisos_departamento FOREIGN KEY (departamento) REFERENCES departamento(id_departamento) ON DELETE RESTRICT ON UPDATE CASCADE
-);
+
 
 
 -- Tabla Rol
@@ -235,13 +228,26 @@ insert into rol (id_rol, nombre, tipo, departamento) values
 ('EM6','Auxiliar de Enfermeria', 'NORMAL', 21),
 ('EM7','Encargado de Inventario', 'NORMAL', 21);
 
-insert into permisos (nombre, descripcion, departamento) values ('VP1', 'Ver listado de pacientes', 1);
+
+-- Tabla Permisos
+CREATE TABLE permisos (
+    id_permiso VARCHAR(5) NOT NULL PRIMARY KEY,
+    descripcion VARCHAR(100) NOT NULL,
+    departamento INT NOT NULL,
+    CONSTRAINT fk_permisos_departamento FOREIGN KEY (departamento) REFERENCES departamento(id_departamento) ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+insert into permisos (id_permiso, descripcion, departamento) values ('PHR1', 'reistrar Empleados', 2);
+insert into permisos (id_permiso, descripcion, departamento) values ('PHR2', 'ver empleados', 2);
+insert into permisos (id_permiso, descripcion, departamento) values ('PHR3', 'editar salario', 2);
+insert into permisos (id_permiso, descripcion, departamento) values ('PHR4', 'editar turno', 2);
+insert into permisos (id_permiso, descripcion, departamento) values ('PHR5', 'enviar correos a empleados', 2);
 
 
 -- Tabla Rol_Permisos
 CREATE TABLE rol_permisos (
-    rol INT,
-    permiso INT,
+    rol VARCHAR(5) NOT NULL,
+    permiso VARCHAR(5) NOT NULL,
     PRIMARY KEY (rol, permiso),
     CONSTRAINT fk_rolpermisos_rol FOREIGN KEY (rol)
         REFERENCES rol(id_rol)
@@ -252,6 +258,148 @@ CREATE TABLE rol_permisos (
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
+
+-- el rol RHS1, DRN1 y DRN2 son los que tienen permisos para registrar empleados
+insert into rol_permisos (rol, permiso) values
+('RHS1', 'PHR1'),
+('DRN1', 'PHR1'),
+('DRN2', 'PHR1'),
+('RHS4', 'PHR1');
+
+-- los que pueden ver la lista de empleados es decir el permiso PHR2 son todos kis que tienen acceso al modulo de recursos humanos
+insert into rol_permisos (rol, permiso) values
+('RHS1', 'PHR2'),
+('RHS2', 'PHR2'),
+('RHS3', 'PHR2'),
+('RHS4', 'PHR2'),
+('RHS5', 'PHR2'),
+('DRN1', 'PHR2'),
+('DRN2', 'PHR2'),
+('DRN3', 'PHR2'),
+('DRN4', 'PHR2'),
+('MG1', 'PHR2'),
+('MG2', 'PHR2'),
+('LB1', 'PHR2'),
+('CG1','PHR2'),
+('CG2','PHR2'),
+('EN1','PHR2'),
+('EN2','PHR2'),
+('CD1','PHR2'),
+('CD2','PHR2'),
+('NR1','PHR2'),
+('NR2','PHR2'),
+('GN1','PHR2'),
+('GN2','PHR2'),
+('PD1','PHR2'),
+('PD2','PHR2'),
+('OF1','PHR2'),
+('OF2','PHR2'),
+('OR1','PHR2'),
+('OR2','PHR2'),
+('UR1','PHR2'),
+('UR2','PHR2'),
+('TR1','PHR2'),
+('TR2','PHR2'),
+('RH1','PHR2'),
+('RH2','PHR2'),
+('NT1','PHR2'),
+('NT2','PHR2'),
+('PS1','PHR2'),
+('PS2','PHR2'),
+('DR1','PHR2'),
+('DR2','PHR2'),
+('OD1','PHR2'),
+('OD2','PHR2'),
+('EM1','PHR2'),
+('EM2','PHR2');
+
+-- el permiso PHR3 que es editar salario solo lo tienen los jefes de departamento, el director y subdirector de direccion y el especialista en nomina
+insert into rol_permisos (rol, permiso) values
+('DRN1', 'PHR3'),
+('DRN2', 'PHR3'),
+('RHS1', 'PHR3'),
+('RHS2', 'PHR3'),
+('RHS3', 'PHR3'),
+('RHS4', 'PHR3'),
+('MG1', 'PHR3'),
+('LB1', 'PHR3'),
+('CG1','PHR3'),
+('EN1','PHR3'),
+('CD1','PHR3'),
+('NR1','PHR3'),
+('GN1','PHR3'),
+('PD1','PHR3'),
+('OF1','PHR3'),
+('OR1','PHR3'),
+('UR1','PHR3'),
+('TR1','PHR3'),
+('RH1','PHR3'),
+('NT1','PHR3'),
+('PS1','PHR3'),
+('DR1','PHR3'),
+('OD1','PHR3'),
+('EM1','PHR3');
+
+insert into rol_permisos (rol, permiso) values
+('DRN1', 'PHR4'),
+('DRN2', 'PHR4'),
+('RHS1', 'PHR4'),
+('RHS2', 'PHR4'),
+('RHS3', 'PHR4'),
+('RHS4', 'PHR4'),
+('RHS5', 'PHR4'),
+('MG1', 'PHR4'),
+('LB1', 'PHR4'),
+('CG1','PHR4'),
+('EN1','PHR4'),
+('CD1','PHR4'),
+('NR1','PHR4'),
+('GN1','PHR4'),
+('PD1','PHR4'),
+('OF1','PHR4'),
+('OR1','PHR4'),
+('UR1','PHR4'),
+('TR1','PHR4'),
+('RH1','PHR4'),
+('NT1','PHR4'),
+('PS1','PHR4'),
+('DR1','PHR4'),
+('OD1','PHR4'),
+('EM1','PHR4');
+
+insert into rol_permisos (rol, permiso) values
+('DRN1', 'PHR5'),
+('DRN2', 'PHR5'),
+('RHS1', 'PHR5'),
+('RHS2', 'PHR5'),
+('RHS3', 'PHR5'),
+('RHS4', 'PHR5'),
+('RHS5', 'PHR5'),
+('MG1', 'PHR5'),
+('LB1', 'PHR5'),
+('CG1','PHR5'),
+('EN1','PHR5'),
+('CD1','PHR5'),
+('NR1','PHR5'),
+('GN1','PHR5'),
+('PD1','PHR5'),
+('OF1','PHR5'),
+('OR1','PHR5'),
+('UR1','PHR5'),
+('TR1','PHR5'),
+('RH1','PHR5'),
+('NT1','PHR5'),
+('PS1','PHR5'),
+('DR1','PHR5'),
+('OD1','PHR5'),
+('EM1','PHR5');
+
+
+
+
+
+
+
 
 -- crear tabla para turnos, hay 3 turnos 7am-3pm, 3pm-11pm, 11pm-7am
 CREATE TABLE turnos (
@@ -271,14 +419,15 @@ CREATE TABLE empleado (
     id_empleado INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(50) NOT NULL,
     apellido VARCHAR(50) NOT NULL,
+    cedula VARCHAR(25) NOT NULL,
     departamento INT NOT NULL,
-    usuario INT UNIQUE,
+    usuario INT NOT NULL UNIQUE,
     rol VARCHAR(5) NOT NULL,
     fecha_contratacion DATE NOT NULL DEFAULT CURRENT_DATE,
     turno INT,
     email VARCHAR(100) UNIQUE NOT NULL,
     num_empleado VARCHAR(6) NOT NULL,
-    salario DECIMAL(10,2) NOT NULL DEFAULT 500.00,
+    salario DECIMAL(10,2) NOT NULL,
     CONSTRAINT fk_empleado_turno FOREIGN KEY (turno)
         REFERENCES turnos(id_turno)
         ON DELETE RESTRICT
@@ -296,7 +445,7 @@ CREATE TABLE empleado (
         ON DELETE RESTRICT
         ON UPDATE CASCADE
 );
-insert into empleado (nombre, departamento, usuario, rol, turno) values ('Juan pruebas', 1,  1, 'DRN1', 1);
+insert into empleado (nombre,apellido,cedula, departamento, usuario,email, rol, turno) values ('Juan','Pruebas','8-888-8888', 1,  1,'juanpruebas001@gmail.com', 'DRN1', 1);
 
 
 DELIMITER //
@@ -316,6 +465,7 @@ DELIMITER //
 CREATE PROCEDURE registrarEmpleado (
     IN nombre VARCHAR(50),
     IN apellido VARCHAR(50),
+    IN cedula VARCHAR(25),
     IN departamento INT,
     IN usuario VARCHAR(10),
     IN contra VARCHAR(500),
@@ -330,8 +480,8 @@ BEGIN
     DECLARE num_empleado VARCHAR(6);
     SET num_empleado = generarIdEmpleado();
     INSERT INTO usuario (username, contra) VALUES (usuario, contra);
-    INSERT INTO empleado (nombre, departamento, usuario, rol, turno, email, num_empleado) VALUES 
-    (nombre, departamento, LAST_INSERT_ID(), rol, turno,email, num_empleado);
+    INSERT INTO empleado (nombre,apellido,cedula, departamento, usuario, rol, turno, email, salario, num_empleado) VALUES 
+    (nombre,apellido,cedula, departamento, LAST_INSERT_ID(), rol, turno,email,salario, num_empleado);
 END //
 DELIMITER ;
 
@@ -344,9 +494,9 @@ CREATE TABLE modulos (
 );  
 INSERT INTO modulos (id_modulo, nombre, descripcion) VALUES
 (1, 'Gestion Pacientes', 'Modulo para gestionar los pacientes'),
-(2, 'Finanzas', 'Modulo para gestionar las finanzas'),
+(4, 'Finanzas', 'Modulo para gestionar las finanzas'),
 (3, 'Inventario', 'Modulo para gestionar el inventario'),
-(4, 'Recursos Humanos', 'Modulo para gestionar los recursos humanos'),
+(2, 'Recursos Humanos', 'Modulo para gestionar los recursos humanos'),
 (5, 'Laboratorios', 'Modulo para gestionar los laboratorios');
 
 --ahora tengo que relacionar los modulos con los roles para indicar que modulo puede ver cada rol
@@ -1209,6 +1359,7 @@ CREATE TABLE pacientes(
     id_paciente INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
     apellido VARCHAR(100) NOT NULL,
+    cedula VARCHAR(25) NOT NULL,
     fecha_nacimiento DATE NOT NULL,
     sexo ENUM('M', 'F') NOT NULL,
     correo VARCHAR(100) not null,

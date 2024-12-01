@@ -184,9 +184,9 @@ session_start();
     </div>
     <script>
 
-        setTimeout(() => {
-            window.location.href = '../../../index.php';
-        }, 5000);
+        // setTimeout(() => {
+        //     window.location.href = '../../../index.php';
+        // }, 5000);
     </script>
     <?php
     unset($_SESSION['message']);

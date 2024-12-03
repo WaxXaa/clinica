@@ -9,12 +9,14 @@ $user_id = $_SESSION['user_id'];
 $database = new Database();
 $conn = $database->getConnection();
 
-$usuarios_query = "SELECT e.nombre as nombre, d.nombre AS departamento, r.nombre AS rol, r.id_rol AS id_rol FROM empleado AS e JOIN departamento AS d on e.departamento = d.id_departamento JOIN rol AS r on e.rol = r.id_rol WHERE usuario = :user_id";
-    $stmt = $conn->prepare($usuarios_query);
+$usuarios_query = "SELECT e.nombre as nombre, d.nombre AS seguro, r.nombre AS rol, r.id_rol AS id_rol, e.id_empleado AS id_empleado FROM empleado AS e JOIN departamento AS d on e.departamento = d.id_departamento JOIN rol AS r on e.rol = r.id_rol WHERE usuario = :user_id;";
+$stmt = $conn->prepare($usuarios_query);
 $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT); // Aseguramos que sea un número entero
 $stmt->execute();
 $usuarios_result = $stmt->fetch(PDO::FETCH_ASSOC); // Obtener todos los resultados
 $user_role = $usuarios_result['id_rol'];
+$id_empleado = $usuarios_result['id_empleado'];
+$_SESSION['id_empleado'] = $id_empleado;
 ?>
 <!DOCTYPE html>
 <html lang="es">

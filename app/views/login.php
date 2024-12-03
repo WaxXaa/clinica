@@ -19,10 +19,10 @@ $error = '';
             font-family: 'Inter', sans-serif;
             margin: 0;
             overflow: hidden;
-            background-color: #12130F;
+            background-color: #F8FFFE;
         }
         .gradient-border {
-            background: linear-gradient(45deg, #c94b4b, #4b134f, #c94b4b);
+            background: linear-gradient(45deg, #00aa99, #f3eada, #d9ede2);
             padding: 10px;
             border-radius: 30px;
             background-size: 200% 200%;
@@ -34,13 +34,13 @@ $error = '';
             100% { background-position: 0% 50%; }
         }
         .container {
-            background-color: #1c1c1e;
+            background-color: ;
             border-radius: 30px;
             overflow: hidden;
         }
         .neumorphism {
             border-radius: 30px 0 0 30px;
-            box-shadow: 10px 10px 20px #0e0e0f, -10px -10px 20px #26272a;
+            /* box-shadow: 5px 5px 10px #0e0e0f; */
         }
         .input-field-container {
             position: relative;
@@ -51,7 +51,7 @@ $error = '';
             background: transparent;
         }
         .input-field-container:focus-within {
-            background: linear-gradient(45deg, #c94b4b, #4b134f, #c94b4b);
+            background: linear-gradient(45deg, #00769b, #009e94, #7cdca0);
             background-size: 200% 200%;
             animation: gradientAnimation 5s ease infinite;
             transform: scale(1.05);
@@ -81,11 +81,11 @@ $error = '';
             margin: 0 auto;
             display: block;
         }
-        .carousel-logo-container {
+        /* .carousel-logo-container {
             position: absolute;
             top: 30px;
             left: 30px;
-        }
+        } */
         #logoImage {
             width: 60px;
             height: 60px;
@@ -99,25 +99,13 @@ $error = '';
         <div class="container flex w-[90vw] h-[90vh] mx-auto">
             
             <!-- Sección Izquierda: Imagen y Mensaje -->
-            <div class="w-1/2 relative h-full flex items-center justify-center p-6 neumorphism">
+            <div class="w-1/2 h-full flex items-center justify-center  neumorphism">
                 <img id="carouselImage" alt="A scenic view" class="w-full h-full object-cover neumorphism" src="https://picsum.photos/800/600?random=1"/>
-                <div class="carousel-logo-container">
-                    <img id="logoImage" src="https://images.pexels.com/photos/4386467/pexels-photo-4386467.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Logo AMC"/>
-                </div>
-                <div class="absolute bottom-20 left-1/2 transform -translate-x-1/2 text-white text-center">
-                    <p class="text-lg font-semibold">Capturing Moments,</p>
-                    <p class="text-lg font-semibold">Creating Memories</p>
-                    <div class="flex justify-center mt-8 space-x-2">
-                        <span class="carousel-button active"></span>
-                        <span class="carousel-button"></span>
-                        <span class="carousel-button"></span>
-                    </div>
-                </div>
             </div>
 
             <!-- Sección Derecha: Formulario de Inicio de Sesión -->
-            <div class="w-1/2 p-12 bg-gray-800 rounded-r-lg flex flex-col justify-center">
-                <h2 class="text-3xl font-semibold text-white mb-8 text-center">Iniciar Sesión</h2>
+            <div class="w-1/2  bg-[#EAFCF3] rounded-r-lg flex flex-col justify-center">
+                <h2 class="text-3xl font-semibold text-[#1c1c1e] mb-8 text-center">Iniciar Sesión</h2>
 
                 <!-- Formulario de Inicio de Sesión con Usuario y Contraseña -->
                 <form method="POST" action="../api/src/Core/App.php" id="loginForm" class="w-2/3 mx-auto">
@@ -130,7 +118,7 @@ $error = '';
                         <i id="togglePassword" class="fas fa-eye text-gray-400 cursor-pointer absolute right-3 top-1/2 transform -translate-y-1/2" onclick="togglePasswordVisibility()"></i>
                     </div>
 
-                    <button class="login-button bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg" type="submit">Iniciar Sesión</button>
+                    <button class="login-button bg-[#1c1c1e] hover:bg-[#00aa9d] text-white font-bold py-2 px-4 rounded-lg" type="submit">Iniciar Sesión</button>
                 </form>
             </div>
         </div>

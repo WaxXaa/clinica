@@ -1359,7 +1359,7 @@ CREATE TABLE pacientes(
     id_paciente INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
     apellido VARCHAR(100) NOT NULL,
-    cedula VARCHAR(25) NOT NULL,
+    cedula VARCHAR(25) UNIQUE NOT NULL,
     fecha_nacimiento DATE NOT NULL,
     sexo ENUM('M', 'F') NOT NULL,
     correo VARCHAR(100) not null,
@@ -1370,37 +1370,155 @@ CREATE TABLE pacientes(
     observaciones TEXT
 );
 
-CREATE TABLE atenciones (
-    id_atencion INT PRIMARY KEY AUTO_INCREMENT,
-    id_paciente INT NOT NULL,
-    fecha_ingreso DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    fecha_alta DATETIME,
-    estado ENUM('En Atención', 'Alta') NOT NULL DEFAULT 'En Atención',
-    CONSTRAINT fk_atencion_paciente FOREIGN KEY (id_paciente)
-        REFERENCES pacientes(id_paciente)
-        ON DELETE RESTRICT
-        ON UPDATE CASCADE
-);
+-- CREATE TABLE atenciones (
+--     id_atencion INT PRIMARY KEY AUTO_INCREMENT,
+--     id_paciente INT NOT NULL,
+--     fecha_ingreso DATETIME DEFAULT CURRENT_TIMESTAMP,
+--     fecha_alta DATETIME,
+--     estado ENUM('En Atención', 'Alta') DEFAULT 'En Atención',
+--     CONSTRAINT fk_atencion_paciente FOREIGN KEY (id_paciente)
+--         REFERENCES pacientes(id_paciente)
+--         ON DELETE RESTRICT
+--         ON UPDATE CASCADE
+-- );
 
 -- Modificar la tabla expedientes_pacientes para relacionarla con atenciones
 CREATE TABLE expedientes_pacientes (
     id_expediente INT PRIMARY KEY AUTO_INCREMENT,
-    id_atencion INT NOT NULL,
-    sintomas TEXT NOT NULL,
-    fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    doctor INT NOT NULL,
+    paciente INT NOT NULL,
+    causaIngreso VARCHAR(200) NOT NULL,
+    fecha_ingreso DATETIME DEFAULT CURRENT_TIMESTAMP,
+    doctor INT,
     tratamiento TEXT,
     medicamentos TEXT,
     diagnostico TEXT,
-    CONSTRAINT fk_expediente_atencion FOREIGN KEY (id_atencion)
-        REFERENCES atenciones(id_atencion)
+    fecha_alta DATETIME,
+    departamento INT NOT NULL,
+    estado ENUM('Espera','En Atencion', 'Alta') DEFAULT 'Espera',
+    CONSTRAINT fk_expediente_paciente FOREIGN KEY (paciente)
+        REFERENCES pacientes(id_paciente)
         ON DELETE RESTRICT
         ON UPDATE CASCADE,
     CONSTRAINT fk_expediente_doctor FOREIGN KEY (doctor)
         REFERENCES empleado(id_empleado)
         ON DELETE RESTRICT
-        ON UPDATE CASCADE
+        ON UPDATE CASCADE,
+        CONSTRAINT fk_expediente_departamento FOREIGN KEY (departamento)
+        REFERENCES departamento(id_departamento)
 );
+
+
+SELECT COUNT(*), departamento from expedientes_pacientes
+WHERE estado = 'Espera' OR estado = 'En Atencion';
+Group by departamento;
+
+DELIMITER $$
+
+CREATE PROCEDURE registrarIngresoPaciente (
+    IN p_departamento INT,
+    IN p_id_paciente INT,
+    IN p_causa_ingreso VARCHAR(200)
+)
+BEGIN
+    DECLARE v_existe_paciente INT;
+
+    -- Verificar si el paciente existe
+    SELECT COUNT(*) INTO v_existe_paciente
+    FROM pacientes
+    WHERE id_paciente = p_id_paciente;
+
+    IF v_existe_paciente > 0 THEN
+        -- Verificar si el paciente ya está siendo atendido
+        IF EXISTS (
+            SELECT 1 FROM expedientes_pacientes
+            WHERE paciente = p_id_paciente
+            AND estado IN ('Espera', 'En Atencion')
+        ) THEN
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'El paciente ya está siendo atendido.';
+        ELSE
+            INSERT INTO expedientes_pacientes (paciente, causaIngreso, departamento)
+            VALUES (p_id_paciente, p_causa_ingreso, p_departamento);
+        END IF;
+    ELSE
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'El paciente no existe.';
+    END IF;
+END $$
+
+DELIMITER ;
+
+
+
+DELIMITER $$
+
+CREATE PROCEDURE asignarDoctor (
+    IN p_id_doctor INT,
+    OUT p_codigo_estado INT,
+    OUT p_mensaje VARCHAR(255),
+    OUT p_datos_paciente TEXT
+)
+BEGIN
+    DECLARE v_existe_doctor INT;
+    DECLARE v_id_expediente INT;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        -- En caso de error, revertir la transacción y establecer código de error
+        ROLLBACK;
+        SET p_codigo_estado = -1;
+        SET p_mensaje = 'Error en la asignación del doctor.';
+    END;
+
+    START TRANSACTION;
+
+    -- Inicializar el mensaje y el código de estado
+    SET p_codigo_estado = 0;
+    SET p_mensaje = '';
+    SET p_datos_paciente = '';
+
+    -- Verificar si el doctor existe
+    SELECT COUNT(*) INTO v_existe_doctor
+    FROM empleado
+    WHERE id_empleado = p_id_doctor;
+
+    IF v_existe_doctor > 0 THEN
+        -- Buscar un paciente ingresado sin doctor asignado
+        SELECT expedientes_pacientes.id_expediente, CONCAT(pacientes.nombre, ' ', pacientes.apellido, ' (Cédula: ', pacientes.cedula, ')') AS datos_paciente
+        INTO v_id_expediente, p_datos_paciente
+        FROM expedientes_pacientes
+        JOIN pacientes ON expedientes_pacientes.paciente = pacientes.id_paciente
+        WHERE expedientes_pacientes.estado = 'Espera' AND expedientes_pacientes.doctor IS NULL
+        LIMIT 1;
+
+        IF v_id_expediente IS NOT NULL THEN
+            -- Asignar el doctor al expediente
+            UPDATE expedientes_pacientes
+            SET doctor = p_id_doctor, estado = 'En Atencion'
+            WHERE id_expediente = v_id_expediente;
+
+            -- Confirmar transacción
+            COMMIT;
+
+            SET p_codigo_estado = 1;
+            SET p_mensaje = 'Doctor asignado correctamente al paciente.';
+        ELSE
+            -- No hay pacientes por atender
+            ROLLBACK;
+            SET p_codigo_estado = 2;
+            SET p_mensaje = 'No hay pacientes por atender.';
+        END IF;
+    ELSE
+        -- El doctor no existe
+        ROLLBACK;
+        SET p_codigo_estado = 3;
+        SET p_mensaje = 'El doctor no existe.';
+    END IF;
+END $$
+
+DELIMITER ;
+
+
+
 
 -- Tabla para registrar los exámenes realizados al paciente durante la atención
 CREATE TABLE expedientes_examenes (
@@ -1409,6 +1527,7 @@ CREATE TABLE expedientes_examenes (
     id_expediente INT NOT NULL,
     examen INT NOT NULL,
     resultados TEXT,
+    estado ENUM('Espera', 'Sin Resultado', 'Con Resultado') DEFAULT 'Espera',
     CONSTRAINT fk_expediente_examenes_expediente FOREIGN KEY (id_expediente)
         REFERENCES expedientes_pacientes(id_expediente)
         ON DELETE CASCADE
@@ -1418,6 +1537,76 @@ CREATE TABLE expedientes_examenes (
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
+
+
+
+DELIMITER $$
+
+CREATE PROCEDURE asignarExamen(
+    IN p_id_doctor INT,
+    IN p_cedula_paciente INT,
+    IN p_examen INT,
+    OUT p_codigo_estado INT,
+    OUT p_mensaje VARCHAR(255)
+)
+BEGIN
+    DECLARE v_existe_doctor INT;
+    DECLARE v_existe_paciente INT;
+    DECLARE v_id_expediente INT;
+    -- Manejo de excepciones
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SET p_codigo_estado = -1;
+        SET p_mensaje = 'Error al asignar examen al paciente.';
+    END;
+
+    -- Iniciar una transacción
+    START TRANSACTION;
+
+    -- Inicializar el mensaje y el código de estado
+    SET p_codigo_estado = 0;
+    SET p_mensaje = '';
+
+    -- Verificar si el doctor existe
+    SELECT COUNT(*) INTO v_existe_doctor
+    FROM empleado
+    WHERE id_empleado = p_id_doctor;
+
+    IF v_existe_doctor > 0 THEN
+        -- Verificar si el paciente existe y está en atención con este doctor
+    
+        SELECT COUNT(*), expedientes_pacientes.id_expediente INTO v_existe_paciente, v_id_expediente
+        FROM expedientes_pacientes
+        JOIN pacientes as p ON expedientes_pacientes.paciente = p.id_paciente
+        WHERE p.cedula = p_cedula_paciente
+          AND estado = 'En Atencion' 
+          AND doctor = p_id_doctor;
+        IF v_existe_paciente > 0 THEN
+            INSERT INTO expedientes_examenes (fecha, expediente, examen, estado)
+            VALUES (NOW(), v_id_expediente, p_examen, 'Espera');
+            -- Confirmar la transacción
+            COMMIT;
+
+            SET p_codigo_estado = 1;
+            SET p_mensaje = 'examen correctamente.';
+        ELSE
+            -- El paciente no está en atención o el doctor no lo está atendiendo
+            ROLLBACK;
+            SET p_codigo_estado = 2;
+            SET p_mensaje = 'El paciente no está en atención o no está siendo atendido por este doctor.';
+        END IF;
+    ELSE
+        -- El doctor no existe
+        ROLLBACK;
+        SET p_codigo_estado = 3;
+        SET p_mensaje = 'El doctor no existe.';
+    END IF;
+
+END $$
+
+DELIMITER ;
+
 
 -- Tabla para generar facturas al dar de alta al paciente
 CREATE TABLE facturas (
@@ -1467,7 +1656,7 @@ BEGIN
     SELECT 
         IFNULL(SUM(e.costo_examen), 0) + 30 + v_cargo_adicional INTO v_total
     FROM expedientes_examenes ee
-    JOIN examenes e ON ee.examen = e.id_examen
+    JOIN examenes e ON e.examen = e.id_examen
     WHERE ee.expediente = (
         SELECT id_expediente
         FROM expedientes_pacientes
@@ -1487,107 +1676,320 @@ DELIMITER ;
 
 
 
-DELIMITER //
 
-CREATE PROCEDURE AsignarExamen(
-    IN p_id_atencion INT,
-    IN p_id_examen INT,
-    IN p_id_doctor VARCHAR(10),
-    IN p_fecha DATE
+
+
+DELIMITER $$
+
+CREATE PROCEDURE TraspasarAtencion(
+    IN p_id_doctor INT,
+    IN p_departamento INT,
+    IN p_cedula_paciente INT,
+    OUT p_codigo_estado INT,
+    OUT p_mensaje VARCHAR(255)
 )
 BEGIN
+    -- Declaraciones de variables deben estar al inicio
+    DECLARE v_existe_doctor INT;
+    DECLARE v_existe_paciente INT;
     DECLARE v_id_expediente INT;
+
+
+    -- Manejo de excepciones
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+BEGIN
+    DECLARE msg TEXT;
+    DECLARE code INT;
+    
+    -- Obtener el mensaje de error y el código de error
+    GET DIAGNOSTICS CONDITION 1
+        code = MYSQL_ERRNO, 
+        msg = MESSAGE_TEXT;
+    
+    -- Realizar el rollback
+    ROLLBACK;
+    
+    -- Establecer los valores de salida
+    SET p_codigo_estado = -1;
+    SET p_mensaje = CONCAT('Error al recetar medicamentos al paciente: ', msg);
+END;
 
     -- Iniciar una transacción
     START TRANSACTION;
 
-    -- Verificar que el doctor está asociado a la atención
-    IF NOT EXISTS (
-        SELECT 1 FROM atenciones
-        WHERE id_atencion = p_id_atencion
-          AND id_doctor = (
-              SELECT id_empleado FROM empleados WHERE id_empleado = p_id_doctor
-          )
-    ) THEN
-        SIGNAL SQLSTATE '45000' 
-            SET MESSAGE_TEXT = 'Doctor no asociado a esta atención.';
+    -- Inicializar el mensaje y el código de estado
+    SET p_codigo_estado = 0;
+    SET p_mensaje = '';
+
+    -- Verificar si el doctor existe
+    SELECT COUNT(*) INTO v_existe_doctor
+    FROM empleado
+    WHERE id_empleado = p_id_doctor;
+
+    IF v_existe_doctor > 0 THEN
+        -- Verificar si el paciente existe y está en atención con este doctor
+        SELECT COUNT(*), expedientes_pacientes.id_expediente INTO v_existe_paciente, v_id_expediente
+        FROM expedientes_pacientes
+        JOIN pacientes as p ON expedientes_pacientes.paciente = p.id_paciente
+        WHERE p.cedula = p_cedula_paciente
+          AND estado = 'En Atencion' 
+          AND doctor = p_id_doctor;
+
+        IF v_existe_paciente > 0 THEN
+            -- Actualizar el departamento y el estado del paciente
+            UPDATE expedientes_pacientes
+            SET departamento = p_departamento, estado = 'Espera', doctor = NULL
+            WHERE id_expediente = v_id_expediente;
+
+            -- Confirmar la transacción
+            COMMIT;
+
+            SET p_codigo_estado = 1;
+            SET p_mensaje = 'Atención traspasada correctamente.';
+        ELSE
+            -- El paciente no está en atención o el doctor no lo está atendiendo
+            ROLLBACK;
+            SET p_codigo_estado = 2;
+            SET p_mensaje = 'El paciente no está en atención o no está siendo atendido por este doctor.';
+        END IF;
+    ELSE
+        -- El doctor no existe
+        ROLLBACK;
+        SET p_codigo_estado = 3;
+        SET p_mensaje = 'El doctor no existe.';
     END IF;
 
-    -- Obtener el id_expediente relacionado con la atención
-    SELECT id_expediente INTO v_id_expediente
-    FROM expedientes_pacientes
-    WHERE id_atencion = p_id_atencion
-    LIMIT 1;
+END $$
+DELIMITER ;
 
-    -- Insertar el examen en expedientes_examenes
-    INSERT INTO expedientes_examenes (fecha, expediente, examen, resultados)
-    VALUES (p_fecha, v_id_expediente, p_id_examen, NULL);
 
-    -- Confirmar la transacción
-    COMMIT;
-END //
+
+
+
+DELIMITER $$
+
+CREATE PROCEDURE darAltaPaciente(
+    IN p_id_doctor INT,
+    IN p_cedula_paciente INT,
+    OUT p_codigo_estado INT,
+    OUT p_mensaje VARCHAR(255)
+)
+BEGIN
+    DECLARE v_existe_doctor INT;
+    DECLARE v_existe_paciente INT;
+    DECLARE v_id_expediente INT;
+
+
+    -- Manejo de excepciones
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SET p_codigo_estado = -1;
+        SET p_mensaje = 'Error al dar de alta al paciente.';
+    END;
+
+    -- Iniciar una transacción
+    START TRANSACTION;
+
+    -- Inicializar el mensaje y el código de estado
+    SET p_codigo_estado = 0;
+    SET p_mensaje = '';
+
+    -- Verificar si el doctor existe
+    SELECT COUNT(*) INTO v_existe_doctor
+    FROM empleado
+    WHERE id_empleado = p_id_doctor;
+
+    IF v_existe_doctor > 0 THEN
+        -- Verificar si el paciente existe y está en atención con este doctor
+        SELECT COUNT(*), expedientes_pacientes.id_expediente INTO v_existe_paciente, v_id_expediente
+        FROM expedientes_pacientes
+        JOIN pacientes as p ON expedientes_pacientes.paciente = p.id_paciente
+        WHERE p.cedula = p_cedula_paciente
+          AND estado = 'En Atencion' 
+          AND doctor = p_id_doctor;
+
+        IF v_existe_paciente > 0 THEN
+            -- Actualizar el departamento y el estado del paciente
+            UPDATE expedientes_pacientes
+            SET estado = 'Alta', fecha_alta = NOW()
+            WHERE id_expediente = v_id_expediente;
+            -- Confirmar la transacción
+            COMMIT;
+
+            SET p_codigo_estado = 1;
+            SET p_mensaje = 'Paciente dado de alta correctamente.';
+        ELSE
+            -- El paciente no está en atención o el doctor no lo está atendiendo
+            ROLLBACK;
+            SET p_codigo_estado = 2;
+            SET p_mensaje = 'El paciente no está en atención o no está siendo atendido por este doctor.';
+        END IF;
+    ELSE
+        -- El doctor no existe
+        ROLLBACK;
+        SET p_codigo_estado = 3;
+        SET p_mensaje = 'El doctor no existe.';
+    END IF;
+
+END $$
 
 DELIMITER ;
 
 
 
 
-DELIMITER //
+DELIMITER $$
 
-CREATE PROCEDURE TraspasarAtencion(
-    IN p_id_atencion INT,
-    IN p_new_id_paciente INT
+CREATE PROCEDURE actualizarMedicamentos(
+    IN p_id_doctor INT,
+    IN p_cedula_paciente INT,
+    IN p_medicamentos TEXT,
+    OUT p_codigo_estado INT,
+    OUT p_mensaje VARCHAR(255)
 )
 BEGIN
-    DECLARE v_old_id_paciente INT;
+    DECLARE v_existe_doctor INT;
+    DECLARE v_existe_paciente INT;
+    DECLARE v_id_paciente INT;
+    DECLARE v_id_expediente INT;
+
+
+    -- Manejo de excepciones
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+BEGIN
+    DECLARE msg TEXT;
+    DECLARE code INT;
+    
+    -- Obtener el mensaje de error y el código de error
+    GET DIAGNOSTICS CONDITION 1
+        code = MYSQL_ERRNO, 
+        msg = MESSAGE_TEXT;
+    
+    -- Realizar el rollback
+    ROLLBACK;
+    
+    -- Establecer los valores de salida
+    SET p_codigo_estado = -1;
+    SET p_mensaje = CONCAT('Error al recetar medicamentos al paciente: ', msg);
+END;
+
+    -- Iniciar una transacción
+    START TRANSACTION;
+
+    -- Inicializar el mensaje y el código de estado
+    SET p_codigo_estado = 0;
+    SET p_mensaje = '';
+
+    -- Verificar si el doctor existe
+    SELECT COUNT(*) INTO v_existe_doctor
+    FROM empleado
+    WHERE id_empleado = p_id_doctor;
+
+    IF v_existe_doctor > 0 THEN
+        -- Verificar si el paciente existe y está en atención con este doctor
+        SELECT COUNT(*), p.id_paciente, expedientes_pacientes.id_expediente INTO v_existe_paciente, v_id_paciente, v_id_expediente
+        FROM expedientes_pacientes
+        JOIN pacientes as p ON expedientes_pacientes.paciente = p.id_paciente
+        WHERE p.cedula = p_cedula_paciente
+          AND estado = 'En Atencion' 
+          AND doctor = p_id_doctor;
+
+        IF v_existe_paciente > 0 THEN
+            UPDATE expedientes_pacientes
+            SET medicamentos = p_medicamentos
+            WHERE id_expediente = v_id_expediente;
+            -- Confirmar la transacción
+            COMMIT;
+
+            SET p_codigo_estado = 1;
+            SET p_mensaje = 'medicamentos recetados correctamente.';
+        ELSE
+            -- El paciente no está en atención o el doctor no lo está atendiendo
+            ROLLBACK;
+            SET p_codigo_estado = 2;
+            SET p_mensaje = 'El paciente no está en atención o no está siendo atendido por este doctor.';
+        END IF;
+    ELSE
+        -- El doctor no existe
+        ROLLBACK;
+        SET p_codigo_estado = 3;
+        SET p_mensaje = 'El doctor no existe.';
+    END IF;
+
+END $$
+
+DELIMITER ;
+
+
+
+
+
+DELIMITER $$
+
+CREATE PROCEDURE actualizarTratamiento(
+    IN p_id_doctor INT,
+    IN p_cedula_paciente INT,
+    IN p_tratamieto TEXT,
+    OUT p_codigo_estado INT,
+    OUT p_mensaje VARCHAR(255)
+)
+BEGIN
+    DECLARE v_existe_doctor INT;
+    DECLARE v_existe_paciente INT;
+    DECLARE v_id_expediente INT;
 
     -- Manejo de excepciones
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         ROLLBACK;
-        SIGNAL SQLSTATE '45000' 
-            SET MESSAGE_TEXT = 'Error al traspasar la atención.';
+        SET p_codigo_estado = -1;
+        SET p_mensaje = 'Error al recetar tratamiento al paciente.';
     END;
 
     -- Iniciar una transacción
     START TRANSACTION;
 
-    -- Verificar que la atención existe y obtener el paciente actual
-    SELECT id_paciente INTO v_old_id_paciente
-    FROM atenciones
-    WHERE id_atencion = p_id_atencion
-    FOR UPDATE;
+    -- Inicializar el mensaje y el código de estado
+    SET p_codigo_estado = 0;
+    SET p_mensaje = '';
 
-    IF v_old_id_paciente IS NULL THEN
-        SIGNAL SQLSTATE '45000' 
-            SET MESSAGE_TEXT = 'La atención especificada no existe.';
+    -- Verificar si el doctor existe
+    SELECT COUNT(*) INTO v_existe_doctor
+    FROM empleado
+    WHERE id_empleado = p_id_doctor;
+
+    IF v_existe_doctor > 0 THEN
+        -- Verificar si el paciente existe y está en atención con este doctor
+        SELECT COUNT(*), expedientes_pacientes.id_expediente INTO v_existe_paciente, v_id_expediente
+        FROM expedientes_pacientes
+        JOIN pacientes as p ON expedientes_pacientes.paciente = p.id_paciente
+        WHERE p.cedula = p_cedula_paciente
+          AND estado = 'En Atencion' 
+          AND doctor = p_id_doctor;
+
+        IF v_existe_paciente > 0 THEN
+            UPDATE expedientes_pacientes
+            SET tratamiento = p_tratamieto
+            WHERE id_expediente = v_id_expediente;
+            -- Confirmar la transacción
+            COMMIT;
+
+            SET p_codigo_estado = 1;
+            SET p_mensaje = 'tratamiento recetados correctamente.';
+        ELSE
+            -- El paciente no está en atención o el doctor no lo está atendiendo
+            ROLLBACK;
+            SET p_codigo_estado = 2;
+            SET p_mensaje = 'El paciente no está en atención o no está siendo atendido por este doctor.';
+        END IF;
+    ELSE
+        -- El doctor no existe
+        ROLLBACK;
+        SET p_codigo_estado = 3;
+        SET p_mensaje = 'El doctor no existe.';
     END IF;
 
-    -- Verificar que el nuevo paciente existe
-    IF NOT EXISTS (
-        SELECT 1 FROM pacientes
-        WHERE id_paciente = p_new_id_paciente
-    ) THEN
-        SIGNAL SQLSTATE '45000' 
-            SET MESSAGE_TEXT = 'El nuevo paciente no existe.';
-    END IF;
-
-    -- Actualizar la atención para asignarla al nuevo paciente
-    UPDATE atenciones
-    SET id_paciente = p_new_id_paciente
-    WHERE id_atencion = p_id_atencion;
-
-    -- Registrar la transferencia en el expediente del paciente
-    -- Asumiendo que 'tratamiento' se usa para observaciones adicionales
-    UPDATE expedientes_pacientes
-    SET diagnostico = CONCAT(
-        diagnostico, ' | Atención traspasada de paciente ID ',
-        v_old_id_paciente, ' a paciente ID ', p_new_id_paciente, ' el ', NOW()
-    )
-    WHERE id_atencion = p_id_atencion;
-
-    -- Confirmar la transacción
-    COMMIT;
-END //
+END $$
 
 DELIMITER ;

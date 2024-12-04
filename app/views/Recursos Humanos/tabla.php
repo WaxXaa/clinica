@@ -10,7 +10,7 @@ $busqueda = isset($_GET['busqueda']) ? $_GET['busqueda'] : '';
 $pagina_actual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
 
 // Configurar registros por página y calcular el offset
-$registros_por_pagina = 2;
+$registros_por_pagina = 10;
 $offset = ($pagina_actual - 1) * $registros_por_pagina;
 
 // Construir consulta con o sin búsqueda

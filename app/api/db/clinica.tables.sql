@@ -233,7 +233,7 @@ insert into rol (id_rol, nombre, tipo, departamento) values
 CREATE TABLE permisos (
     id_permiso VARCHAR(5) NOT NULL PRIMARY KEY,
     descripcion VARCHAR(100) NOT NULL,
-    departamento INT NOT NULL,
+    departamento INT,
     CONSTRAINT fk_permisos_departamento FOREIGN KEY (departamento) REFERENCES departamento(id_departamento) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
@@ -395,6 +395,266 @@ insert into rol_permisos (rol, permiso) values
 ('EM1','PHR5');
 
 
+insert into permisos (id_permiso, descripcion, departamento) 
+values ('PGP1', 'Registrar Paciente', 4),
+('PGP2', 'Ver Pacientes  registrados', 4),
+('PGP3', 'ingrasar Paciente', 4),
+('PGP4', 'atender paciente', 4),
+('PGP5', 'dar alta paciente', 4),
+('PGP6', 'recetar medicamento', 4),
+('PGP7', 'recetar tratamiento', 4),
+('PGP8', 'ver pacientes', 4),
+('PGP9', 'hacer traspaso de paciente', 4),
+('PGP10', 'asignar examen', 4);
+
+
+-- los que pueden registrar paciente son DRN1, DRN2, MG1, CG1, EN1, CD1, NR1, GN1, PD1, OF1, OR1, UR1, TR1, RH1, NT1, PS1, DR1, OD1, EM1
+-- tambien los Mg2 , CG2, EN2, CD2, NR2, GN2, PD2, OF2, OR2, UR2, TR2, RH2, NT2, PS2, DR2, OD2, EM2.
+-- mg4, cg4, en4, cd4, nr4, gn4, pd4, of4, or4, ur4, tr4, rh4, nt4, ps4, dr4, od4, em4,
+-- mg5,cg5,en5,cd5,nr5,gn5,pd5,of5,or5,ur5,tr5,rh5,nt5,ps5,dr5,od5,em5,
+
+inser into rol_permisos (rol, permiso) values
+('DRN1', 'PGP1'),
+('DRN2', 'PGP1'),
+('MG1', 'PGP1'),
+('CG1', 'PGP1'),
+('EN1', 'PGP1'),
+('CD1', 'PGP1'),
+('NR1', 'PGP1'),
+('GN1', 'PGP1'),
+('PD1', 'PGP1'),
+('OF1', 'PGP1'),
+('OR1', 'PGP1'),
+('UR1', 'PGP1'),
+('TR1', 'PGP1'),
+('RH1', 'PGP1'),
+('NT1', 'PGP1'),
+('PS1', 'PGP1'),
+('DR1', 'PGP1'),
+('OD1', 'PGP1'),
+('EM1', 'PGP1'),
+('MG2', 'PGP1'),
+('CG2', 'PGP1'),
+('EN2', 'PGP1'),
+('CD2', 'PGP1'),
+('NR2', 'PGP1'),
+('GN2', 'PGP1'),
+('PD2', 'PGP1'),
+('OF2', 'PGP1'),
+('OR2', 'PGP1'),
+('UR2', 'PGP1'),
+('TR2', 'PGP1'),
+('RH2', 'PGP1'),
+('NT2', 'PGP1'),
+('PS2', 'PGP1'),
+('DR2', 'PGP1'),
+('OD2', 'PGP1'),
+('EM2', 'PGP1'),
+('MG4', 'PGP1'),
+('CG4', 'PGP1'),
+('EN4', 'PGP1'),
+('CD4', 'PGP1'),
+('NR4', 'PGP1'),
+('GN4', 'PGP1'),
+('PD4', 'PGP1'),
+('OF4', 'PGP1'),
+('OR4', 'PGP1'),
+('UR4', 'PGP1'),
+('TR4', 'PGP1'),
+('RH4', 'PGP1'),
+('NT4', 'PGP1'),
+('PS4', 'PGP1'),
+('DR4', 'PGP1'),
+('OD4', 'PGP1'),
+('EM4', 'PGP1'),
+('MG5', 'PGP1'),
+('CG5', 'PGP1'),
+('EN5', 'PGP1'),
+('CD5', 'PGP1'),
+('NR5', 'PGP1'),
+('GN5', 'PGP1'),
+('PD5', 'PGP1'),
+('OF5', 'PGP1'),
+('OR5', 'PGP1'),
+('UR5', 'PGP1'),
+('TR5', 'PGP1'),
+('RH5', 'PGP1'),
+('NT5', 'PGP1'),
+('PS5', 'PGP1'),
+('DR5', 'PGP1'),
+('OD5', 'PGP1'),
+('EM5', 'PGP1');
+
+
+inser into rol_permisos (rol, permiso) values
+('DRN1', 'PGP2'),
+('DRN2', 'PGP2'),
+('MG1', 'PGP2'),
+('CG1', 'PGP2'),
+('EN1', 'PGP2'),
+('CD1', 'PGP2'),
+('NR1', 'PGP2'),
+('GN1', 'PGP2'),
+('PD1', 'PGP2'),
+('OF1', 'PGP2'),
+('OR1', 'PGP2'),
+('UR1', 'PGP2'),
+('TR1', 'PGP2'),
+('RH1', 'PGP2'),
+('NT1', 'PGP2'),
+('PS1', 'PGP2'),
+('DR1', 'PGP2'),
+('OD1', 'PGP2'),
+('EM1', 'PGP2'),
+('MG2', 'PGP2'),
+('CG2', 'PGP2'),
+('EN2', 'PGP2'),
+('CD2', 'PGP2'),
+('NR2', 'PGP2'),
+('GN2', 'PGP2'),
+('PD2', 'PGP2'),
+('OF2', 'PGP2'),
+('OR2', 'PGP2'),
+('UR2', 'PGP2'),
+('TR2', 'PGP2'),
+('RH2', 'PGP2'),
+('NT2', 'PGP2'),
+('PS2', 'PGP2'),
+('DR2', 'PGP2'),
+('OD2', 'PGP2'),
+('EM2', 'PGP2'),
+('MG4', 'PGP2'),
+('CG4', 'PGP2'),
+('EN4', 'PGP2'),
+('CD4', 'PGP2'),
+('NR4', 'PGP2'),
+('GN4', 'PGP2'),
+('PD4', 'PGP2'),
+('OF4', 'PGP2'),
+('OR4', 'PGP2'),
+('UR4', 'PGP2'),
+('TR4', 'PGP2'),
+('RH4', 'PGP2'),
+('NT4', 'PGP2'),
+('PS4', 'PGP2'),
+('DR4', 'PGP2'),
+('OD4', 'PGP2'),
+('EM4', 'PGP2'),
+('MG5', 'PGP2'),
+('CG5', 'PGP2'),
+('EN3', 'PGP2'),
+('CD5', 'PGP2'),
+('NR5', 'PGP2'),
+('GN5', 'PGP2'),
+('PD5', 'PGP2'),
+('OF5', 'PGP2'),
+('OR5', 'PGP2'),
+('UR5', 'PGP2'),
+('TR5', 'PGP2'),
+('RH5', 'PGP2'),
+('NT5', 'PGP2'),
+('PS5', 'PGP2'),
+('DR5', 'PGP2'),
+('OD5', 'PGP2'),
+('EM5', 'PGP2'),
+('LB1','PGP2'),
+('MG6', 'PGP2'),
+('CG6', 'PGP2'),
+('CD6', 'PGP2'),
+('NR6', 'PGP2'),
+('GN6', 'PGP2'),
+('PD6', 'PGP2'),
+('OF6', 'PGP2'),
+('OR6', 'PGP2'),
+('UR6', 'PGP2'),
+('TR6', 'PGP2'),
+('RH6', 'PGP2'),
+('NT6', 'PGP2'),
+('PS6', 'PGP2'),
+('DR6', 'PGP2'),
+('OD6', 'PGP2'),
+('EM6', 'PGP2');
+
+
+inser into rol_permisos (rol, permiso) values
+('DRN1', 'PGP3'),
+('DRN2', 'PGP3'),
+('MG1', 'PGP3'),
+('CG1', 'PGP3'),
+('EN1', 'PGP3'),
+('CD1', 'PGP3'),
+('NR1', 'PGP3'),
+('GN1', 'PGP3'),
+('PD1', 'PGP3'),
+('OF1', 'PGP3'),
+('OR1', 'PGP3'),
+('UR1', 'PGP3'),
+('TR1', 'PGP3'),
+('RH1', 'PGP3'),
+('NT1', 'PGP3'),
+('PS1', 'PGP3'),
+('DR1', 'PGP3'),
+('OD1', 'PGP3'),
+('EM1', 'PGP3'),
+('MG2', 'PGP3'),
+('CG2', 'PGP3'),
+('EN2', 'PGP3'),
+('CD2', 'PGP3'),
+('NR2', 'PGP3'),
+('GN2', 'PGP3'),
+('PD2', 'PGP3'),
+('OF2', 'PGP3'),
+('OR2', 'PGP3'),
+('UR2', 'PGP3'),
+('TR2', 'PGP3'),
+('RH2', 'PGP3'),
+('NT2', 'PGP3'),
+('PS2', 'PGP3'),
+('DR2', 'PGP3'),
+('OD2', 'PGP3'),
+('EM2', 'PGP3'),
+('MG4', 'PGP3'),
+('CG4', 'PGP3'),
+('CD4', 'PGP3'),
+('NR4', 'PGP3'),
+('GN4', 'PGP3'),
+('PD4', 'PGP3'),
+('OF4', 'PGP3'),
+('OR4', 'PGP3'),
+('UR4', 'PGP3'),
+('TR4', 'PGP3'),
+('RH4', 'PGP3'),
+('NT4', 'PGP3'),
+('PS4', 'PGP3'),
+('DR4', 'PGP3'),
+('OD4', 'PGP3'),
+('EM4', 'PGP3');
+
+
+-- para atender paciente solo pueden los medico
+insert into rol_permisos (id_rol, id_permiso) values
+('MG2', 'PGP4'),
+('CG2', 'PGP4'),
+('CD2', 'PGP4'),
+('NR2', 'PGP4'),
+('GN2', 'PGP4'),
+('PD2', 'PGP4'),
+('OF2', 'PGP4'),
+('OR2', 'PGP4'),
+('UR2', 'PGP4'),
+('TR2', 'PGP4'),
+('RH2', 'PGP4'),
+('NT2', 'PGP4'),
+('PS2', 'PGP4'),
+('DR2', 'PGP4'),
+('OD2', 'PGP4'),
+('EM2', 'PGP4');
+
+
+
+
+
+
 
 
 
@@ -499,7 +759,7 @@ INSERT INTO modulos (id_modulo, nombre, descripcion) VALUES
 (2, 'Recursos Humanos', 'Modulo para gestionar los recursos humanos'),
 (5, 'Laboratorios', 'Modulo para gestionar los laboratorios');
 
---ahora tengo que relacionar los modulos con los roles para indicar que modulo puede ver cada rol
+-- ahora tengo que relacionar los modulos con los roles para indicar que modulo puede ver cada rol
 CREATE TABLE modulo_rol (
     id_modulo INT NOT NULL,
     id_rol VARCHAR(5) NOT NULL,
@@ -508,7 +768,7 @@ CREATE TABLE modulo_rol (
     FOREIGN KEY (id_rol) REFERENCES rol(id_rol) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
---el director y subdirector del departamento de direccion pueden ver todos los modulos
+-- el director y subdirector del departamento de direccion pueden ver todos los modulos
 INSERT INTO modulo_rol (id_modulo, id_rol) VALUES
 (1, 'DRN1'),
 (2, 'DRN1'),
@@ -520,6 +780,8 @@ INSERT INTO modulo_rol (id_modulo, id_rol) VALUES
 (3, 'DRN2'),
 (4, 'DRN2'),
 (5, 'DRN2');
+
+
 
 -- el asistente y secretario solo pueden ver el modulo de finanzas, recursos humanos, inventario
 INSERT INTO modulo_rol (id_modulo, id_rol) VALUES
@@ -616,7 +878,7 @@ INSERT INTO modulo_rol (id_modulo, id_rol) VALUES
 (1, 'EN3'),
 (1, 'EN4');
 
---con el resto de departamentos pasa lo mismo que con medicina general y cirugia
+-- con el resto de departamentos pasa lo mismo que con medicina general y cirugia
 INSERT INTO modulo_rol (id_modulo, id_rol) VALUES
 (1, 'CD1'),
 (2, 'CD1'),
@@ -1408,10 +1670,6 @@ CREATE TABLE expedientes_pacientes (
 );
 
 
-SELECT COUNT(*), departamento from expedientes_pacientes
-WHERE estado = 'Espera' OR estado = 'En Atencion';
-Group by departamento;
-
 DELIMITER $$
 
 CREATE PROCEDURE registrarIngresoPaciente (
@@ -1636,17 +1894,6 @@ END $$
 DELIMITER ;
 
 
-SELECT ee.id_examen_paciente as numExamen
-p.nombre as nombre,
-p.apellido as apellido,
-p.cedula as cedula,
-ex.nombre as examen,
-ee.estado as estado
-FROM expedientes_examenes as ee
-JOIN expedientes_pacientes as ep on ee.id_expediente = ep.id_expediente 
-JOIN pacientes as p on ep.paciente = p.id_paciente 
-JOIN examenes as ex on ee.examen = ex.id_examen 
-WHERE estado = 'Espera' OR estado = 'Sin Resultado';
 
 DELIMITER $$
 
@@ -2113,120 +2360,440 @@ END $$
 
 DELIMITER ;
 
-CREATE TABLE InventarioGeneral (
-    IdInsumo INT AUTO_INCREMENT PRIMARY KEY,  -- ID único del insumo
-    NombreInsumo VARCHAR(30) NOT NULL UNIQUE, -- Nombre del insumo (único para evitar duplicados)
-    Cantidad INT NOT NULL                     -- Cantidad disponible en el inventario general
+
+
+
+
+
+
+
+
+
+-- 🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲🎲
+
+
+
+
+
+CREATE TABLE insumos (
+    id_insumo INT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    costo DECIMAL(10,2) NOT NULL
 );
 
-CREATE TABLE InventarioDepartamento (
-    IdInsumo INT NOT NULL,                        -- ID del insumo (relacionado con InventarioGeneral)
-    IdDepartamento INT NOT NULL,                 -- ID del departamento (relacionado con Departamento)
-    Cantidad INT NOT NULL,                       -- Cantidad del insumo en el departamento
-    PRIMARY KEY (IdInsumo, IdDepartamento),      -- Clave compuesta para evitar duplicados
-    FOREIGN KEY (IdInsumo) REFERENCES InventarioGeneral(IdInsumo),
-    FOREIGN KEY (IdDepartamento) REFERENCES Departamento(id_departamento)
+CREATE TABLE insumos_departamento (
+    id_insumo INT NOT NULL,                        -- ID del insumo (relacionado con Insumos)
+    id_departamento INT NOT NULL,           -- Cantidad del insumo en el departamento
+    PRIMARY KEY (id_insumo, id_departamento),      -- Clave compuesta para evitar duplicados
+    FOREIGN KEY (id_insumo) REFERENCES insumos(id_insumo),
+    FOREIGN KEY (id_departamento) REFERENCES Departamento(id_departamento)
 );
 
-DELIMITER //
 
-CREATE PROCEDURE TransferirInsumo(
-    IN p_IdInsumo INT,              -- ID del insumo a transferir
-    IN p_IdDepartamento INT,        -- ID del departamento receptor
-    IN p_Cantidad INT               -- Cantidad a transferir
+
+
+
+
+
+
+
+CREATE TABLE inventario_departamento (
+    id_insumo INT NOT NULL,                        -- ID del insumo (relacionado con InventarioGeneral)
+    id_departamento INT NOT NULL,                 -- ID del departamento (relacionado con Departamento)
+    cantidad INT NOT NULL,                       -- Cantidad del insumo en el departamento
+    PRIMARY KEY (id_insumo, id_departamento),      -- Clave compuesta para evitar duplicados
+    FOREIGN KEY (id_insumo) REFERENCES insumos(id_insumo),
+    FOREIGN KEY (id_departamento) REFERENCES Departamento(id_departamento)
+);
+
+CREATE TABLE peticiones_insumos (
+    id_peticion INT PRIMARY KEY AUTO_INCREMENT,
+    cantidad INT NOT NULL,
+    insumo INT NOT NULL,
+    id_departamento INT NOT NULL,
+    fecha_peticion DATETIME DEFAULT CURRENT_TIMESTAMP,
+    estado ENUM('Pendiente', 'Aprobada') DEFAULT 'Pendiente',
+    CONSTRAINT fk_peticion_departamento FOREIGN KEY (id_departamento)
+        REFERENCES departamento(id_departamento)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE,
+    CONSTRAINT fk_peticion_insumo FOREIGN KEY (insumo)
+        REFERENCES insumos(id_insumo)
+);
+
+
+DELIMITER $$
+
+CREATE PROCEDURE pedirInsumo(
+    IN p_Cantidad INT,
+    IN p_id_insumo INT,
+    IN p_departamento INT,
+    OUT p_codigo_estado INT,
+    OUT p_mensaje VARCHAR(255)
 )
 BEGIN
-    -- Verificar si hay suficiente cantidad en InventarioGeneral
-    IF (SELECT Cantidad FROM InventarioGeneral WHERE IdInsumo = p_IdInsumo) >= p_Cantidad THEN
 
-        -- Verificar si el insumo ya existe en InventarioDepartamento
-        IF EXISTS (
-            SELECT 1
-            FROM InventarioDepartamento
-            WHERE IdInsumo = p_IdInsumo AND IdDepartamento = p_IdDepartamento
-        ) THEN
-            -- Actualizar la cantidad existente en el departamento
-            UPDATE InventarioDepartamento
-            SET Cantidad = Cantidad + p_Cantidad
-            WHERE IdInsumo = p_IdInsumo AND IdDepartamento = p_IdDepartamento;
-        ELSE
-            -- Insertar un nuevo registro en InventarioDepartamento
-            INSERT INTO InventarioDepartamento (IdInsumo, IdDepartamento, Cantidad)
-            VALUES (p_IdInsumo, p_IdDepartamento, p_Cantidad);
-        END IF;
+    -- Manejo de excepciones
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SET p_codigo_estado = -1;
+        SET p_mensaje = 'Error al pedir mas insumos.';
+    END;
 
-        -- Actualizar la cantidad en InventarioGeneral
-        UPDATE InventarioGeneral
-        SET Cantidad = Cantidad - p_Cantidad
-        WHERE IdInsumo = p_IdInsumo;
+    INSERT INTO peticiones_insumos (cantidad, insumo, id_departamento)
+        VALUES (p_Cantidad, p_id_insumo, p_departamento);
 
-    ELSE
-        -- Lanzar un error si no hay suficiente cantidad
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Cantidad insuficiente en el inventario general';
-    END IF;
-END;
-//
+    COMMIT;
 
--- Se llama utilizando "CALL TransferirInsumo(a, b, c); a siendo el objeto que se quiere transferir, b siendo el departamento, y c siendo la cantidad"
+    SET p_codigo_estado = 1;
+    SET p_mensaje = 'Insumo pedido correctamente.';
+
+
+END $$
 
 DELIMITER ;
 
-INSERT INTO InventarioGeneral (NombreInsumo, Cantidad)
-VALUES
-    ('Guantes quirúrgicos', 200),
-    ('Mascarillas N95', 500),
-    ('Jeringas 5ml', 300),
-    ('Alcohol 70%', 100),
-    ('Batas quirúrgicas', 150),
-    ('Gasas estériles', 400),
-    ('Catéter intravenoso', 250),
-    ('Antiséptico iodado', 80),
-    ('Termómetros digitales', 50),
-    ('Esfigmomanómetros', 30),
-    ('Cintas adhesivas médicas', 120),
-    ('Vendas elásticas', 220),
-    ('Estetoscopios', 20),
-    ('Suturas absorbibles', 100),
-    ('Oxímetros de pulso', 40),
-    ('Tijeras quirúrgicas', 60),
-    ('Cánulas nasales', 300),
-    ('Cubrebocas quirúrgicos', 600),
-    ('Cajas de guantes estériles', 100),
-    ('Solución salina 500ml', 400),
-    ('Solución glucosa 500ml', 200),
-    ('Agujas hipodérmicas', 1000),
-    ('Bolsas de suero', 350),
-    ('Desinfectante hospitalario', 90),
-    ('Carros de curación', 10),
-    ('Bombas de infusión', 15),
-    ('Monitores de signos vitales', 25),
-    ('Electrodos ECG', 500),
-    ('Papel ECG', 150),
-    ('Tubos de ensayo', 700),
-    ('Microscopios', 10),
-    ('Reactivos de laboratorio', 100),
-    ('Centrífugas de laboratorio', 5),
-    ('Cubetas quirúrgicas', 50),
-    ('Sillas de ruedas', 20),
-    ('Camillas móviles', 15),
-    ('Luces quirúrgicas', 10),
-    ('Laringoscopios', 25),
-    ('Respiradores automáticos', 20),
-    ('Cánulas de traqueostomía', 60),
-    ('Guías para intubación', 50),
-    ('Paquetes de bisturí', 300),
-    ('Cubrecalzado desechable', 500),
-    ('Gorros quirúrgicos', 400),
-    ('Batas para visitantes', 300),
-    ('Extintores de CO2', 25),
-    ('Gas oxígeno comprimido', 50),
-    ('Toallas desinfectantes', 700),
-    ('Papel higiénico industrial', 1000),
-    ('Fajas lumbares', 120),
-    ('Rodilleras ortopédicas', 80);
+DELIMITER $$
+
+CREATE PROCEDURE transferirInsumo(
+    IN p_id_insumo INT,              -- ID del insumo a transferir
+    IN p_id_departamento INT,        -- ID del departamento receptor
+    IN p_cantidad INT,               -- Cantidad a transferir
+    IN p_id_peticion INT,            -- ID de la petición de insumo
+    OUT p_codigo_estado INT,         -- Código de estado de la operación
+    OUT p_mensaje VARCHAR(255)       -- Mensaje descriptivo del resultado
+)
+BEGIN
+    DECLARE v_cantidad_actual INT;
+    DECLARE v_cantidad_departamento INT;
+
+    -- Manejo de excepciones
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SET p_codigo_estado = -1;
+        SET p_mensaje = 'Error al transferir el insumo.';
+    END;
+
+    -- Iniciar una transacción
+    START TRANSACTION;
+
+    -- Obtener la cantidad actual en el inventario general (id_departamento = 0)
+    SELECT cantidad INTO v_cantidad_actual
+    FROM inventario_departamento
+    WHERE id_insumo = p_id_insumo AND id_departamento = 0;
+
+    -- Verificar si hay suficiente cantidad en el inventario general
+    IF v_cantidad_actual >= p_cantidad THEN
+        -- Verificar si el insumo ya existe en el inventario del departamento
+        SELECT cantidad INTO v_cantidad_departamento
+        FROM inventario_departamento
+        WHERE id_insumo = p_id_insumo AND id_departamento = p_id_departamento;
+
+        IF v_cantidad_departamento IS NOT NULL THEN
+            -- Actualizar la cantidad existente en el departamento
+            UPDATE inventario_departamento
+            SET cantidad = cantidad + p_cantidad
+            WHERE id_insumo = p_id_insumo AND id_departamento = p_id_departamento;
+        ELSE
+            -- Insertar el insumo en el inventario del departamento
+            INSERT INTO inventario_departamento (id_insumo, id_departamento, cantidad)
+            VALUES (p_id_insumo, p_id_departamento, p_cantidad);
+        END IF;
+
+        -- Actualizar la cantidad en el inventario general
+        UPDATE inventario_departamento
+        SET cantidad = cantidad - p_cantidad
+        WHERE id_insumo = p_id_insumo AND id_departamento = 0;
+
+        -- Actualizar el estado de la petición de insumo a "Aprobada"
+        UPDATE peticiones_insumos
+        SET estado = 'Aprobada'
+        WHERE id_peticion = p_id_peticion;
+
+        -- Confirmar la transacción
+        COMMIT;
+
+        SET p_codigo_estado = 1;
+        SET p_mensaje = 'Insumo transferido correctamente.';
+    ELSE
+        -- No hay suficiente cantidad en el inventario general
+        ROLLBACK;
+        SET p_codigo_estado = 2;
+        SET p_mensaje = 'Cantidad insuficiente en el inventario general.';
+    END IF;
+END $$
+
+DELIMITER ;
+
+
+INSERT INTO insumos (id_insumo, nombre, descripcion, costo) VALUES
+(1, 'Guantes quirúrgicos', 'Guantes estériles para procedimientos quirúrgicos', 5.00),
+(2, 'Mascarillas N95', 'Mascarillas de alta filtración para protección respiratoria', 15.00),
+(3, 'Jeringas 5ml', 'Jeringas reutilizables de 5 ml para inyecciones', 0.50),
+(4, 'Alcohol 70%', 'Solución desinfectante al 70% para limpieza de superficies', 8.00),
+(5, 'Batas quirúrgicas', 'Batas estériles para uso durante cirugías', 25.00),
+(6, 'Gasas estériles', 'Gasas desechables para cobertura y limpieza de heridas', 2.00),
+(7, 'Termómetros digitales', 'Termómetros electrónicos para la medición de la temperatura corporal', 45.00),
+(8, 'Cintas adhesivas médicas', 'Cintas resistentes para fijación de gasas y vendajes', 3.00),
+(9, 'Vendas elásticas', 'Vendas elásticas para soporte y compresión de extremidades', 4.50),
+(10, 'Estetoscopios', 'Instrumento médico para auscultación de sonidos corporales', 60.00),
+(11, 'Cubrebocas quirúrgicos', 'Mascarillas desechables para protección durante procedimientos', 3.50),
+(12, 'Cajas de guantes estériles', 'Cajas que contienen guantes estériles para uso médico', 50.00),
+(13, 'Desinfectante hospitalario', 'Solución desinfectante de amplio espectro para ambientes hospitalarios', 20.00),
+(14, 'Monitores de signos vitales', 'Dispositivos electrónicos para monitoreo continuo de signos vitales', 500.00),
+(15, 'Luces quirúrgicas', 'Iluminación especializada para salas de cirugía', 300.00),
+(16, 'Cánulas de traqueostomía', 'Cánulas utilizadas en procedimientos de traqueostomía', 25.00),
+(17, 'Cubrecalzado desechable', 'Cubrezapatos desechables para uso en áreas estériles', 1.50),
+(18, 'Gorros quirúrgicos', 'Gorros desechables para mantener la higiene durante cirugías', 2.00),
+(19, 'Batas para visitantes', 'Batas desechables para uso de visitantes en áreas sanitarias', 3.00),
+(20, 'Extintores de CO2', 'Extintores portátiles de dióxido de carbono para emergencias', 150.00),
+(21, 'Toallas desinfectantes', 'Toallas impregnadas con desinfectante para limpieza de superficies', 10.00),
+(22, 'Papel higiénico industrial', 'Papel higiénico de alto rendimiento para instalaciones médicas', 12.00);
 
 
 
 
+INSERT INTO insumos_departamento (id_insumo, id_departamento) VALUES
+-- Guantes quirúrgicos (ID Insumo: 1)
+(1, 4),  -- Medicina General
+(1, 5),  -- Laboratorios
+(1, 6),  -- Cirugía
+(1, 7),  -- Enfermería
 
+-- Mascarillas N95 (ID Insumo: 2)
+(2, 4),  -- Medicina General
+(2, 5),  -- Laboratorios
+(2, 6),  -- Cirugía
+(2, 7),  -- Enfermería
+(2, 8),  -- Cardiología
+
+-- Jeringas 5ml (ID Insumo: 3)
+(3, 4),  -- Medicina General
+(3, 7),  -- Enfermería
+(3, 9),  -- Neurología
+(3, 11), -- Pediatría
+
+-- Alcohol 70% (ID Insumo: 4)
+(4, 3),  -- Inventario
+(4, 4),  -- Medicina General
+(4, 5),  -- Laboratorios
+(4, 6),  -- Cirugía
+(4, 7),  -- Enfermería
+
+-- Batas quirúrgicas (ID Insumo: 5)
+(5, 6),  -- Cirugía
+(5, 7),  -- Enfermería
+
+-- Gasas estériles (ID Insumo: 6)
+(6, 4),  -- Medicina General
+(6, 6),  -- Cirugía
+(6, 7),  -- Enfermería
+
+-- Termómetros digitales (ID Insumo: 7)
+(7, 4),  -- Medicina General
+(7, 10), -- Ginecología
+(7, 11), -- Pediatría
+
+-- Cintas adhesivas médicas (ID Insumo: 8)
+(8, 6),  -- Cirugía
+(8, 7),  -- Enfermería
+(8, 13), -- Ortopedia
+
+-- Vendas elásticas (ID Insumo: 9)
+(9, 13), -- Ortopedia
+(9, 15), -- Traumatología
+(9, 19), -- Fisioterapia
+
+-- Estetoscopios (ID Insumo: 10)
+(10, 4),  -- Medicina General
+(10, 8),  -- Cardiología
+(10, 11), -- Pediatría
+
+-- Cubrebocas quirúrgicos (ID Insumo: 11)
+(11, 4),  -- Medicina General
+(11, 5),  -- Laboratorios
+(11, 6),  -- Cirugía
+(11, 7),  -- Enfermería
+
+-- Cajas de guantes estériles (ID Insumo: 12)
+(12, 3),  -- Inventario
+(12, 6),  -- Cirugía
+
+-- Desinfectante hospitalario (ID Insumo: 13)
+(13, 3),  -- Inventario
+(13, 5),  -- Laboratorios
+(13, 7),  -- Enfermería
+
+-- Monitores de signos vitales (ID Insumo: 14)
+(14, 8),  -- Cardiología
+(14, 9),  -- Neurología
+(14, 15), -- Traumatología
+
+-- Luces quirúrgicas (ID Insumo: 15)
+(15, 6),  -- Cirugía
+
+-- Cánulas de traqueostomía (ID Insumo: 16)
+(16, 8),  -- Cardiología
+(16, 9),  -- Neurología
+
+-- Cubrecalzado desechable (ID Insumo: 17)
+(17, 5),  -- Laboratorios
+(17, 6),  -- Cirugía
+
+-- Gorros quirúrgicos (ID Insumo: 18)
+(18, 6),  -- Cirugía
+(18, 7),  -- Enfermería
+
+-- Batas para visitantes (ID Insumo: 19)
+(19, 4),  -- Medicina General
+(19, 11), -- Pediatría
+(19, 10), -- Ginecología
+
+-- Extintores de CO2 (ID Insumo: 20)
+(20, 3),  -- Inventario
+(20, 5),  -- Laboratorios
+(20, 6),  -- Cirugía
+(20, 7),  -- Enfermería
+
+-- Toallas desinfectantes (ID Insumo: 21)
+(21, 3),  -- Inventario
+(21, 4),  -- Medicina General
+(21, 7),  -- Enfermería
+
+-- Papel higiénico industrial (ID Insumo: 22)
+(22, 3),  -- Inventario
+(22, 4),  -- Medicina General
+(22, 7);  -- Enfermería
+
+
+
+INSERT INTO inventario_departamento (id_insumo, id_departamento, cantidad) VALUES
+-- Guantes quirúrgicos (ID Insumo: 1)
+(1, 3, 50),   -- Inventario
+(1, 4, 15),   -- Medicina General
+(1, 5, 10),   -- Laboratorios
+(1, 6, 20),   -- Cirugía
+(1, 7, 18),   -- Enfermería
+
+-- Mascarillas N95 (ID Insumo: 2)
+(2, 3, 40),   -- Inventario
+(2, 4, 12),   -- Medicina General
+(2, 5, 8),    -- Laboratorios
+(2, 6, 15),   -- Cirugía
+(2, 7, 14),   -- Enfermería
+(2, 8, 10),   -- Cardiología
+
+-- Jeringas 5ml (ID Insumo: 3)
+(3, 3, 60),   -- Inventario
+(3, 4, 30),   -- Medicina General
+(3, 7, 25),   -- Enfermería
+(3, 9, 20),   -- Neurología
+(3, 11, 22),  -- Pediatría
+
+-- Alcohol 70% (ID Insumo: 4)
+(4, 3, 50),   -- Inventario
+(4, 4, 20),   -- Medicina General
+(4, 5, 12),   -- Laboratorios
+(4, 6, 18),   -- Cirugía
+(4, 7, 16),   -- Enfermería
+
+-- Batas quirúrgicas (ID Insumo: 5)
+(5, 3, 25),   -- Inventario
+(5, 6, 10),   -- Cirugía
+(5, 7, 8),    -- Enfermería
+
+-- Gasas estériles (ID Insumo: 6)
+(6, 3, 40),   -- Inventario
+(6, 4, 18),   -- Medicina General
+(6, 6, 15),   -- Cirugía
+(6, 7, 16),   -- Enfermería
+
+-- Termómetros digitales (ID Insumo: 7)
+(7, 3, 10),   -- Inventario
+(7, 4, 5),    -- Medicina General
+(7, 10, 4),   -- Ginecología
+(7, 11, 4),   -- Pediatría
+
+-- Cintas adhesivas médicas (ID Insumo: 8)
+(8, 3, 20),   -- Inventario
+(8, 6, 8),    -- Cirugía
+(8, 7, 10),   -- Enfermería
+(8, 13, 7),   -- Ortopedia
+
+-- Vendas elásticas (ID Insumo: 9)
+(9, 3, 25),   -- Inventario
+(9, 13, 12),  -- Ortopedia
+(9, 15, 14),  -- Traumatología
+(9, 19, 10),  -- Fisioterapia
+
+-- Estetoscopios (ID Insumo: 10)
+(10, 3, 8),   -- Inventario
+(10, 4, 3),   -- Medicina General
+(10, 8, 3),   -- Cardiología
+(10, 11, 2),  -- Pediatría
+
+-- Cubrebocas quirúrgicos (ID Insumo: 11)
+(11, 3, 45),  -- Inventario
+(11, 4, 18),  -- Medicina General
+(11, 5, 12),  -- Laboratorios
+(11, 6, 20),  -- Cirugía
+(11, 7, 16),  -- Enfermería
+
+-- Cajas de guantes estériles (ID Insumo: 12)
+(12, 3, 35),  -- Inventario
+(12, 6, 15),  -- Cirugía
+
+-- Desinfectante hospitalario (ID Insumo: 13)
+(13, 3, 28),  -- Inventario
+(13, 5, 12),  -- Laboratorios
+(13, 7, 20),  -- Enfermería
+
+-- Monitores de signos vitales (ID Insumo: 14)
+(14, 3, 4),   -- Inventario
+(14, 8, 1),   -- Cardiología
+(14, 9, 1),   -- Neurología
+(14, 15, 1),  -- Traumatología
+
+-- Luces quirúrgicas (ID Insumo: 15)
+(15, 3, 2),   -- Inventario
+(15, 6, 3),   -- Cirugía
+
+-- Cánulas de traqueostomía (ID Insumo: 16)
+(16, 3, 8),   -- Inventario
+(16, 8, 3),   -- Cardiología
+(16, 9, 2),   -- Neurología
+
+-- Cubrecalzado desechable (ID Insumo: 17)
+(17, 3, 50),  -- Inventario
+(17, 5, 20),  -- Laboratorios
+(17, 6, 25),  -- Cirugía
+
+-- Gorros quirúrgicos (ID Insumo: 18)
+(18, 3, 35),  -- Inventario
+(18, 6, 15),  -- Cirugía
+(18, 7, 12),  -- Enfermería
+
+-- Batas para visitantes (ID Insumo: 19)
+(19, 3, 25),  -- Inventario
+(19, 4, 10),  -- Medicina General
+(19, 11, 8),  -- Pediatría
+(19, 10, 6),  -- Ginecología
+
+-- Extintores de CO2 (ID Insumo: 20)
+(20, 3, 5),   -- Inventario
+(20, 5, 1),   -- Laboratorios
+(20, 6, 2),   -- Cirugía
+(20, 7, 2),   -- Enfermería
+
+-- Toallas desinfectantes (ID Insumo: 21)
+(21, 3, 40),  -- Inventario
+(21, 4, 15),  -- Medicina General
+(21, 7, 18),  -- Enfermería
+
+-- Papel higiénico industrial (ID Insumo: 22)
+(22, 3, 60),  -- Inventario
+(22, 4, 25),  -- Medicina General
+(22, 7, 30);  -- Enfermería

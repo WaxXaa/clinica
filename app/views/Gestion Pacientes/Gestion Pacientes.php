@@ -127,8 +127,8 @@ $departamento = $usuarios_result['id_departamento'];
           $departamentoIngreso = $_POST['departamento'];
           $cedula = trim($cedula);
           $causa_ingreso = trim($causa_ingreso);
-  
-          // Verificar si el paciente existe
+          try {
+            //code...
             $stmt_check = $conn->prepare("SELECT id_paciente FROM pacientes WHERE cedula = :cedula");
             $stmt_check->bindParam(":cedula", $cedula);
             $stmt_check->execute();
@@ -158,6 +158,11 @@ $departamento = $usuarios_result['id_departamento'];
             }else {
               $error = "Paciente no encontrado.";
           }
+          } catch (PDOException $e) {
+            $error_registrar_ingreso = 'Error: ' . $e->getMessage();
+          }
+          // Verificar si el paciente existe
+            
         } elseif (isset($_POST['atender-paciente'])) {
           $id_doctor = $_SESSION['id_empleado']; // Asumiendo que $id_empleado contiene el ID del doctor
 
@@ -380,7 +385,7 @@ $departamento = $usuarios_result['id_departamento'];
            $error_recetar_medicamento = 'Error: ' . $e->getMessage();
           }
         }
-        elseif(isset($_POST['asisgnar-examen'])){
+        elseif(isset($_POST['asignar-examen'])){
           $cedula_paciente = $_POST['cedula'];
           $examen = $_POST['examen'];
           $cedula_paciente = trim($cedula_paciente);

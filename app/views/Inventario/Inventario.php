@@ -77,7 +77,96 @@ $user_department = $usuarios_result['departamento'];
     <div class="flex-1 p-5 space-y-5 mt-10 text-black">
         <!-- Contenedor Principal -->
         <div id="main-container-modulos" class="bg-white rounded-lg p-5 shadow-md flex space-x-4">
+        <?php
+if (isset($_POST['transferir'])) {
+    $id_insumo = $_POST['insumo'];
+    $id_departamento = $_POST['departamento'];
+    $cantidad = $_POST['cantidad'];
+    $id_peticion = $_POST['peticion'];
 
+    try {
+        // Conexión a la base de datos
+    
+        // Preparar la llamada al procedimiento almacenado
+        $stmt = $conn->prepare("CALL transferirInsumo(:id_insumo, :id_departamento, :cantidad, :id_peticion, @codigo_estado, @mensaje)");
+
+        // Enlazar parámetros de entrada
+        $stmt->bindParam(':id_insumo', $id_insumo, PDO::PARAM_INT);
+        $stmt->bindParam(':id_departamento', $id_departamento, PDO::PARAM_INT);
+        $stmt->bindParam(':cantidad', $cantidad, PDO::PARAM_INT);
+        $stmt->bindParam(':id_peticion', $id_peticion, PDO::PARAM_INT);
+
+        // Ejecutar el procedimiento
+        $stmt->execute();
+
+        // Obtener los valores de salida
+        $result = $conn->query("SELECT @codigo_estado AS codigo_estado, @mensaje AS mensaje")->fetch(PDO::FETCH_ASSOC);
+
+        $codigo_estado = (int)$result['codigo_estado'];
+        $mensaje = $result['mensaje'];
+
+        // Manejar el resultado basado en el código de estado
+        switch ($codigo_estado) {
+            case 1:
+                // Éxito: Insumo transferido
+                $success_transferir_insumo = $mensaje;
+                break;
+            case 2:
+                // Cantidad insuficiente en el inventario general
+                $error_transferir_insumo = $mensaje;
+                break;
+            case -1:
+                // Error en la transacción
+                $error_transferir_insumo = $mensaje;
+                break;
+            default:
+                // Error no esperado
+                $error_transferir_insumo = 'Ha ocurrido un error inesperado.';
+                break;
+        }
+    } catch (PDOException $e) {
+        // Manejo de errores de conexión u otros errores
+        $error_transferir_insumo = 'Error: ' . $e->getMessage();
+    }
+}
+
+?>
+        <div id="peticiones">
+            <h2 class="text-2xl font-bold">Peticiones de Insumos</h2>
+            <!-- Mostrar mensajes -->
+            <?php if (isset($success_transferir_insumo)): ?>
+                <p id="success-message" style="color: green;"><?= htmlspecialchars($success_transferir_insumo) ?></p>
+            <?php endif; ?>
+            <?php if (isset($error_transferir_insumo)): ?>
+                <p id="error-message" style="color: red;"><?= htmlspecialchars($error_transferir_insumo) ?></p>
+            <?php endif; ?>
+            <?php
+            $stmt = $conn->prepare("SELECT p.id_peticion as id_peticion, i.nombre as nombre, i.id_insumo as id_insumo, p.cantidad as cantidad, d.nombre as departamento, d.id_departamento as id_departamento, p.fecha_peticion as fecha FROM peticiones_insumos as p JOIN insumos as i on p.insumo = i.id_insumo JOIN departamento as d on p.id_departamento = d.id_departamento WHERE p.estado = 'Pendiente' AND p.id_departamento != 3");
+            $stmt->execute();
+            $peticiones = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (count($peticiones) === 0) {
+                echo '<p>No hay peticiones pendientes.</p>';
+            }
+            ?>
+            <?php foreach ($peticiones as $peticion): ?>
+                <div class="bg-white shadow rounded-lg p-4 flex flex-col space-y-4">
+                    <h3 class="text-xl font-bold">Petición #<?php echo htmlspecialchars($peticion['id_peticion']); ?></h3>
+                    <p class="text-gray-700"><?php echo htmlspecialchars($peticion['nombre']); ?></p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-500">el departamento <?php echo htmlspecialchars($peticion['departamento']); ?> esta pidiento <?php echo htmlspecialchars($peticion['cantidad']); ?> <?php echo htmlspecialchars($peticion['nombre']); ?></span>
+                        <span class="text-sm text-gray-500">Fecha de peticion: <?php echo htmlspecialchars($peticion['fecha']); ?></span>
+                    <form action="" method="post">
+                        <input type="hidden" name="transferir" value="tansferir">
+                        <input type="hidden" name="peticion" value="<?php echo htmlspecialchars($peticion['id_peticion']); ?>">
+                        <input type="hidden" name="insumo" value= "<?php echo htmlspecialchars($peticion['id_insumo']); ?>">
+                        <input type="hidden" name="cantidad" value="<?php echo htmlspecialchars($peticion['cantidad']); ?>">
+                        <input type="hidden" name="departamento" value="<?php echo htmlspecialchars($peticion['id_departamento']); ?>">
+                        <button class="bg-green-500 text-white px-4 py-2 rounded-lg" type="submit">Aceptar Peticion</button>
+                    </form>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
 
         <div>
     </div>

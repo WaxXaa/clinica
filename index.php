@@ -1,5 +1,6 @@
 <?php
 session_start();
+include_once './app/api/src/controllers/indexControlador.php';
 include_once './app/api/src/core/Database.php'; // Asegúrate de que la ruta sea correcta
 if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
     header('Location: ./app/views/login.php');
@@ -17,16 +18,37 @@ $usuarios_result = $stmt->fetch(PDO::FETCH_ASSOC); // Obtener todos los resultad
 $user_role = $usuarios_result['id_rol'];
 $id_empleado = $usuarios_result['id_empleado'];
 $_SESSION['id_empleado'] = $id_empleado;
+
+// Controller initialization
+$controller = new IndexController($conn);
+
+// Fetch data for dashboard
+try {
+    $examenes = $controller->getExamenes();
+    $pacientes = $controller->getPacientes();
+    $peticiones = $controller->getPeticiones();
+} catch (PDOException $e) {
+    die('Error fetching dashboard data: ' . $e->getMessage());
+}
+
+// Fetch data for pie chart
+    $departamento = $controller->getPacientesPorDepartamento();
+
+
+        $labels[] = $departamento;
+        // $data[] = $departamento['cantidad'];
+
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Sidebar with Header</title>
+    <title>Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.5/lottie.min.js"></script>
     <style>
         .lottie-animation {
             width: 30px;
@@ -79,13 +101,176 @@ $_SESSION['id_empleado'] = $id_empleado;
     <!-- Contenido Principal -->
     <div class="flex-1 p-5 space-y-5 mt-10 text-black">
          <!-- Contenedor Principal -->
-         <div id="main-container-modulos"class="bg-white rounded-lg p-5 shadow-md flex space-x-4">
-            
+        <div id="main-container-modulos"class="bg-white rounded-lg p-5 shadow-md flex space-x-4">
+            <div class="flex-1 p-5 space-y-5">
+                <h1 class="text-2xl font-bold">Dashboard</h1>
+
+                <!-- Exámenes Table -->
+                <div class="bg-white p-5 rounded-md shadow-md h-96 overflow-y-scroll">
+                    <h2 class="text-xl font-bold mb-4">Exámenes</h2>
+                    <table class="w-full border border-gray-300">
+                        <thead>
+                            <tr>
+                                <th class="border px-4 py-2">ID</th>
+                                <th class="border px-4 py-2">Nombre</th>
+                                <th class="border px-4 py-2">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($examenes as $examen): ?>
+                            <tr>
+                                <td class="border px-4 py-2"><?php echo htmlspecialchars($examen['id_examen'] ?? 'N/A'); ?></td>
+                                <td class="border px-4 py-2"><?php echo htmlspecialchars($examen['nombre'] ?? 'N/A'); ?></td>
+                                <td class="border px-4 py-2"><?php echo htmlspecialchars($examen['precio'] ?? 'N/A'); ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pacientes Table -->
+                <div class="bg-white p-5 rounded-md shadow-md h-96 overflow-y-scroll">
+                    <h2 class="text-xl font-bold mb-4">Pacientes Registrados</h2>
+                    <table class="w-full border border-gray-300">
+                        <thead>
+                            <tr>
+                                <th class="border px-4 py-2">ID</th>
+                                <th class="border px-4 py-2">Nombre</th>
+                                <th class="border px-4 py-2">Apellido</th>
+                                <th class="border px-4 py-2">Cédula</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($pacientes as $paciente): ?>
+                            <tr>
+                                <td class="border px-4 py-2"><?php echo htmlspecialchars($paciente['id_paciente'] ?? 'N/A'); ?></td>
+                                <td class="border px-4 py-2"><?php echo htmlspecialchars($paciente['nombre'] ?? 'N/A'); ?></td>
+                                <td class="border px-4 py-2"><?php echo htmlspecialchars($paciente['apellido'] ?? 'N/A'); ?></td>
+                                
+                                <td class="border px-4 py-2"><?php echo htmlspecialchars($paciente['cedula'] ?? 'N/A'); ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Peticiones Table -->
+                
+                <div class="flex justify-evenly mt-10 " >
+
+                <div id="grafico-pacientes" class="bg-white rounded-lg p-5 shadow-md">
+                    <h2 class="text-xl font-bold">Pacientes por Departamento</h2>
+                    <canvas id="chart" style="max-width: 400px; max-height: 400px;"></canvas>
+                </div>
+                <div id="grafico-salario" class="bg-white rounded-lg p-5 shadow-md">
+                    <h2 class="text-xl font-bold">AVG Salario por Departamento</h2>
+                    <canvas id="chart2" style="max-width: 400px; max-height: 400px;"></canvas>
+                </div>
+
+                </div>
+                <!-- Pie Chart -->
+                <!-- Exámenes en Realización -->
+            <div class="bg-white p-5 rounded-md shadow-md">
+                <h2 class="text-xl font-bold mb-4">Exámenes en Realización</h2>
+                <table class="w-full border border-gray-300">
+                    <thead>
+                        <tr>
+                            <th class="border px-4 py-2">Nombre del Examen</th>
+                            <th class="border px-4 py-2">Nombre del Paciente</th>
+                            <th class="border px-4 py-2">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        // Obtener los datos de las peticiones pendientes
+                        $peticionesPendientes = $controller->getExamenesPendientesConDetalles();
+
+                        if (!empty($peticionesPendientes)) {
+                            foreach ($peticionesPendientes as $peticion) {
+                                echo "<tr>
+                                        <td class='border px-4 py-2'>" . htmlspecialchars($peticion['examen']) . "</td>
+                                        <td class='border px-4 py-2'>" . htmlspecialchars($peticion['nombre']) . "</td>
+                                        <td class='border px-4 py-2'>" . htmlspecialchars($peticion['estado']) . "</td>
+                                    </tr>";
+                            }
+                        } else {
+                            echo "<tr>
+                                    <td colspan='3' class='border px-4 py-2 text-center'>No hay exámenes en realización.</td>
+                                </tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+            </div>
         </div>
     </div>
-
-
     <script>
+    // Obtener los datos desde PHP
+    fetch('./chartSalario.php')
+                        .then(response => response.json())
+                        .then(data => {
+                            const labels = data.map(item => item.departamento);
+                            const chartData = data.map(item => item.promedio_salario);
+
+                            const ctx = document.getElementById('chart2').getContext('2d');
+                            const chart = new Chart(ctx, {
+                                type: 'bar',
+                                data: {
+                                    labels: labels,
+                                    datasets: [{
+                                        label: 'Promedio Salario',
+                                        data: chartData,
+                                        backgroundColor: [
+                                            '#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0',
+                                            '#9966ff', '#ff9f40', '#c9cbcf', '#ff9ff3',
+                                            '#00d2d3', '#54a0ff', '#5f27cd', '#1dd1a1',
+                                            '#ff6b6b', '#48dbfb', '#f368e0', '#00d2d3',
+                                            '#8395a7', '#222f3e', '#ee5253', '#0abde3',
+                                            '#10ac84'
+                                        ]
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                }
+                            });
+                        })
+                        .catch(error => console.error('Error fetching chart data:', error));
+  
+        fetch('./chart.php')
+            .then(response => response.json())
+            .then(data => {
+                const labels = data.map(item => item.departamento);
+                const chartData = data.map(item => item.cantidad);
+
+                const ctx = document.getElementById('chart').getContext('2d');
+                const chart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Pacientes',
+                            data: chartData,
+                            backgroundColor: [
+                                '#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0',
+                                '#9966ff', '#ff9f40', '#c9cbcf', '#ff9ff3',
+                                '#00d2d3', '#54a0ff', '#5f27cd', '#1dd1a1',
+                                '#ff6b6b', '#48dbfb', '#f368e0', '#00d2d3',
+                                '#8395a7', '#222f3e', '#ee5253', '#0abde3',
+                                '#10ac84'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching chart data:', error));
+
 
 
         function setup() {

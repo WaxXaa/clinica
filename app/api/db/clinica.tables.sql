@@ -14,6 +14,7 @@ CREATE TABLE usuario (
     CONSTRAINT uk_usuario_username UNIQUE (username)
 );
 insert into usuario (username,contra) values ('superad','1');
+insert into usuario (username,contra) values ('admin','1');
 -- Tabla Permisos
 CREATE TABLE permisos (
     id_permiso INT PRIMARY KEY AUTO_INCREMENT,

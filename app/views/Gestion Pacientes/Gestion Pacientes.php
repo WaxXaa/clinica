@@ -456,6 +456,19 @@ $departamento = $usuarios_result['id_departamento'];
               <label class="block text-gray-700">Fecha de Nacimiento:</label>
               <input type="date" name="fecha_nacimiento" required class="w-full p-2 border rounded-md">
             </div>
+            <script>
+              document.addEventListener('DOMContentLoaded', function() {
+                const fechaNacimientoInput = document.querySelector('input[name="fecha_nacimiento"]');
+                const today = new Date().toISOString().split('T')[0];
+                fechaNacimientoInput.setAttribute('max', today);
+
+                fechaNacimientoInput.addEventListener('input', function() {
+                  if (this.value > today) {
+                    this.value = today;
+                  }
+                });
+              });
+            </script>
             <div>
               <label class="block text-gray-700">Género:</label>
               <select name="genero" required class="w-full p-2 border rounded-md">

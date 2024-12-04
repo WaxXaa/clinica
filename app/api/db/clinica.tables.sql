@@ -1523,7 +1523,7 @@ DELIMITER ;
 -- Tabla para registrar los exámenes realizados al paciente durante la atención
 CREATE TABLE expedientes_examenes (
     id_examen_paciente INT PRIMARY KEY AUTO_INCREMENT,
-    fecha DATE NOT NULL,
+    fecha_examen DATE,
     id_expediente INT NOT NULL,
     examen INT NOT NULL,
     resultados TEXT,
@@ -1538,7 +1538,115 @@ CREATE TABLE expedientes_examenes (
         ON UPDATE CASCADE
 );
 
+DELIMITER $$
 
+CREATE PROCEDURE indicarExamenRealizado(
+    IN p_id_examen_paciente INT,
+    OUT p_codigo_estado INT,
+    OUT p_mensaje VARCHAR(255)
+)
+BEGIN
+    DECLARE v_estado_actual ENUM('Espera', 'Sin Resultado', 'Con Resultado');
+
+    -- Manejo de excepciones
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SET p_codigo_estado = -1;
+        SET p_mensaje = 'Error al actualizar el estado del examen.';
+    END;
+
+    -- Iniciar una transacción
+    START TRANSACTION;
+
+    -- Obtener el estado actual del examen
+    SELECT estado INTO v_estado_actual
+    FROM expedientes_examenes
+    WHERE id_examen_paciente = p_id_examen_paciente;
+
+    -- Verificar si el estado actual es 'Espera'
+    IF v_estado_actual = 'Espera' THEN
+        -- Actualizar el estado a 'Sin Resultado'
+        UPDATE expedientes_examenes
+        SET estado = 'Sin Resultado'
+        WHERE id_examen_paciente = p_id_examen_paciente;
+
+        -- Confirmar la transacción
+        COMMIT;
+
+        SET p_codigo_estado = 1;
+        SET p_mensaje = 'Estado del examen actualizado a Sin Resultado.';
+    ELSE
+        -- No se puede actualizar el estado
+        ROLLBACK;
+        SET p_codigo_estado = 2;
+        SET p_mensaje = 'El estado del examen no es Espera.';
+    END IF;
+END $$
+
+DELIMITER ;
+
+
+DELIMITER $$
+
+CREATE PROCEDURE indicarResultadosListos(
+    IN p_id_examen_paciente INT,
+    OUT p_codigo_estado INT,
+    OUT p_mensaje VARCHAR(255)
+)
+BEGIN
+    DECLARE v_estado_actual ENUM('Espera', 'Sin Resultado', 'Con Resultado');
+
+    -- Manejo de excepciones
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SET p_codigo_estado = -1;
+        SET p_mensaje = 'Error al actualizar el estado del examen.';
+    END;
+
+    -- Iniciar una transacción
+    START TRANSACTION;
+
+    -- Obtener el estado actual del examen
+    SELECT estado INTO v_estado_actual
+    FROM expedientes_examenes
+    WHERE id_examen_paciente = p_id_examen_paciente;
+
+    -- Verificar si el estado actual es 'Espera'
+    IF v_estado_actual = 'Sin Resultado' THEN
+        -- Actualizar el estado a 'Sin Resultado'
+        UPDATE expedientes_examenes
+        SET estado = 'Con Resultado'
+        WHERE id_examen_paciente = p_id_examen_paciente;
+
+        -- Confirmar la transacción
+        COMMIT;
+
+        SET p_codigo_estado = 1;
+        SET p_mensaje = 'Resultado del examen correctamente indicado.';
+    ELSE
+        -- No se puede actualizar el estado
+        ROLLBACK;
+        SET p_codigo_estado = 2;
+        SET p_mensaje = 'El estado del examen no es el estado Esperado.';
+    END IF;
+END $$
+
+DELIMITER ;
+
+
+SELECT ee.id_examen_paciente as numExamen
+p.nombre as nombre,
+p.apellido as apellido,
+p.cedula as cedula,
+ex.nombre as examen,
+ee.estado as estado
+FROM expedientes_examenes as ee
+JOIN expedientes_pacientes as ep on ee.id_expediente = ep.id_expediente 
+JOIN pacientes as p on ep.paciente = p.id_paciente 
+JOIN examenes as ex on ee.examen = ex.id_examen 
+WHERE estado = 'Espera' OR estado = 'Sin Resultado';
 
 DELIMITER $$
 
@@ -1554,12 +1662,23 @@ BEGIN
     DECLARE v_existe_paciente INT;
     DECLARE v_id_expediente INT;
     -- Manejo de excepciones
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        SET p_codigo_estado = -1;
-        SET p_mensaje = 'Error al asignar examen al paciente.';
-    END;
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+BEGIN
+    DECLARE msg TEXT;
+    DECLARE code INT;
+    
+    -- Obtener el mensaje de error y el código de error
+    GET DIAGNOSTICS CONDITION 1
+        code = MYSQL_ERRNO, 
+        msg = MESSAGE_TEXT;
+    
+    -- Realizar el rollback
+    ROLLBACK;
+    
+    -- Establecer los valores de salida
+    SET p_codigo_estado = -1;
+    SET p_mensaje = CONCAT('Error al recetar medicamentos al paciente: ', msg);
+END;
 
     -- Iniciar una transacción
     START TRANSACTION;
@@ -1583,8 +1702,8 @@ BEGIN
           AND estado = 'En Atencion' 
           AND doctor = p_id_doctor;
         IF v_existe_paciente > 0 THEN
-            INSERT INTO expedientes_examenes (fecha, expediente, examen, estado)
-            VALUES (NOW(), v_id_expediente, p_examen, 'Espera');
+            INSERT INTO expedientes_examenes (id_expediente, examen, estado)
+            VALUES (v_id_expediente, p_examen, 'Espera');
             -- Confirmar la transacción
             COMMIT;
 
@@ -1993,3 +2112,121 @@ BEGIN
 END $$
 
 DELIMITER ;
+
+CREATE TABLE InventarioGeneral (
+    IdInsumo INT AUTO_INCREMENT PRIMARY KEY,  -- ID único del insumo
+    NombreInsumo VARCHAR(30) NOT NULL UNIQUE, -- Nombre del insumo (único para evitar duplicados)
+    Cantidad INT NOT NULL                     -- Cantidad disponible en el inventario general
+);
+
+CREATE TABLE InventarioDepartamento (
+    IdInsumo INT NOT NULL,                        -- ID del insumo (relacionado con InventarioGeneral)
+    IdDepartamento INT NOT NULL,                 -- ID del departamento (relacionado con Departamento)
+    Cantidad INT NOT NULL,                       -- Cantidad del insumo en el departamento
+    PRIMARY KEY (IdInsumo, IdDepartamento),      -- Clave compuesta para evitar duplicados
+    FOREIGN KEY (IdInsumo) REFERENCES InventarioGeneral(IdInsumo),
+    FOREIGN KEY (IdDepartamento) REFERENCES Departamento(id_departamento)
+);
+
+DELIMITER //
+
+CREATE PROCEDURE TransferirInsumo(
+    IN p_IdInsumo INT,              -- ID del insumo a transferir
+    IN p_IdDepartamento INT,        -- ID del departamento receptor
+    IN p_Cantidad INT               -- Cantidad a transferir
+)
+BEGIN
+    -- Verificar si hay suficiente cantidad en InventarioGeneral
+    IF (SELECT Cantidad FROM InventarioGeneral WHERE IdInsumo = p_IdInsumo) >= p_Cantidad THEN
+
+        -- Verificar si el insumo ya existe en InventarioDepartamento
+        IF EXISTS (
+            SELECT 1
+            FROM InventarioDepartamento
+            WHERE IdInsumo = p_IdInsumo AND IdDepartamento = p_IdDepartamento
+        ) THEN
+            -- Actualizar la cantidad existente en el departamento
+            UPDATE InventarioDepartamento
+            SET Cantidad = Cantidad + p_Cantidad
+            WHERE IdInsumo = p_IdInsumo AND IdDepartamento = p_IdDepartamento;
+        ELSE
+            -- Insertar un nuevo registro en InventarioDepartamento
+            INSERT INTO InventarioDepartamento (IdInsumo, IdDepartamento, Cantidad)
+            VALUES (p_IdInsumo, p_IdDepartamento, p_Cantidad);
+        END IF;
+
+        -- Actualizar la cantidad en InventarioGeneral
+        UPDATE InventarioGeneral
+        SET Cantidad = Cantidad - p_Cantidad
+        WHERE IdInsumo = p_IdInsumo;
+
+    ELSE
+        -- Lanzar un error si no hay suficiente cantidad
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Cantidad insuficiente en el inventario general';
+    END IF;
+END;
+//
+
+-- Se llama utilizando "CALL TransferirInsumo(a, b, c); a siendo el objeto que se quiere transferir, b siendo el departamento, y c siendo la cantidad"
+
+DELIMITER ;
+
+INSERT INTO InventarioGeneral (NombreInsumo, Cantidad)
+VALUES
+    ('Guantes quirúrgicos', 200),
+    ('Mascarillas N95', 500),
+    ('Jeringas 5ml', 300),
+    ('Alcohol 70%', 100),
+    ('Batas quirúrgicas', 150),
+    ('Gasas estériles', 400),
+    ('Catéter intravenoso', 250),
+    ('Antiséptico iodado', 80),
+    ('Termómetros digitales', 50),
+    ('Esfigmomanómetros', 30),
+    ('Cintas adhesivas médicas', 120),
+    ('Vendas elásticas', 220),
+    ('Estetoscopios', 20),
+    ('Suturas absorbibles', 100),
+    ('Oxímetros de pulso', 40),
+    ('Tijeras quirúrgicas', 60),
+    ('Cánulas nasales', 300),
+    ('Cubrebocas quirúrgicos', 600),
+    ('Cajas de guantes estériles', 100),
+    ('Solución salina 500ml', 400),
+    ('Solución glucosa 500ml', 200),
+    ('Agujas hipodérmicas', 1000),
+    ('Bolsas de suero', 350),
+    ('Desinfectante hospitalario', 90),
+    ('Carros de curación', 10),
+    ('Bombas de infusión', 15),
+    ('Monitores de signos vitales', 25),
+    ('Electrodos ECG', 500),
+    ('Papel ECG', 150),
+    ('Tubos de ensayo', 700),
+    ('Microscopios', 10),
+    ('Reactivos de laboratorio', 100),
+    ('Centrífugas de laboratorio', 5),
+    ('Cubetas quirúrgicas', 50),
+    ('Sillas de ruedas', 20),
+    ('Camillas móviles', 15),
+    ('Luces quirúrgicas', 10),
+    ('Laringoscopios', 25),
+    ('Respiradores automáticos', 20),
+    ('Cánulas de traqueostomía', 60),
+    ('Guías para intubación', 50),
+    ('Paquetes de bisturí', 300),
+    ('Cubrecalzado desechable', 500),
+    ('Gorros quirúrgicos', 400),
+    ('Batas para visitantes', 300),
+    ('Extintores de CO2', 25),
+    ('Gas oxígeno comprimido', 50),
+    ('Toallas desinfectantes', 700),
+    ('Papel higiénico industrial', 1000),
+    ('Fajas lumbares', 120),
+    ('Rodilleras ortopédicas', 80);
+
+
+
+
+

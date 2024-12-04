@@ -12,23 +12,18 @@ $usuarios_result = $stmt->fetch(PDO::FETCH_ASSOC);
 <header class="fixed w-full flex items-center justify-between h-14 text-white bg-teal-600 z-10">
 
             <!-- Logo y Avatar con Popup de Opciones -->
-            <div @click="openProfile = !openProfile" @click.away="openProfile = false" class="flex items-center justify-start md:justify-center pl-3 w-14 md:w-64 h-14 border-none relative cursor-pointer">
                 
                 <!-- Contenedor del Perfil con hover -->
-                <div class="flex items-center space-x-2 bg-transparent text-white px-3 py-1 rounded-lg hover:bg-gray-700 cursor-pointer transition-all duration-300">
-                    <!-- Avatar con Estado -->
-                    <div class="relative w-10 h-10">
-                        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" alt="Avatar" class="w-full h-full rounded-full border-2 border-white">
-                    </div>
+                <div class="flex items-center space-x-2 bg-transparent text-white px-3  rounded-lg hover:bg-[#00756a] cursor-pointer transition-all duration-300">
                     
                     <!-- Información del Usuario -->
-                    <div class="flex flex-col text-sm">
+                    <div class="flex flex-col text-base">
                         <span class="font-semibold"><?php echo $usuarios_result['nombre']; ?></span>
                         <span class="font-semibold text-white text-xs"><?php echo $usuarios_result['departamento'] . "/" . $usuarios_result['rol']; ?></span>
                     </div>
                 </div>
             
-            </div>
+            
 
         <!-- Search Bar -->
         <div class="flex justify-between items-center h-14 w-full pr-4 ml-10">

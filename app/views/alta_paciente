@@ -1,0 +1,58 @@
+<?php
+require '../../config/db.php'; 
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id_atencion = $_POST['id_atencion'];
+    $fecha_alta = date('Y-m-d H:i:s'); // get fecha y hora actuales
+
+    try {
+        $conn = Database::connect();
+
+        $stmt = $conn->prepare("CALL AltaPaciente(?, ?)");
+        $stmt->bind_param("is", $id_atencion, $fecha_alta);
+        $stmt->execute();
+
+        echo "Paciente dado de alta exitosamente.";
+    } catch (Exception $e) {
+        echo "Error al dar de alta al paciente: " . $e->getMessage();
+    } finally {
+        $conn->close();
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alta de Paciente</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg shadow-md w-1/2">
+        <h2 class="text-2xl font-semibold mb-4">Alta de Paciente</h2>
+        <form action="alta_paciente.php" method="POST" class="space-y-4">
+            <div>
+                <label for="id_atencion" class="block text-sm font-medium">Seleccionar Paciente:</label>
+                <select id="id_atencion" name="id_atencion" class="border p-2 w-full" required>
+                    <option value="">Seleccione una Atención</option>
+                    <?php
+                    require '../../config/db.php';
+                    $conn = Database::connect();
+                    $result = $conn->query("SELECT a.id_atencion, p.nombre, p.apellido 
+                                             FROM atenciones a
+                                             JOIN pacientes p ON a.id_paciente = p.id_paciente
+                                             WHERE a.estado = 'En Atención'");
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<option value='{$row['id_atencion']}'>Atención ID {$row['id_atencion']} - {$row['nombre']} {$row['apellido']}</option>";
+                    }
+                    $conn->close();
+                    ?>
+                </select>
+            </div>
+            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Dar de Alta</button>
+        </form>
+    </div>
+</body>
+</html>

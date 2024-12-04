@@ -179,14 +179,14 @@ session_start();
                 ?>
             </div>
             <p>Serás redirigido en <span id="cuenta_regresiva" class="cuenta_regresiva">5</span> segundos.</p>
-            <a href="../registrar_automovil.php" class="enlace_redireccion">Volver al formulario de registro</a>
+            <a href="../../../index.php" class="enlace_redireccion">Volver al formulario de registro</a>
         </div>
     </div>
     <script>
 
-        setTimeout(() => {
-            window.location.href = '../../../index.php';
-        }, 5000);
+        // setTimeout(() => {
+        //     window.location.href = '../../../index.php';
+        // }, 5000);
     </script>
     <?php
     unset($_SESSION['message']);

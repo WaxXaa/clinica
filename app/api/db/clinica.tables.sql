@@ -408,13 +408,7 @@ values ('PGP1', 'Registrar Paciente', 4),
 ('PGP10', 'asignar examen', 4);
 
 
--- los que pueden registrar paciente son DRN1, DRN2, MG1, CG1, EN1, CD1, NR1, GN1, PD1, OF1, OR1, UR1, TR1, RH1, NT1, PS1, DR1, OD1, EM1
--- tambien los Mg2 , CG2, EN2, CD2, NR2, GN2, PD2, OF2, OR2, UR2, TR2, RH2, NT2, PS2, DR2, OD2, EM2.
--- mg4, cg4, en4, cd4, nr4, gn4, pd4, of4, or4, ur4, tr4, rh4, nt4, ps4, dr4, od4, em4,
--- mg5,cg5,en5,cd5,nr5,gn5,pd5,of5,or5,ur5,tr5,rh5,nt5,ps5,dr5,od5,em5,
-
-inser into rol_permisos (rol, permiso) values
-('DRN1', 'PGP1'),
+insert into rol_permisos (rol, permiso) values
 ('DRN2', 'PGP1'),
 ('MG1', 'PGP1'),
 ('CG1', 'PGP1'),
@@ -486,7 +480,7 @@ inser into rol_permisos (rol, permiso) values
 ('EM5', 'PGP1');
 
 
-inser into rol_permisos (rol, permiso) values
+insert into rol_permisos (rol, permiso) values
 ('DRN1', 'PGP2'),
 ('DRN2', 'PGP2'),
 ('MG1', 'PGP2'),
@@ -576,7 +570,7 @@ inser into rol_permisos (rol, permiso) values
 ('EM6', 'PGP2');
 
 
-inser into rol_permisos (rol, permiso) values
+insert into rol_permisos (rol, permiso) values
 ('DRN1', 'PGP3'),
 ('DRN2', 'PGP3'),
 ('MG1', 'PGP3'),
@@ -632,7 +626,7 @@ inser into rol_permisos (rol, permiso) values
 
 
 -- para atender paciente solo pueden los medico
-insert into rol_permisos (id_rol, id_permiso) values
+insert into rol_permisos (rol, permiso) values
 ('MG2', 'PGP4'),
 ('CG2', 'PGP4'),
 ('CD2', 'PGP4'),
@@ -651,13 +645,337 @@ insert into rol_permisos (id_rol, id_permiso) values
 ('EM2', 'PGP4');
 
 
+-- para atender paciente solo pueden los medico
+insert into rol_permisos (rol, permiso) values
+('MG2', 'PGP5'),
+('CG2', 'PGP5'),
+('CD2', 'PGP5'),
+('NR2', 'PGP5'),
+('GN2', 'PGP5'),
+('PD2', 'PGP5'),
+('OF2', 'PGP5'),
+('OR2', 'PGP5'),
+('UR2', 'PGP5'),
+('TR2', 'PGP5'),
+('RH2', 'PGP5'),
+('NT2', 'PGP5'),
+('PS2', 'PGP5'),
+('DR2', 'PGP5'),
+('OD2', 'PGP5'),
+('EM2', 'PGP5');
+
+-- para recetar medicamento solo pueden los medico
+insert into rol_permisos (rol, permiso) values
+('MG2', 'PGP6'),
+('CG2', 'PGP6'),
+('CD2', 'PGP6'),
+('NR2', 'PGP6'),
+('GN2', 'PGP6'),
+('PD2', 'PGP6'),
+('OF2', 'PGP6'),
+('OR2', 'PGP6'),
+('UR2', 'PGP6'),
+('TR2', 'PGP6'),
+('RH2', 'PGP6'),
+('NT2', 'PGP6'),
+('PS2', 'PGP6'),
+('DR2', 'PGP6'),
+('OD2', 'PGP6'),
+('EM2', 'PGP6');
+
+-- para recetar tratamiento solo pueden los medico
+insert into rol_permisos (rol, permiso) values
+('MG2', 'PGP7'),
+('CG2', 'PGP7'),
+('CD2', 'PGP7'),
+('NR2', 'PGP7'),
+('GN2', 'PGP7'),
+('PD2', 'PGP7'),
+('OF2', 'PGP7'),
+('OR2', 'PGP7'),
+('UR2', 'PGP7'),
+('TR2', 'PGP7'),
+('RH2', 'PGP7'),
+('NT2', 'PGP7'),
+('PS2', 'PGP7'),
+('DR2', 'PGP7'),
+('OD2', 'PGP7'),
+('EM2', 'PGP7');
+
+-- para ver pacientes solo pueden los medico
+insert into rol_permisos (rol, permiso) values
+('MG2', 'PGP8'),
+('CG2', 'PGP8'),
+('CD2', 'PGP8'),
+('NR2', 'PGP8'),
+('GN2', 'PGP8'),
+('PD2', 'PGP8'),
+('OF2', 'PGP8'),
+('OR2', 'PGP8'),
+('UR2', 'PGP8'),
+('TR2', 'PGP8'),
+('RH2', 'PGP8'),
+('NT2', 'PGP8'),
+('PS2', 'PGP8'),
+('DR2', 'PGP8'),
+('OD2', 'PGP8'),
+('EM2', 'PGP8');
+
+-- para hacer traspaso de paciente solo pueden los medico
+insert into rol_permisos (rol, permiso) values
+('MG2', 'PGP9'),
+('CG2', 'PGP9'),
+('CD2', 'PGP9'),
+('NR2', 'PGP9'),
+('GN2', 'PGP9'),
+('PD2', 'PGP9'),
+('OF2', 'PGP9'),
+('OR2', 'PGP9'),
+('UR2', 'PGP9'),
+('TR2', 'PGP9'),
+('RH2', 'PGP9'),
+('NT2', 'PGP9'),
+('PS2', 'PGP9'),
+('DR2', 'PGP9'),
+('OD2', 'PGP9'),
+('EM2', 'PGP9');
+
+-- para asignar examen solo pueden los medico
+insert into rol_permisos (rol, permiso) values
+('MG2', 'PGP10'),
+('CG2', 'PGP10'),
+('CD2', 'PGP10'),
+('NR2', 'PGP10'),
+('GN2', 'PGP10'),
+('PD2', 'PGP10'),
+('OF2', 'PGP10'),
+('OR2', 'PGP10'),
+('UR2', 'PGP10'),
+('TR2', 'PGP10'),
+('RH2', 'PGP10'),
+('NT2', 'PGP10'),
+('PS2', 'PGP10'),
+('DR2', 'PGP10'),
+('OD2', 'PGP10'),
+('EM2', 'PGP10');
 
 
 
 
+insert into permisos (id_permiso, descripcion, departamento) values
+('PLB1', 'Ver examenes por atenderse', 5),
+('PLB2', 'indicar que el examen se realizo', 5),
+('PLB3', 'indicar que los resultados estan listos', 5);
+
+insert into permisos (id_permiso, descripcion, departamento) values
+('PIV1', 'ver la lista de insumos', 3),
+('PIV2', 'ver pedidos de insumos', 3),
+('PIV3', 'hacer peticion', 3),
+('PIV4', 'procesar informacion', 3);
+
+insert into rol_permisos (rol, permiso) values
+('CG3', 'PLB1'),
+('CD3', 'PLB1'),
+('NR3', 'PLB1'),
+('GN3', 'PLB1'),
+('PD3', 'PLB1'),
+('OF3', 'PLB1'),
+('OR3', 'PLB1'),
+('UR3', 'PLB1'),
+('TR3', 'PLB1'),
+('RH3', 'PLB1'),
+('NT3', 'PLB1');
+
+
+insert into rol_permisos (rol, permiso) values
+('PS3', 'PLB1'),
+('DR3', 'PLB1'),
+('OD3', 'PLB1'),
+('EM3', 'PLB1'),
+('MG1', 'PLB1'),
+('CG1', 'PLB1'),
+('CD1', 'PLB1'),
+('NR1', 'PLB1'),
+('GN1', 'PLB1'),
+('PD1', 'PLB1'),
+('OF1', 'PLB1'),
+('OR1', 'PLB1'),
+('UR1', 'PLB1'),
+('TR1', 'PLB1'),
+('RH1', 'PLB1'),
+('NT1', 'PLB1'),
+('PS1', 'PLB1'),
+('DR1', 'PLB1'),
+('OD1', 'PLB1'),
+('EM1', 'PLB1'),
+('MG2', 'PLB1'),
+('CG2', 'PLB1'),
+('CD2', 'PLB1'),
+('NR2', 'PLB1'),
+('GN2', 'PLB1'),
+('PD2', 'PLB1'),
+('OF2', 'PLB1'),
+('OR2', 'PLB1');
 
 
 
+insert into rol_permisos (rol, permiso) values
+('PS3', 'PLB1'),
+('DR3', 'PLB1'),
+('OD3', 'PLB1'),
+('EM3', 'PLB1'),
+('MG1', 'PLB1'),
+('CG1', 'PLB1'),
+('CD1', 'PLB1'),
+('NR1', 'PLB1'),
+('GN1', 'PLB1'),
+('PD1', 'PLB1'),
+('OF1', 'PLB1'),
+('OR1', 'PLB1'),
+('UR1', 'PLB1'),
+('TR1', 'PLB1'),
+('RH1', 'PLB1'),
+('NT1', 'PLB1'),
+('PS1', 'PLB1'),
+('DR1', 'PLB1'),
+('OD1', 'PLB1'),
+('EM1', 'PLB1'),
+('MG2', 'PLB1'),
+('CG2', 'PLB1'),
+('CD2', 'PLB1'),
+('NR2', 'PLB1'),
+('GN2', 'PLB1'),
+('PD2', 'PLB1'),
+('OF2', 'PLB1'),
+('OR2', 'PLB1');
+
+insert into rol_permisos (rol, permiso) values
+('UR2', 'PLB1'),
+('TR2', 'PLB1'),
+('RH2', 'PLB1'),
+('NT2', 'PLB1'),
+('PS2', 'PLB1'),
+('DR2', 'PLB1'),
+('OD2', 'PLB1'),
+('EM2', 'PLB1'),
+('MG5', 'PLB1');
+
+
+
+insert into rol_permisos (rol, permiso) values
+('CD5', 'PLB1'),
+('NR5', 'PLB1'),
+('GN5', 'PLB1'),
+('PD5', 'PLB1'),
+('OF5', 'PLB1'),
+('OR5', 'PLB1'),
+('UR5', 'PLB1');
+
+
+insert into rol_permisos (rol, permiso) values
+('TR5', 'PLB1'),
+('RH5', 'PLB1'),
+('NT5', 'PLB1'),
+('PS5', 'PLB1'),
+('DR5', 'PLB1'),
+('OD5', 'PLB1'),
+('EM5', 'PLB1');
+
+insert into rol_permisos (rol, permiso) values
+('DRN1', 'PLB1'),
+('DRN2', 'PLB1'),
+('LB1', 'PLB1'),
+('LB2', 'PLB1'),
+('LB3', 'PLB1');
+
+
+insert into rol_permisos (rol, permiso) values
+('LB1', 'PLB3'),
+('LB2', 'PLB3');
+
+insert into rol_permisos (rol, permiso) values
+('DRN1', 'PIV1'),
+('DRN2', 'PIV1'),
+('MG6', 'PIV1'),
+('CG6', 'PIV1'),
+('CD6', 'PIV1'),
+('NR6', 'PIV1'),
+('GN6', 'PIV1'),
+('PD6', 'PIV1'),
+('OF6', 'PIV1'),
+('OR6', 'PIV1'),
+('UR6', 'PIV1'),
+('TR6', 'PIV1'),
+('RH6', 'PIV1'),
+('NT6', 'PIV1'),
+('PS6', 'PIV1'),
+('DR6', 'PIV1'),
+('OD6', 'PIV1'),
+('EM6', 'PIV1'),
+('MG1', 'PIV1'),
+('CG1', 'PIV1'),
+('CD1', 'PIV1'),
+('NR1', 'PIV1'),
+('GN1', 'PIV1'),
+('PD1', 'PIV1'),
+('OF1', 'PIV1'),
+('OR1', 'PIV1'),
+('UR1', 'PIV1'),
+('TR1', 'PIV1'),
+('RH1', 'PIV1'),
+('NT1', 'PIV1'),
+('PS1', 'PIV1'),
+('DR1', 'PIV1'),
+('OD1', 'PIV1'),
+('EM1', 'PIV1'),
+('IN1', 'PIV1'),
+('IN2', 'PIV1'),
+('IN3', 'PIV1');
+
+
+
+
+insert into rol_permisos (rol, permiso) values
+('DRN1', 'PIV2'),
+('DRN2', 'PIV2'),
+('IN1', 'PIV2'),
+('IN2', 'PIV2');
+
+insert into rol_permisos (rol, permiso) values
+('IN1', 'PIV3'),
+('IN2', 'PIV3'),
+('MG6', 'PIV3'),
+('CG6', 'PIV3'),
+('CD6', 'PIV3'),
+('NR6', 'PIV3'),
+('GN6', 'PIV3'),
+('PD6', 'PIV3'),
+('OF6', 'PIV3'),
+('OR6', 'PIV3'),
+('UR6', 'PIV3'),
+('TR6', 'PIV3'),
+('RH6', 'PIV3'),
+('NT6', 'PIV3'),
+('PS6', 'PIV3'),
+('DR6', 'PIV3'),
+('OD6', 'PIV3'),
+('EM6', 'PIV3'),
+('MG1', 'PIV3'),
+('CG1', 'PIV3'),
+('CD1', 'PIV3'),
+('NR1', 'PIV3'),
+('GN1', 'PIV3'),
+('PD1', 'PIV3'),
+('OF1', 'PIV3'),
+('OR1', 'PIV3'),
+('UR1', 'PIV3'),
+('TR1', 'PIV3'),
+('RH1', 'PIV3'),
+('NT1', 'PIV3'),
+('PS1', 'PIV3'),
+('DR1', 'PIV3'),
+('OD1', 'PIV3'),
+('EM1', 'PIV3');
 
 
 

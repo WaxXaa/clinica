@@ -56,11 +56,11 @@ try {
         }
     </style>
 </head>
-<body class="flex justify-start items-start h-screen bg-slate-200 text-white" x-data="{ sidebarOpen: true, isDark: false, openProfile: false, openStatus: false }" x-init="initializeSidebarToggleButton()">
+<body class="flex justify-start items-start h-screen bg-[#EAFCF3] text-white" x-data="{ sidebarOpen: true, isDark: false, openProfile: false, openStatus: false }" x-init="initializeSidebarToggleButton()">
     <!-- Header -->
     <?php include_once './app/views/header.php'; ?>
     <!-- Sidebar -->
-    <aside :class="sidebarOpen ? 'w-1/6' : 'w-28'" class="relative bg-slate-200 h-screen p-5 pt-20 transition-all duration-700 flex flex-col space-y-4">
+    <aside :class="sidebarOpen ? 'w-1/6' : 'w-28'" class="relative h-screen p-5 pt-20 transition-all duration-700 flex flex-col space-y-4">
     <div id="homeLink" class="section-button flex items-center space-x-2 py-2 px-3 rounded-md transition-all duration-300 group
                 hover:bg-gradient-to-r from-lime-400 via-emerald-400 to-teal-400"
         :class="!sidebarOpen ? 'justify-center' : ''">
@@ -101,8 +101,8 @@ try {
     <!-- Contenido Principal -->
     <div class="flex-1 p-5 space-y-5 mt-10 text-black">
          <!-- Contenedor Principal -->
-        <div id="main-container-modulos"class="bg-white rounded-lg p-5 shadow-md flex space-x-4">
-            <div class="flex-1 p-5 space-y-5">
+        <div id="main-container-modulos" class="bg-white rounded-lg p-5 shadow-md flex space-x-4">
+            <div class="bg-[#F8FFFE] flex-1 p-5 space-y-5">
                 <h1 class="text-2xl font-bold">Dashboard</h1>
 
                 <!-- Exámenes Table -->
@@ -158,11 +158,11 @@ try {
                 
                 <div class="flex justify-evenly mt-10 " >
 
-                <div id="grafico-pacientes" class="bg-white rounded-lg p-5 shadow-md">
+                <div id="grafico-pacientes" class="bg-[#F8FFFE] rounded-lg p-5 shadow-md">
                     <h2 class="text-xl font-bold">Pacientes por Departamento</h2>
                     <canvas id="chart" style="max-width: 400px; max-height: 400px;"></canvas>
                 </div>
-                <div id="grafico-salario" class="bg-white rounded-lg p-5 shadow-md">
+                <div id="grafico-salario" class="bg-[#F8FFFE] rounded-lg p-5 shadow-md">
                     <h2 class="text-xl font-bold">AVG Salario por Departamento</h2>
                     <canvas id="chart2" style="max-width: 400px; max-height: 400px;"></canvas>
                 </div>
@@ -170,7 +170,7 @@ try {
                 </div>
                 <!-- Pie Chart -->
                 <!-- Exámenes en Realización -->
-            <div class="bg-white p-5 rounded-md shadow-md">
+            <div class="bg-[#F8FFFE] p-5 rounded-md shadow-md">
                 <h2 class="text-xl font-bold mb-4">Exámenes en Realización</h2>
                 <table class="w-full border border-gray-300">
                     <thead>
@@ -208,36 +208,36 @@ try {
     <script>
     // Obtener los datos desde PHP
     fetch('./chartSalario.php')
-                        .then(response => response.json())
-                        .then(data => {
-                            const labels = data.map(item => item.departamento);
-                            const chartData = data.map(item => item.promedio_salario);
-
-                            const ctx = document.getElementById('chart2').getContext('2d');
-                            const chart = new Chart(ctx, {
-                                type: 'bar',
-                                data: {
-                                    labels: labels,
-                                    datasets: [{
-                                        label: 'Promedio Salario',
-                                        data: chartData,
-                                        backgroundColor: [
-                                            '#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0',
-                                            '#9966ff', '#ff9f40', '#c9cbcf', '#ff9ff3',
-                                            '#00d2d3', '#54a0ff', '#5f27cd', '#1dd1a1',
-                                            '#ff6b6b', '#48dbfb', '#f368e0', '#00d2d3',
-                                            '#8395a7', '#222f3e', '#ee5253', '#0abde3',
-                                            '#10ac84'
-                                        ]
-                                    }]
-                                },
-                                options: {
-                                    responsive: true,
-                                    maintainAspectRatio: false,
-                                }
-                            });
-                        })
-                        .catch(error => console.error('Error fetching chart data:', error));
+        .then(response => response.json())
+        .then(data => {
+            const labels = data.map(item => item.departamento);
+            const chartData = data.map(item => item.promedio_salario);
+    
+            const ctx = document.getElementById('chart2').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Promedio Salario',
+                        data: chartData,
+                        backgroundColor: [
+                            '#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0',
+                            '#9966ff', '#ff9f40', '#c9cbcf', '#ff9ff3',
+                            '#00d2d3', '#54a0ff', '#5f27cd', '#1dd1a1',
+                            '#ff6b6b', '#48dbfb', '#f368e0', '#00d2d3',
+                            '#8395a7', '#222f3e', '#ee5253', '#0abde3',
+                            '#10ac84'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                }
+            });
+        })
+        .catch(error => console.error('Error fetching chart data:', error));
   
         fetch('./chart.php')
             .then(response => response.json())

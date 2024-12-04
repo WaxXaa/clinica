@@ -14,8 +14,10 @@ $stmt = $conn->prepare($usuarios_query);
 $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT); // Aseguramos que sea un número entero
 $stmt->execute();
 $usuarios_result = $stmt->fetch(PDO::FETCH_ASSOC); // Obtener todos los resultados
-$user_role = $usuarios_result['id_rol'];
+$user_rol = $usuarios_result['id_rol'];
 $user_department = $usuarios_result['departamento'];
+include_once '../../api/src/controllers/recursosHumanosControlador.php';
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -33,11 +35,11 @@ $user_department = $usuarios_result['departamento'];
         }
     </style>
 </head>
-<body class="flex justify-start items-start h-screen bg-slate-200 text-white" x-data="{ sidebarOpen: true, isDark: false, openProfile: false, openStatus: false }" x-init="initializeSidebarToggleButton()">
+<body class="flex justify-start items-start h-screen bg-[#EAFCF3] text-white" x-data="{ sidebarOpen: true, isDark: false, openProfile: false, openStatus: false }" x-init="initializeSidebarToggleButton()">
     <!-- Header -->
     <?php include_once '../../views/header.php'; ?>
     <!-- Sidebar -->
-    <aside :class="sidebarOpen ? 'w-1/6' : 'w-28'" class="relative bg-slate-200 h-screen p-5 pt-20 transition-all duration-700 flex flex-col space-y-4">
+    <aside :class="sidebarOpen ? 'w-1/6' : 'w-28'" class="relative h-screen p-5 pt-20 transition-all duration-700 flex flex-col space-y-4">
         <!-- modulo de inicio-->
         <div id="homeLink" class="section-button flex items-center space-x-2 py-2 px-3 rounded-md transition-all duration-300 group hover:bg-gradient-to-r from-lime-400 via-emerald-400 to-teal-400"
             :class="!sidebarOpen ? 'justify-center' : ''">
@@ -56,7 +58,7 @@ $user_department = $usuarios_result['departamento'];
                 JOIN modulo_rol mr ON m.id_modulo = mr.id_modulo
                 WHERE mr.id_rol = :role
             ");
-            $stmt->bindParam(':role', $user_role);
+            $stmt->bindParam(':role', $user_rol);
             $stmt->execute();
             $modules = $stmt->fetchAll(PDO::FETCH_ASSOC);
         ?>
@@ -159,9 +161,20 @@ $user_department = $usuarios_result['departamento'];
             ?>
             
         <!-- Contenedor Principal -->
-        <div id="main-container-modulos" class="bg-white rounded-lg p-5 shadow-md grid grid-cols-2 gap-4">
+        <div id="main-container-modulos" class=" rounded-lg p-5 shadow-md grid grid-cols-2 gap-4">
+        
+        <?php
+        
+        $controller = new HumanResourcesController();
+        $roles_con_PHR1 = $controller->getRolesByPermission('PLB2');
+
+        // Verificar si el rol del usuario actual está en la lista de roles con PHR1
+        if (in_array($user_rol, $roles_con_PHR1)) {
+        // Mostrar la sección de registro de empleado
+        ?>
         <div id="estados-examenes" class="bg-[#F8FFFE] p-4 rounded-lg  shadow-md shadow-green-400/50">
-      <h2 class="text-2xl font-semibold mb-4">Realización de Examen</h2>
+
+        <h2 class="text-2xl font-semibold mb-4">Realización de Examen</h2>
           <!-- Display messages -->
           <!-- Display messages -->
         <?php if (isset($success_realizar_examnes)): ?>
@@ -180,6 +193,20 @@ $user_department = $usuarios_result['departamento'];
             </div>
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">Registrar la Realizacion del Examen</button>
           </form>
+          </div>
+
+          <?php } ?>
+          <?php
+        
+        $controller = new HumanResourcesController();
+        $roles_con_PHR1 = $controller->getRolesByPermission('PLB3');
+
+        // Verificar si el rol del usuario actual está en la lista de roles con PHR1
+        if (in_array($user_rol, $roles_con_PHR1)) {
+        // Mostrar la sección de registro de empleado
+        ?>
+        <div id="estados-examenes-res" class="bg-[#F8FFFE] p-4 rounded-lg  shadow-md shadow-green-400/50">
+
           <h2 class="text-2xl font-semibold mb-4">Indicar Resultados Listos</h2>
           <!-- Display messages -->
           <!-- Display messages -->
@@ -200,6 +227,8 @@ $user_department = $usuarios_result['departamento'];
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">Indicar Resultados Listos</button>
           </form>
       </div>
+
+          <?php } ?>
         <div id="confirmation-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
         <div class="bg-white p-6 rounded-lg shadow-lg">
           <h3 class="text-xl font-semibold mb-4">Confirmar Acción</h3>
@@ -235,6 +264,15 @@ $user_department = $usuarios_result['departamento'];
           }
         });
         </script>
+        <?php
+        
+        $controller = new HumanResourcesController();
+        $roles_con_PHR1 = $controller->getRolesByPermission('PLB1');
+
+        // Verificar si el rol del usuario actual está en la lista de roles con PHR1
+        if (in_array($user_rol, $roles_con_PHR1)) {
+        // Mostrar la sección de registro de empleado
+        ?>
       <div id="lista-examenes" class="bg-[#F8FFFE] p-4 rounded-lg  shadow-md shadow-green-400/50">
         <h2 class="text-2xl font-semibold mb-4">Examenes</h2>
         <div class="flex items-center mb-4">
@@ -267,7 +305,7 @@ $user_department = $usuarios_result['departamento'];
           <!-- Contenido de paginación -->
         </div>
       </div>
-        
+        <?php } ?>
         <div>
     </div>
         <script>

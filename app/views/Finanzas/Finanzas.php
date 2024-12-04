@@ -47,11 +47,11 @@ try {
         }
     </style>
 </head>
-<body class="flex justify-start items-start h-screen bg-slate-200 text-white" x-data="{ sidebarOpen: true, isDark: false, openProfile: false, openStatus: false }" x-init="initializeSidebarToggleButton()">
+<body class="flex justify-start items-start h-screen bg-[#EAFCF3] text-white" x-data="{ sidebarOpen: true, isDark: false, openProfile: false, openStatus: false }" x-init="initializeSidebarToggleButton()">
     <!-- Header -->
     <?php include_once '../../views/header.php'; ?>
     <!-- Sidebar -->
-    <aside :class="sidebarOpen ? 'w-1/6' : 'w-28'" class="relative bg-slate-200 h-screen p-5 pt-20 transition-all duration-700 flex flex-col space-y-4">
+    <aside :class="sidebarOpen ? 'w-1/6' : 'w-28'" class="relative h-screen p-5 pt-20 transition-all duration-700 flex flex-col space-y-4">
         <!-- modulo de inicio-->
         <div id="homeLink" class="section-button flex items-center space-x-2 py-2 px-3 rounded-md transition-all duration-300 group hover:bg-gradient-to-r from-lime-400 via-emerald-400 to-teal-400"
             :class="!sidebarOpen ? 'justify-center' : ''">
@@ -90,7 +90,7 @@ try {
     <!-- Contenido Principal -->
     <div class="flex-1 p-5 space-y-5 mt-10 text-black">
         <!-- Contenedor Principal -->
-        <div id="main-container-modulos" class="bg-white rounded-lg p-5 shadow-md grid grid-cols-2 gap-4">
+        <div id="main-container-modulos" class=" rounded-lg p-5 shadow-md grid grid-cols-2 gap-4">
                 <!-- Exámenes Table -->
                 <div class="bg-white p-5 rounded-md shadow-md h-96 overflow-y-scroll">
                     <h2 class="text-xl font-bold mb-4">Costo de los Examenes que realiza el Hospital</h2>

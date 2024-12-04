@@ -14,8 +14,10 @@ $stmt = $conn->prepare($usuarios_query);
 $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT); // Aseguramos que sea un número entero
 $stmt->execute();
 $usuarios_result = $stmt->fetch(PDO::FETCH_ASSOC); // Obtener todos los resultados
-$user_role = $usuarios_result['id_rol'];
+$user_rol = $usuarios_result['id_rol'];
 $departamento = $usuarios_result['id_departamento'];
+include_once '../../api/src/controllers/recursosHumanosControlador.php';
+
 
 
 ?>
@@ -60,7 +62,7 @@ $departamento = $usuarios_result['id_departamento'];
       JOIN modulo_rol mr ON m.id_modulo = mr.id_modulo
       WHERE mr.id_rol = :role
     ");
-    $stmt->bindParam(':role', $user_role);
+    $stmt->bindParam(':role', $user_rol);
     $stmt->execute();
     $modules = $stmt->fetchAll(PDO::FETCH_ASSOC);
     ?>
@@ -431,6 +433,15 @@ $departamento = $usuarios_result['id_departamento'];
         }
       }
       ?>
+      <?php
+        
+        $controller = new HumanResourcesController();
+        $roles_con_PHR1 = $controller->getRolesByPermission('PGP1');
+
+        // Verificar si el rol del usuario actual está en la lista de roles con PHR1
+        if (in_array($user_rol, $roles_con_PHR1)) {
+        // Mostrar la sección de registro de empleado
+        ?>
       <div id="registro-paciente" class="bg-[#F8FFFE] p-5 rounded-lg shadow-md shadow-green-400/50">
         <h2 class="text-2xl font-semibold mb-4">Registrar Paciente</h2>
         <div class="mt-6">
@@ -525,6 +536,18 @@ $departamento = $usuarios_result['id_departamento'];
           </form>
         </div>
       </div>
+      <?php
+        }
+      ?>
+      <?php
+        
+        $controller = new HumanResourcesController();
+        $roles_con_PHR1 = $controller->getRolesByPermission('PGP2');
+
+        // Verificar si el rol del usuario actual está en la lista de roles con PHR1
+        if (in_array($user_rol, $roles_con_PHR1)) {
+        // Mostrar la sección de registro de empleado
+        ?>
       <div id="lista-pacientes" class="bg-[#F8FFFE] p-4 rounded-lg  shadow-md shadow-green-400/50">
         <h2 class="text-2xl font-semibold mb-4">Pacientes registrados</h2>
         <div class="flex items-center mb-4">
@@ -558,6 +581,18 @@ $departamento = $usuarios_result['id_departamento'];
           <!-- Contenido de paginación -->
         </div>
       </div>
+      <?php
+        }
+      ?>
+      <?php
+        
+        $controller = new HumanResourcesController();
+        $roles_con_PHR1 = $controller->getRolesByPermission('PGP3');
+
+        // Verificar si el rol del usuario actual está en la lista de roles con PHR1
+        if (in_array($user_rol, $roles_con_PHR1)) {
+        // Mostrar la sección de registro de empleado
+        ?>
       <div id="registro-ingreso" class="bg-[#F8FFFE] p-4 rounded-lg  shadow-md shadow-green-400/50">
       <h2 class="text-2xl font-semibold mb-4">Ingreso de Paciente</h2>
           <!-- Display messages -->
@@ -594,6 +629,18 @@ $departamento = $usuarios_result['id_departamento'];
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">Registrar Ingreso</button>
           </form>
       </div>
+      <?php
+        }
+        ?>
+        <?php
+        
+        $controller = new HumanResourcesController();
+        $roles_con_PHR1 = $controller->getRolesByPermission('PGP4');
+
+        // Verificar si el rol del usuario actual está en la lista de roles con PHR1
+        if (in_array($user_rol, $roles_con_PHR1)) {
+        // Mostrar la sección de registro de empleado
+        ?>
       <div id="atencion-paciente" class="bg-[#F8FFFE] p-4 rounded-lg  shadow-md shadow-green-400/50">
         <h2 class="text-2xl font-semibold mb-4">Atender Paciente</h2>
         <!-- Display messages -->
@@ -627,6 +674,7 @@ $departamento = $usuarios_result['id_departamento'];
             <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Dar de Alta</button>
         </form>
       </div>
+        
       <div id="recetar-medicamento-tratamiento" class="bg-[#F8FFFE] p-4 rounded-lg  shadow-md shadow-green-400/50">
       <h2 class="text-2xl font-semibold mb-4">Recetar Tratamiento</h2>
           <!-- Display messages -->
@@ -793,7 +841,7 @@ $departamento = $usuarios_result['id_departamento'];
                         
                         $examen_query = "SELECT me.id_examen as id_examen, ex.nombre as nombre FROM medicos_examenes as me JOIN examenes as ex on me.id_examen = ex.id_examen WHERE me.id_medico = :medico;";
                         $stmt = $conn->prepare($examen_query);
-                        $stmt->bindParam(':medico', $user_role, PDO::PARAM_STR);
+                        $stmt->bindParam(':medico', $user_rol, PDO::PARAM_STR);
                         $stmt->execute();
                         while ($examen = $stmt->fetch(PDO::FETCH_ASSOC)) {
                               echo '<script>console.log("'.$examen['nombre'].' <br>")</script>';
@@ -804,6 +852,9 @@ $departamento = $usuarios_result['id_departamento'];
             <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Asignar Examen</button>
         </form>
       </div>
+      <?php
+        }
+        ?>
     </div>
   </div>
   <script>

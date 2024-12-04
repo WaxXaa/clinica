@@ -9,13 +9,16 @@ $user_id = $_SESSION['user_id'];
 $database = new Database();
 $conn = $database->getConnection();
 
-$usuarios_query = "SELECT e.nombre as nombre, d.nombre AS departamento, r.nombre AS rol, r.id_rol AS id_rol FROM empleado AS e JOIN departamento AS d on e.departamento = d.id_departamento JOIN rol AS r on e.rol = r.id_rol WHERE usuario = :user_id";
+$usuarios_query = "SELECT e.nombre as nombre, d.nombre AS departamento, d.id_departamento as id_departamento, r.nombre AS rol, r.id_rol AS id_rol FROM empleado AS e JOIN departamento AS d on e.departamento = d.id_departamento JOIN rol AS r on e.rol = r.id_rol WHERE usuario = :user_id";
 $stmt = $conn->prepare($usuarios_query);
 $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT); // Aseguramos que sea un número entero
 $stmt->execute();
 $usuarios_result = $stmt->fetch(PDO::FETCH_ASSOC); // Obtener todos los resultados
-$user_role = $usuarios_result['id_rol'];
+$user_rol = $usuarios_result['id_rol'];
 $user_department = $usuarios_result['departamento'];
+$user_department_id = $usuarios_result['id_departamento'];
+include_once '../../api/src/controllers/recursosHumanosControlador.php';
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -33,11 +36,11 @@ $user_department = $usuarios_result['departamento'];
         }
     </style>
 </head>
-<body class="flex justify-start items-start h-screen bg-slate-200 text-white" x-data="{ sidebarOpen: true, isDark: false, openProfile: false, openStatus: false }" x-init="initializeSidebarToggleButton()">
+<body class="flex justify-start items-start h-screen bg-[#EAFCF3] text-white" x-data="{ sidebarOpen: true, isDark: false, openProfile: false, openStatus: false }" x-init="initializeSidebarToggleButton()">
     <!-- Header -->
     <?php include_once '../../views/header.php'; ?>
     <!-- Sidebar -->
-    <aside :class="sidebarOpen ? 'w-1/6' : 'w-28'" class="relative bg-slate-200 h-screen p-5 pt-20 transition-all duration-700 flex flex-col space-y-4">
+    <aside :class="sidebarOpen ? 'w-1/6' : 'w-28'" class="relative h-screen p-5 pt-20 transition-all duration-700 flex flex-col space-y-4">
         <!-- modulo de inicio-->
         <div id="homeLink" class="section-button flex items-center space-x-2 py-2 px-3 rounded-md transition-all duration-300 group hover:bg-gradient-to-r from-lime-400 via-emerald-400 to-teal-400"
             :class="!sidebarOpen ? 'justify-center' : ''">
@@ -56,7 +59,7 @@ $user_department = $usuarios_result['departamento'];
                 JOIN modulo_rol mr ON m.id_modulo = mr.id_modulo
                 WHERE mr.id_rol = :role
             ");
-            $stmt->bindParam(':role', $user_role);
+            $stmt->bindParam(':role', $user_rol);
             $stmt->execute();
             $modules = $stmt->fetchAll(PDO::FETCH_ASSOC);
         ?>
@@ -76,7 +79,7 @@ $user_department = $usuarios_result['departamento'];
     <!-- Contenido Principal -->
     <div class="flex-1 p-5 space-y-5 mt-10 text-black">
         <!-- Contenedor Principal -->
-        <div id="main-container-modulos" class="bg-white rounded-lg p-5 shadow-md flex space-x-4">
+        <div id="main-container-modulos" class=" rounded-lg p-5 shadow-md flex space-x-4">
         <?php
 if (isset($_POST['transferir'])) {
     $id_insumo = $_POST['insumo'];
@@ -129,8 +132,59 @@ if (isset($_POST['transferir'])) {
         $error_transferir_insumo = 'Error: ' . $e->getMessage();
     }
 }
+// Manejar la solicitud de pedir insumo
+if (isset($_POST['pedir'])) {
+    // Obtener y validar los datos del formulario
+    $id_insumo = isset($_POST['insumo']) ? (int)$_POST['insumo'] : 0;
+    $cantidad = isset($_POST['cantidad']) ? (int)$_POST['cantidad'] : 0;
 
+    // Validación básica
+    if ($id_insumo > 0 && $cantidad > 0) {
+        try {
+            // Preparar la llamada al procedimiento almacenado
+            $stmt = $conn->prepare("CALL pedirInsumo(:p_Cantidad, :p_id_insumo, :p_departamento, @p_codigo_estado, @p_mensaje)");
+
+            // Enlazar los parámetros de entrada
+            $stmt->bindParam(':p_Cantidad', $cantidad, PDO::PARAM_INT);
+            $stmt->bindParam(':p_id_insumo', $id_insumo, PDO::PARAM_INT);
+            $stmt->bindParam(':p_departamento', $user_department_id, PDO::PARAM_INT);
+
+            // Ejecutar el procedimiento
+            $stmt->execute();
+
+            // Obtener los valores de salida
+            $resultado = $conn->query("SELECT @p_codigo_estado AS codigo_estado, @p_mensaje AS mensaje")->fetch(PDO::FETCH_ASSOC);
+
+            $codigo_estado = isset($resultado['codigo_estado']) ? (int)$resultado['codigo_estado'] : -1;
+            $mensaje = isset($resultado['mensaje']) ? $resultado['mensaje'] : 'Error desconocido.';
+
+            // Manejar el resultado basado en el código de estado
+            if ($codigo_estado === 1) {
+                // Éxito
+                $success_pedir_insumo = $mensaje;
+            } else {
+                // Error
+                $error_pedir_insumo = $mensaje;
+            }
+        } catch (PDOException $e) {
+            // Manejo de errores de conexión u otros errores
+            $error_pedir_insumo = 'Error al procesar la solicitud: ' . $e->getMessage();
+        }
+    } else {
+        // Datos inválidos
+        $error_pedir_insumo = 'Por favor, seleccione un insumo válido y una cantidad mayor que cero.';
+    }
+}
 ?>
+<?php
+        
+        $controller = new HumanResourcesController();
+        $roles_con_PHR1 = $controller->getRolesByPermission('PIV2');
+
+        // Verificar si el rol del usuario actual está en la lista de roles con PHR1
+        if (in_array($user_rol, $roles_con_PHR1)) {
+        // Mostrar la sección de registro de empleado
+        ?>
         <div id="peticiones">
             <h2 class="text-2xl font-bold">Peticiones de Insumos</h2>
             <!-- Mostrar mensajes -->
@@ -167,7 +221,69 @@ if (isset($_POST['transferir'])) {
                 </div>
             <?php endforeach; ?>
         </div>
+        <?php
+        }
+        ?>
+        <?php
+        
+        $controller = new HumanResourcesController();
+        $roles_con_PHR1 = $controller->getRolesByPermission('PIV3');
 
+        // Verificar si el rol del usuario actual está en la lista de roles con PHR1
+        if (in_array($user_rol, $roles_con_PHR1)) {
+        // Mostrar la sección de registro de empleado
+        ?>
+        <!-- Formulario para Solicitar Insumos -->
+        <div id="solicitar-insumo" class="bg-white rounded-lg p-5 shadow-md">
+            <h2 class="text-xl font-bold mb-4">Solicitar Insumo</h2>
+
+            <!-- Mostrar mensajes de éxito o error -->
+            <?php if (isset($success_pedir_insumo)): ?>
+                <p class="text-green-500 mb-4"><?= htmlspecialchars($success_pedir_insumo) ?></p>
+            <?php endif; ?>
+            <?php if (isset($error_pedir_insumo)): ?>
+                <p class="text-red-500 mb-4"><?= htmlspecialchars($error_pedir_insumo) ?></p>
+            <?php endif; ?>
+
+            <form action="" method="post" class="flex flex-col space-y-4">
+                <input type="hidden" name="pedir" value="pedir">
+
+                <!-- Campo de Selección de Insumo -->
+                <div>
+                    <label for="insumo" class="block text-sm font-medium text-gray-700">Insumo:</label>
+                    <select name="insumo" id="insumo" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                        <option value="">Seleccione un insumo</option>
+                        <?php
+                        // Obtener la lista de insumos para el desplegable
+                        $insumos_query = "SELECT ip.id_insumo as id_insumo, i.nombre as nombre FROM insumos_departamento as ip JOIN insumos as i on ip.id_insumo = i.id_insumo where ip.id_departamento = :departamento ORDER BY nombre ASC";
+                        $insumos_stmt = $conn->prepare($insumos_query);
+                        $insumos_stmt->bindParam(':departamento', $user_department_id, PDO::PARAM_INT);
+                        $insumos_stmt->execute();
+                        $insumos = $insumos_stmt->fetchAll(PDO::FETCH_ASSOC);
+                        foreach ($insumos as $insumo):
+                        ?>
+                            <option value="<?= htmlspecialchars($insumo['id_insumo']) ?>"><?= htmlspecialchars($insumo['nombre']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <!-- Campo de Cantidad -->
+                <div>
+                    <label for="cantidad" class="block text-sm font-medium text-gray-700">Cantidad:</label>
+                    <input type="number" name="cantidad" id="cantidad" min="1" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="Ingrese la cantidad">
+                </div>
+
+                <!-- Botón de Envío -->
+                <div>
+                    <button type="submit" name="pedir" value="pedirInsumo" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Solicitar Insumo
+                    </button>
+                </div>
+            </form>
+        </div>
+        <?php
+        }
+        ?>
         <div>
     </div>
 

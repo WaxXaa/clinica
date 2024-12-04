@@ -170,7 +170,7 @@ session_start();
         }
     </style>
 </head>
-<body>
+<body class="bg-[#EAFCF3]">
     <div class="contenedor">
         <div class="<?php echo isset($_SESSION['message_type']) ? $_SESSION['message_type'] : 'info'; ?>">
             <div class="mensaje">
